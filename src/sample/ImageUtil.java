@@ -1,3 +1,5 @@
+package sample;
+
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
@@ -67,7 +69,7 @@ public class ImageUtil {
           filename = args[0];
       }
       else {
-          filename = "sample.ppm";
+          filename = "/.`~/.//";
       }
       
       ImageUtil.readPPM(filename);
