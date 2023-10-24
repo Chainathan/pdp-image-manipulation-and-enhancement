@@ -77,7 +77,7 @@ public interface ImeModel {
    *
    * @return A list of ImeModels representing the split grayscale images.
    */
-  List<ImeModel> split();
+  List<ImeModel> rgbSplit();
 
   /**
    * Combine multiple grayscale images each representing a channel of the
@@ -87,7 +87,7 @@ public interface ImeModel {
    * @return An ImeModel representing the combined image.
    * @throws IllegalArgumentException If one of the ImeModel is not grayscale images.
    */
-  ImeModel combine(List<ImeModel> imageModelList) throws IllegalArgumentException;
+  ImeModel rgbCombine(List<ImeModel> imageModelList) throws IllegalArgumentException;
 
   /**
    * Apply a blur effect to the image.
