@@ -1,8 +1,13 @@
 package sample;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
+
+import javax.imageio.ImageIO;
 
 
 /**
@@ -69,10 +74,37 @@ public class ImageUtil {
           filename = args[0];
       }
       else {
-          filename = "/.`~/.//";
+          filename = "sample.ppm";
       }
       
-      ImageUtil.readPPM(filename);
+      ImageUtil.loadGeneralFormat(filename);
+  }
+  static void loadGeneralFormat(String filePath){
+    String imagePath = "gg/samplea.png"; // Replace with the actual file path
+    File imageFile = new File(imagePath);
+
+    try {
+      BufferedImage image = ImageIO.read(imageFile);
+      if (image != null) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        // Iterate through the pixels and print RGB values
+        for (int y = 0; y < height; y++) {
+          for (int x = 0; x < width; x++) {
+            int pixel = image.getRGB(x, y);
+            int red = (pixel >> 16) & 0xFF;
+            int green = (pixel >> 8) & 0xFF;
+            int blue = pixel & 0xFF;
+            System.out.println("Pixel at (" + x + "," + y + ") - R:" + red + " G:" + green + " B:" + blue);
+          }
+        }
+      } else {
+        System.out.println("Failed to load the image.");
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }
 

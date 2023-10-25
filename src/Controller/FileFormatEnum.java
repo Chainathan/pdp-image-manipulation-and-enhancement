@@ -1,9 +1,5 @@
 package Controller;
 
-import Exceptions.FileFormatNotSupportedException;
-import Model.ImeModel;
-import Model.RGBModel;
-
 public enum FileFormatEnum {
     PNG(".png"),
     JPG(".jpg"),
@@ -19,10 +15,10 @@ public enum FileFormatEnum {
         return extension;
     }
 
-    ImeModel getImeModel() throws FileFormatNotSupportedException{
+    /*RgbImeModel getImeModel() throws FileFormatNotSupportedException{
         if (this.equals(PNG) || this.equals(JPG) || this.equals(PPM)){
-            return new RGBModel();
+            return new RGBModelOld();
         }
         throw new FileFormatNotSupportedException("Unsupported File format");
-    }
+    }*/
 }
