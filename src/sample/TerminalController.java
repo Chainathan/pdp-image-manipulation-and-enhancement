@@ -1,4 +1,4 @@
-package Controller;
+package sample;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class TerminalController {
             for (int i=2;i<5;i++){
               componentList.add(arguments[i]);
             }
-            rgbImageProcessor.split(arguments[1],componentList);
+            rgbImageProcessor.splitComponents(arguments[1],componentList);
           } else {
             System.out.println("Invalid '" + command + "' command syntax.");
           }
@@ -96,7 +96,7 @@ public class TerminalController {
             for (int i=2;i<5;i++){
               componentList.add(arguments[i]);
             }
-            rgbImageProcessor.combine(arguments[1],componentList);
+            rgbImageProcessor.combineComponents(arguments[1],componentList);
           } else {
             System.out.println("Invalid '" + command + "' command syntax.");
           }

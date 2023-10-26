@@ -1,4 +1,4 @@
-package Controller;
+package Model;
 
 public enum FileFormatEnum {
     PNG(".png"),

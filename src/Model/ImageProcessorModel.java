@@ -73,7 +73,7 @@ public interface ImageProcessorModel {
    *
    * @return A list of ImeModels representing the split grayscale images.
    */
-  void split(String imageName, List<String> destComponentImageList) throws IllegalArgumentException;
+  void splitComponents(String imageName, List<String> destComponentImageList) throws IllegalArgumentException;
 
   /**
    * Combine multiple grayscale images each representing a channel of the
@@ -83,7 +83,7 @@ public interface ImageProcessorModel {
    * @return An ImeModel representing the combined image.
    * @throws IllegalArgumentException If one of the ImeModel is not grayscale images.
    */
-  void combine(String destImageName, List<String> componentImageList) throws IllegalArgumentException;
+  void combineComponents(String destImageName, List<String> componentImageList) throws IllegalArgumentException;
 
   /**
    * Apply a blur effect to the image.

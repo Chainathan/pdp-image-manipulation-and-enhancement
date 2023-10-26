@@ -1,5 +1,6 @@
 package Model;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -7,7 +8,6 @@ import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
 
-import Controller.FileFormatEnum;
 import Exceptions.FileFormatNotSupportedException;
 
 public class RgbImageDAO {
@@ -54,7 +54,7 @@ public class RgbImageDAO {
         image.setRGB(i, j, rgb);
       }
     }
-    return new RGBModel(image);
+    return new RGBModel(image, maxValue);
   }
   static RgbImeModel loadGeneralFormat(String filePath) throws IOException {
     File imageFile = new File(filePath);
@@ -66,7 +66,7 @@ public class RgbImageDAO {
       throw new IOException("Failed to load the image.");
     }
   }
-  static void save(String filePath, RgbImeModel imageModel) {
+  static void save(String filePath, RgbImeModel imageModel) throws IOException{
     // save the image - TODO
   }
 }

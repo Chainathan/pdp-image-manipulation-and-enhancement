@@ -1,14 +1,18 @@
 package Model;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 
-public class RGBModel implements RgbImeModel{
+class RGBModel implements RgbImeModel{
   private BufferedImage image;
+  private final int maxPixelValue;
 
+  public RGBModel(BufferedImage image, int maxPixelValue) {
+    this.image = image;
+    this.maxPixelValue = maxPixelValue;
+  }
   public RGBModel(BufferedImage image) {
     this.image = image;
+    this.maxPixelValue = (int) Math.pow(2,image.getColorModel().getPixelSize())-1;
   }
 
   public BufferedImage getImage() {
@@ -40,7 +44,7 @@ public class RGBModel implements RgbImeModel{
   }
 
   public RGBModel visualizeRedComponent() {
-    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType()); // BufferedImage.TYPE_INT_RGB
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
         int pixel = image.getRGB(x, y);
@@ -52,7 +56,7 @@ public class RGBModel implements RgbImeModel{
   }
 
   public RGBModel visualizeGreenComponent() {
-    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
         int pixel = image.getRGB(x, y);
@@ -64,7 +68,7 @@ public class RGBModel implements RgbImeModel{
   }
 
   public RGBModel visualizeBlueComponent() {
-    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+    BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
         int pixel = image.getRGB(x, y);
@@ -79,50 +83,48 @@ public class RGBModel implements RgbImeModel{
     int width = image.getWidth();
     int height = image.getHeight();
 
-    BufferedImage grayscaleImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         int rgb = image.getRGB(x, y);
-        int r = (rgb >> 16) & 0xFF;  // Red component
-        int g = (rgb >> 8) & 0xFF;   // Green component
-        int b = rgb & 0xFF;          // Blue component
-        int v = (Math.max(r, Math.max(g, b)) + Math.min(r, Math.min(g, b))) / 2;  // Calculate V
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        int v = (Math.max(r, Math.max(g, b)));
 
-        int grayscaleValue = (v << 16) | (v << 8) | v;  // Create grayscale pixel value
-        grayscaleImage.setRGB(x, y, grayscaleValue);
+        int grayscaleValue = (v << 16) | (v << 8) | v;
+        resultImage.setRGB(x, y, grayscaleValue);
       }
     }
 
-    return new RGBModel(grayscaleImage);
+    return new RGBModel(resultImage);
   }
 
   public RGBModel visualizeLumaComponent() {
     int width = image.getWidth();
     int height = image.getHeight();
 
-    BufferedImage grayscaleImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    BufferedImage resultImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
 
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         int rgb = image.getRGB(x, y);
-        int r = (rgb >> 16) & 0xFF;  // Red component
-        int g = (rgb >> 8) & 0xFF;   // Green component
-        int b = rgb & 0xFF;          // Blue component
-        int yuvLuma = (int) (0.299 * r + 0.587 * g + 0.114 * b);  // Calculate YUV luma component
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        int luma = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
 
-        int grayscaleValue = (yuvLuma << 16) | (yuvLuma << 8) | yuvLuma;  // Create grayscale pixel value
-        grayscaleImage.setRGB(x, y, grayscaleValue);
+        int grayscaleValue = (luma << 16) | (luma << 8) | luma;  
+        resultImage.setRGB(x, y, grayscaleValue);
       }
     }
 
-    return new RGBModel(grayscaleImage);
+    return new RGBModel(resultImage);
   }
 
   public RGBModel visualizeIntensityComponent() {
     BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-    ColorModel cm = resultImage.getColorModel();
-    WritableRaster raster = resultImage.getRaster();
 
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
@@ -130,8 +132,9 @@ public class RGBModel implements RgbImeModel{
         int red = (pixel >> 16) & 0xFF;
         int green = (pixel >> 8) & 0xFF;
         int blue = pixel & 0xFF;
-        int gray = (int) (0.299 * red + 0.587 * green + 0.114 * blue);
-        raster.setSample(x, y, 0, gray);
+        int intensity =  ( red +  green + blue)/3;
+        int grayscaleValue = (intensity << 16) | (intensity << 8) | intensity;
+        resultImage.setRGB(x, y, grayscaleValue);
       }
     }
     return new RGBModel(resultImage);
@@ -145,7 +148,7 @@ public class RGBModel implements RgbImeModel{
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int pixel = image.getRGB(x, y);
-        resultImage.setRGB(width - 1 - x, y, pixel); // Flip horizontally
+        resultImage.setRGB(width - 1 - x, y, pixel); 
       }
     }
     return new RGBModel(resultImage);
@@ -159,7 +162,7 @@ public class RGBModel implements RgbImeModel{
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int pixel = image.getRGB(x, y);
-        resultImage.setRGB(x, height - 1 - y, pixel); // Flip vertically
+        resultImage.setRGB(x, height - 1 - y, pixel); 
       }
     }
     return new RGBModel(resultImage);
@@ -177,9 +180,9 @@ public class RGBModel implements RgbImeModel{
         int green = (pixel >> 8) & 0xFF;
         int blue = pixel & 0xFF;
 
-        red = Math.min(255, red + increment);
-        green = Math.min(255, green + increment);
-        blue = Math.min(255, blue + increment);
+        red = Math.min(maxPixelValue, red + increment);
+        green = Math.min(maxPixelValue, green + increment);
+        blue = Math.min(maxPixelValue, blue + increment);
 
         int newPixel = (red << 16) | (green << 8) | blue;
         resultImage.setRGB(x, y, newPixel);
@@ -200,9 +203,9 @@ public class RGBModel implements RgbImeModel{
         int green = (pixel >> 8) & 0xFF;
         int blue = pixel & 0xFF;
 
-        red = Math.min(255, red - decrement);
-        green = Math.min(255, green - decrement);
-        blue = Math.min(255, blue - decrement);
+        red = Math.max(0, red - decrement);
+        green = Math.max(0, green - decrement);
+        blue = Math.max(0, blue - decrement);
 
         int newPixel = (red << 16) | (green << 8) | blue;
         resultImage.setRGB(x, y, newPixel);
@@ -233,11 +236,7 @@ public class RGBModel implements RgbImeModel{
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
 
-    // Laplacian Sharpening Kernel (3x3)
     double[][] kernel = {
-            {0.0, -1.0, 0.0},
-            {-1.0, 5.0, -1.0},
-            {0.0, -1.0, 0.0}
     };
 
     applyConvolution(width, height, resultImage, kernel);
@@ -290,7 +289,7 @@ public class RGBModel implements RgbImeModel{
           }
         }
 
-        int newPixel = ((int) red << 16) | ((int) green << 8) | (int) blue;
+        int newPixel = (red << 16) | (green << 8) | blue;
         resultImage.setRGB(x, y, newPixel);
       }
     }

@@ -72,7 +72,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     }
 
     @Override
-    public void split(String imageName, List<String> destComponentImageList)
+    public void splitComponents(String imageName, List<String> destComponentImageList)
             throws IllegalArgumentException{
         destComponentImageList.forEach(this::checkImageNameExists);
         checkImageNameExists(imageName);
@@ -84,7 +84,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     }
 
     @Override
-    public void combine(String destImageName, List<String> componentImageList)
+    public void combineComponents(String destImageName, List<String> componentImageList)
             throws IllegalArgumentException{
         componentImageList.forEach(this::checkImageNameExists);
         checkValidImageName(destImageName);
