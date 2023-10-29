@@ -2,15 +2,17 @@ package Model;
 
 import java.awt.image.BufferedImage;
 
-class RGBModel implements RgbImeModel{
+import DAO.ImageData;
+
+class RGBModelBuffered implements RgbImageModel {
   private BufferedImage image;
   private final int maxPixelValue;
 
-  public RGBModel(BufferedImage image, int maxPixelValue) {
+  public RGBModelBuffered(BufferedImage image, int maxPixelValue) {
     this.image = image;
     this.maxPixelValue = maxPixelValue;
   }
-  public RGBModel(BufferedImage image) {
+  public RGBModelBuffered(BufferedImage image) {
     this.image = image;
     this.maxPixelValue = (int) Math.pow(2,image.getColorModel().getPixelSize())-1;
   }
@@ -24,7 +26,7 @@ class RGBModel implements RgbImeModel{
   }
 
   @Override
-  public RgbImeModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException{
+  public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException{
     switch (componentEnum){
       case RED:
         return visualizeRedComponent();
@@ -43,7 +45,7 @@ class RGBModel implements RgbImeModel{
     }
   }
 
-  public RGBModel visualizeRedComponent() {
+  public RGBModelBuffered visualizeRedComponent() {
     BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType()); // BufferedImage.TYPE_INT_RGB
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
@@ -52,10 +54,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, (red << 16));
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel visualizeGreenComponent() {
+  public RGBModelBuffered visualizeGreenComponent() {
     BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
@@ -64,10 +66,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, (green << 8));
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel visualizeBlueComponent() {
+  public RGBModelBuffered visualizeBlueComponent() {
     BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
     for (int y = 0; y < image.getHeight(); y++) {
       for (int x = 0; x < image.getWidth(); x++) {
@@ -76,10 +78,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, blue);
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel visualizeValueComponent() {
+  public RGBModelBuffered visualizeValueComponent() {
     int width = image.getWidth();
     int height = image.getHeight();
 
@@ -98,10 +100,10 @@ class RGBModel implements RgbImeModel{
       }
     }
 
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel visualizeLumaComponent() {
+  public RGBModelBuffered visualizeLumaComponent() {
     int width = image.getWidth();
     int height = image.getHeight();
 
@@ -120,10 +122,10 @@ class RGBModel implements RgbImeModel{
       }
     }
 
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel visualizeIntensityComponent() {
+  public RGBModelBuffered visualizeIntensityComponent() {
     BufferedImage resultImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 
     for (int y = 0; y < image.getHeight(); y++) {
@@ -137,10 +139,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, grayscaleValue);
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel horizontalFlip() {
+  public RGBModelBuffered horizontalFlip() {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -151,10 +153,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(width - 1 - x, y, pixel); 
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel verticalFlip() {
+  public RGBModelBuffered verticalFlip() {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -165,10 +167,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, height - 1 - y, pixel); 
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel brighten(int increment) {
+  public RGBModelBuffered brighten(int increment) {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -188,10 +190,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, newPixel);
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel darken(int decrement) {
+  public RGBModelBuffered darken(int decrement) {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -211,10 +213,10 @@ class RGBModel implements RgbImeModel{
         resultImage.setRGB(x, y, newPixel);
       }
     }
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel blur() {
+  public RGBModelBuffered blur() {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -228,10 +230,10 @@ class RGBModel implements RgbImeModel{
 
     applyConvolution(width, height, resultImage, kernel);
 
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel sharpen() {
+  public RGBModelBuffered sharpen() {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -241,10 +243,10 @@ class RGBModel implements RgbImeModel{
 
     applyConvolution(width, height, resultImage, kernel);
 
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
   }
 
-  public RGBModel sepia() {
+  public RGBModelBuffered sepia() {
     int width = image.getWidth();
     int height = image.getHeight();
     BufferedImage resultImage = new BufferedImage(width, height, image.getType());
@@ -269,7 +271,17 @@ class RGBModel implements RgbImeModel{
       }
     }
 
-    return new RGBModel(resultImage);
+    return new RGBModelBuffered(resultImage);
+  }
+
+  @Override
+  public ImageData getImageData() {
+    return null;
+  }
+
+  @Override
+  public void loadImageData(ImageData imageData) {
+
   }
 
   private void applyConvolution(int width, int height, BufferedImage resultImage, double[][] kernel) {

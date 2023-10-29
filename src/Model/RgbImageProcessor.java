@@ -1,29 +1,29 @@
 package Model;
 
+import DAO.ImageData;
 import Exceptions.FileFormatNotSupportedException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 public class RgbImageProcessor implements ImageProcessorModel {
-    Map<String, RgbImeModel> imageList;
+    private Map<String, RgbImageModel> imageList;
 
     @Override
-    public void load(String destImageName, String filePath) throws IllegalArgumentException,
-            IOException, FileFormatNotSupportedException {
+    public void addImage(String destImageName, ImageData imageData)
+            throws IllegalArgumentException {
         checkValidImageName(destImageName);
-
-        RgbImeModel imageModel = RgbImageDAO.load(filePath);
+        RgbImageModel imageModel = new RgbImage();
+        imageModel.loadImageData(imageData);
         imageList.put(destImageName,imageModel);
     }
 
     @Override
-    public void save(String imageName, String filePath) throws IllegalArgumentException,
-            IOException, FileFormatNotSupportedException {
+    public ImageData getImageData(String imageName) throws IllegalArgumentException,
+            FileFormatNotSupportedException {
         checkImageNameExists(imageName);
-        RgbImeModel imageModel = imageList.get(imageName);
-        RgbImageDAO.save(filePath, imageModel);
+        RgbImageModel imageModel = imageList.get(imageName);
+        return imageModel.getImageData();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
         checkImageNameExists(imageName);
         ComponentEnum componentEnum = ComponentEnum.valueOf(component);
 
-        RgbImeModel destImage = imageList.get(imageName).visualizeComponent(componentEnum);
+        RgbImageModel destImage = imageList.get(imageName).visualizeComponent(componentEnum);
         imageList.put(destImageName, destImage);
     }
 
@@ -41,7 +41,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     public void horizontalFlip(String imageName, String destImageName) throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).horizontalFlip();
+        RgbImageModel destImage = imageList.get(imageName).horizontalFlip();
         imageList.put(destImageName, destImage);
     }
 
@@ -49,7 +49,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     public void verticalFlip(String imageName, String destImageName) throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).verticalFlip();
+        RgbImageModel destImage = imageList.get(imageName).verticalFlip();
         imageList.put(destImageName, destImage);
     }
 
@@ -58,7 +58,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
             throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).brighten(increment);
+        RgbImageModel destImage = imageList.get(imageName).brighten(increment);
         imageList.put(destImageName, destImage);
     }
 
@@ -67,7 +67,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
             throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).darken(decrement);
+        RgbImageModel destImage = imageList.get(imageName).darken(decrement);
         imageList.put(destImageName, destImage);
     }
 
@@ -76,11 +76,33 @@ public class RgbImageProcessor implements ImageProcessorModel {
             throws IllegalArgumentException{
         destComponentImageList.forEach(this::checkImageNameExists);
         checkImageNameExists(imageName);
+        if(destComponentImageList.size()!=3){
+            throw new IllegalArgumentException("Invalid list of Destination images");
+        }
+        RgbImageModel rgbImageModel = imageList.get(imageName);
+        ImageData imageData = rgbImageModel.getImageData();
+        ChannelModel red = new Channel(imageData.getData()[0]);
+        ChannelModel green = new Channel(imageData.getData()[1]);
+        ChannelModel blue = new Channel(imageData.getData()[2]);
 
-//        List<RgbImeModel> destImageList = imageList.get(imageName).rgbSplit();
-//        imageList.put(destImageNameRed, destImageList.get(0));
-//        imageList.put(destImageNameGreen, destImageList.get(1));
-//        imageList.put(destImageNameBlue, destImageList.get(2));
+        RgbImageModel newRed = new RgbImage(
+                red,
+                new Channel(red.getHeight(),red.getWidth()),
+                new Channel(red.getHeight(),red.getWidth()),
+                imageData.getMaxValue());
+        RgbImageModel newGreen = new RgbImage(
+                new Channel(green.getHeight(),green.getWidth()),
+                green,
+                new Channel(green.getHeight(),green.getWidth()),
+                imageData.getMaxValue());
+        RgbImageModel newBlue = new RgbImage(
+                new Channel(blue.getHeight(),blue.getWidth()),
+                new Channel(blue.getHeight(),blue.getWidth()),
+                blue,
+                imageData.getMaxValue());
+        imageList.put(destComponentImageList.get(0), newRed);
+        imageList.put(destComponentImageList.get(1), newGreen);
+        imageList.put(destComponentImageList.get(2), newBlue);
     }
 
     @Override
@@ -88,24 +110,26 @@ public class RgbImageProcessor implements ImageProcessorModel {
             throws IllegalArgumentException{
         componentImageList.forEach(this::checkImageNameExists);
         checkValidImageName(destImageName);
+        if(componentImageList.size()!=3){
+            throw new IllegalArgumentException("Invalid list of Component images");
+        }
+        ImageData red = imageList.get(componentImageList.get(0)).getImageData();
+        ImageData green = imageList.get(componentImageList.get(1)).getImageData();
+        ImageData blue = imageList.get(componentImageList.get(2)).getImageData();
 
-//        RgbImeModel red = imageList.get(redImage);
-//        RgbImeModel green = imageList.get(greenImage);
-//        RgbImeModel blue = imageList.get(blueImage);
-//        List<RgbImeModel> rgbList = new ArrayList<>();
-//        rgbList.add(red);
-//        rgbList.add(green);
-//        rgbList.add(blue);
-//
-//        RgbImeModel destImage = red.rgbCombine(rgbList);
-//        imageList.put(destImageName, destImage);
+        int[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
+        ImageData newImageData = new ImageData(newData,red.getMaxValue());
+
+        RgbImageModel newImage = new RgbImage();
+        newImage.loadImageData(newImageData);
+        imageList.put(destImageName,newImage);
     }
 
     @Override
     public void blur(String imageName, String destImageName) throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).blur();
+        RgbImageModel destImage = imageList.get(imageName).blur();
         imageList.put(destImageName, destImage);
     }
 
@@ -113,7 +137,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     public void sharpen(String imageName, String destImageName) throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).sharpen();
+        RgbImageModel destImage = imageList.get(imageName).sharpen();
         imageList.put(destImageName, destImage);
     }
 
@@ -121,7 +145,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     public void sepia(String imageName, String destImageName) throws IllegalArgumentException{
         checkValidImageName(destImageName);
         checkImageNameExists(imageName);
-        RgbImeModel destImage = imageList.get(imageName).sepia();
+        RgbImageModel destImage = imageList.get(imageName).sepia();
         imageList.put(destImageName, destImage);
     }
 

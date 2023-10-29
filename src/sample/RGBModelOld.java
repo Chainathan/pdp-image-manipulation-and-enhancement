@@ -1,9 +1,9 @@
 //package sample;
 //
 //import Exceptions.FileFormatNotSupportedException;
-//import sample.ChannelModel;
+//import Model.ChannelModel;
 //import Model.ComponentEnum;
-//import Model.RgbImageDAO;
+//import Controller.RgbImageDAO;
 //import Model.RgbImeModel;
 //
 //import java.io.IOException;

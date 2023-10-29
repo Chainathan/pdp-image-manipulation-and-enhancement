@@ -3,6 +3,7 @@ package Model;
 import java.io.IOException;
 import java.util.List;
 
+import DAO.ImageData;
 import Exceptions.FileFormatNotSupportedException;
 
 public interface ImageProcessorModel {
@@ -10,21 +11,17 @@ public interface ImageProcessorModel {
   /**
    * Load an image from the specified file path.
    *
-   * @param filePath The path to the image file.
-   * @return An ImageModel representing the loaded image.
-   * @throws IOException If an I/O error occurs while loading the image.
-   * @throws FileFormatNotSupportedException If the file format is not supported.
+   * @param imageData The path to the image file.
+   * @throws IllegalArgumentException If the image does not exist.
    */
-  void load(String destImageName, String filePath) throws IOException, FileFormatNotSupportedException;
+  void addImage(String destImageName, ImageData imageData) throws IllegalArgumentException;
 
   /**
    * Save the image model to the specified file path.
    *
-   * @param filePath The path to save the image to.
-   * @throws FileFormatNotSupportedException If the file format is not supported.
-   * @throws IOException If an I/O error occurs while saving the image.
+   * @throws IllegalArgumentException If the image does not exist.
    */
-  void save(String imageName, String filePath) throws FileFormatNotSupportedException, IOException;
+  ImageData getImageData(String imageName) throws IllegalArgumentException;
 
   /**
    * Visualize the image model using the specified component.

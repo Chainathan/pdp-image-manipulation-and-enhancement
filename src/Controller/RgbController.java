@@ -1,18 +1,37 @@
 package Controller;
 
-
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import DAO.ImageData;
+import DAO.ImageDataDAO;
 import Model.ImageProcessorModel;
 
+/*
+* TODO -
+* write save in dao
+* Convolution method.
+* Interface for controller & view.
+* access modifiers.
+* Input output stream.
+* TEST.
+* Error handling.
+* Menu and Exit options?
+*
+* VIEW.
+* */
+
 public class RgbController {
-  ImageProcessorModel rgbImageProcessor;
+  private final ImageProcessorModel rgbImageProcessor;
+  private final ImageDataDAO imageDataDAO;
 
   public RgbController(ImageProcessorModel rgbImageProcessor) {
     this.rgbImageProcessor = rgbImageProcessor;
+    this.imageDataDAO = new ImageDataDAO();
   }
 
   public void run() throws IOException {
@@ -22,101 +41,98 @@ public class RgbController {
     while (true) {
       System.out.print("> ");
       String input = scanner.nextLine();
-      String[] arguments = input.split("\\s+");
-
-      if (arguments.length == 0) {
-        continue;
-      }
-
-      String command = arguments[0].toLowerCase();
-
-      switch (command) {
-        case "load":
-        case "save":
-        case "horizontal-flip":
-        case "vertical-flip":
-          executeBasicCommand(command, arguments);
-          break;
-        case "red-component":
-        case "green-component":
-        case "blue-component":
-        case "value-component":
-        case "luma-component":
-        case "intensity-component":
-        case "brighten":
-        case "darken":
-        case "rgb-split":
-        case "rgb-combine":
-        case "blur":
-        case "sharpen":
-        case "sepia":
-          executeAdvancedCommand(command, arguments);
-          break;
-        case "run":
-          if (arguments.length == 2) {
-            runScript(arguments[1]);
-          } else {
-            System.out.println("Invalid 'run' command syntax.");
-          }
-          break;
-        default:
-          System.out.println("Unknown command: " + command);
-      }
+      processOperation(input);
     }
   }
 
-  private static void runScript(String argument) {
-  }
+  private void processOperation(String operation) throws IOException {
+    String[] arguments = operation.split("\\s+");
+    if (arguments.length == 0) {
+      return;
+    }
+    String command = arguments[0].toLowerCase();
 
-  // Method to execute basic commands
-  private void executeBasicCommand(String command, String[] arguments) throws IOException {
     if (arguments.length == 3) {
-      if ("load".equals(command)) {
-        rgbImageProcessor.load(arguments[1], arguments[2]);
-      } else if ("save".equals(command)) {
-        rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);
-      } else if ("horizontal-flip".equals(command)) {
-        rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);
-      } else if ("vertical-flip".equals(command)) {
-        rgbImageProcessor.verticalFlip(arguments[1], arguments[2]);
-      }
+      executeThreeArgCommand(command,arguments);
+    } else if (arguments.length == 4) {
+      executeFourArgCommand(command,arguments);
+    } else if (arguments.length == 2) {
+      runScript(arguments[1]);
     } else {
-      System.out.println("Invalid '" + command + "' command syntax.");
+      System.out.println("Unknown command: " + command);
     }
   }
 
-  // Method to execute advanced commands
-  private void executeAdvancedCommand(String command, String[] arguments) {
-    if (arguments.length == 4) {
-      if ("red-component".equals(command) || "green-component".equals(command) || "blue-component".equals(command)
-              || "value-component".equals(command) || "luma-component".equals(command)
-              || "intensity-component".equals(command)) {
+  private void runScript(String filePath) throws IOException {
+    Scanner sc = new Scanner(new FileInputStream(filePath));
+    while (sc.hasNextLine()) {
+      String s = sc.nextLine();
+      if (s.charAt(0) != '#') {
+        processOperation(s);
+      }
+    }
+  }
+
+  private void executeFourArgCommand(String command, String[] arguments) {
+    switch (command) {
+      case "red-component":
+      case "green-component":
+      case "blue-component":
+      case "value-component":
+      case "luma-component":
+      case "intensity-component":
         rgbImageProcessor.visualizeComponent(arguments[1], arguments[2], arguments[0]);
-      } else if ("brighten".equals(command)) {
+        break;
+      case "brighten":
         int increment = Integer.parseInt(arguments[1]);
         rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
-      }
-      else if ("darken".equals(command)) {
-        int increment = Integer.parseInt(arguments[1]);
-        rgbImageProcessor.darken(arguments[2], arguments[3], increment);
-      }
-      else if ("rgb-combine".equals(command)) {
+        break;
+      case "darken":
+        int decrement = Integer.parseInt(arguments[1]);
+        rgbImageProcessor.darken(arguments[2], arguments[3], decrement);
+        break;
+      case "rgb-split":
+        List<String> destComponentList = new ArrayList<>();
+        destComponentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
+        rgbImageProcessor.splitComponents(arguments[1], destComponentList);
+        break;
+      case "rgb-combine":
         List<String> componentList = new ArrayList<>();
-        for (int i=2;i<arguments.length;i++){
-          componentList.add(arguments[i]);
-        }
-        rgbImageProcessor.combineComponents(arguments[1],componentList);
-      }
-      else if ("rgb-split".equals(command)) {
-        List<String> componentList = new ArrayList<>();
-        for (int i=2;i<arguments.length;i++){
-          componentList.add(arguments[i]);
-        }
-        rgbImageProcessor.splitComponents(arguments[1],componentList);
-      }
-    } else {
-      System.out.println("Invalid '" + command + "' command syntax.");
+        componentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
+        rgbImageProcessor.combineComponents(arguments[1], componentList);
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
     }
   }
 
+  private void executeThreeArgCommand(String command, String[] arguments) throws IOException {
+    switch (command) {
+      case "load":
+        ImageData imageData = imageDataDAO.load(arguments[1]);
+        rgbImageProcessor.addImage(arguments[2],imageData);
+        break;
+      case "save":
+        ImageData destImageData = rgbImageProcessor.getImageData(arguments[1]);
+        imageDataDAO.save(arguments[2],destImageData);
+        break;
+      case "horizontal-flip":
+        rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);
+        break;
+      case "vertical-flip":
+        rgbImageProcessor.verticalFlip(arguments[1], arguments[2]);
+        break;
+      case "blur":
+        rgbImageProcessor.blur(arguments[1], arguments[2]);
+        break;
+      case "sharpen":
+        rgbImageProcessor.sharpen(arguments[1], arguments[2]);
+        break;
+      case "sepia":
+        rgbImageProcessor.sepia(arguments[1], arguments[2]);
+        break;
+      default:
+        System.out.println("Unknown command: " + command);
+    }
+  }
 }
