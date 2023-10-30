@@ -72,12 +72,14 @@ public interface RgbImageModel {
 
   /**
    * Get the raw data of the image in the form of ImageData object.
+   *
    * @return ImageData object containing the raw data of the image.
    */
   ImageData getImageData();
 
   /**
    * Load the raw data from the ImageData data object into the RgbImageModel.
+   *
    * @param imageData
    */
   void loadImageData(ImageData imageData);

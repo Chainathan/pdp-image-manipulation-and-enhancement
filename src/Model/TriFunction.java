@@ -1,4 +1,5 @@
 package Model;
+
 /**
  * Represents a function that takes three arguments and produces a result.
  *

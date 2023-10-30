@@ -19,8 +19,8 @@ public interface DataDAO {
   /**
    * Save image data to a file.
    *
-   * @param filePath    The path to the file where the image data will be saved.
-   * @param imageModel  The ImageData object containing the data to be saved.
+   * @param filePath   The path to the file where the image data will be saved.
+   * @param imageModel The ImageData object containing the data to be saved.
    * @throws IOException If an error occurs during file writing or saving.
    */
   public void save(String filePath, ImageData imageModel) throws IOException;
