@@ -3,11 +3,12 @@ package Model;
 import DAO.ImageData;
 import Exceptions.FileFormatNotSupportedException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class RgbImageProcessor implements ImageProcessorModel {
-    private Map<String, RgbImageModel> imageList;
+    private final Map<String, RgbImageModel> imageList = new HashMap<>();
 
     @Override
     public void addImage(String destImageName, ImageData imageData)

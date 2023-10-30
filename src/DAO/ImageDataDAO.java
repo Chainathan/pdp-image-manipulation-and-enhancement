@@ -8,17 +8,29 @@ import javax.imageio.ImageIO;
 import Exceptions.FileFormatNotSupportedException;
 import Model.FileFormatEnum;
 import java.awt.Color;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 
-public class ImageDataDAO {
+public class ImageDataDAO implements DataDAO{
 
   public ImageData load(String filePath) throws IOException {
-    String extension = filePath.substring(filePath.lastIndexOf('.'));
-    FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
-    return switch (fileFormatEnum) {
-      case PNG, JPG -> loadGeneralFormat(filePath);
-      case PPM -> loadPPM(filePath);
-      default -> throw new FileFormatNotSupportedException("Unsupported File format");
-    };
+    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".","");;
+    //Check if extension is present in Enum.
+    try{
+      FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
+        switch (fileFormatEnum) {
+            case png:
+            case jpg:
+                return loadGeneralFormat(filePath);
+            case ppm:
+                return loadPPM(filePath);
+            default:
+                throw new FileFormatNotSupportedException("Unsupported File format");
+        }
+    }
+    catch (IllegalArgumentException e){
+      throw new FileFormatNotSupportedException("Unsupported File format");
+    }
   }
 
   private ImageData loadPPM(String filePath) throws IOException {
@@ -39,7 +51,7 @@ public class ImageDataDAO {
     int height = sc.nextInt();
     int maxValue = sc.nextInt();
     //BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    int[][][] imageData = new int[3][width][height];
+    int[][][] imageData = new int[3][height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         int red = sc.nextInt();
@@ -82,7 +94,69 @@ public class ImageDataDAO {
       throw new IOException("Failed to load the image.");
     }
   }
-  public void save(String filePath, ImageData imageModel) throws IOException{
-    // save the image - TODO
+
+  public void save(String filePath, ImageData imageModel) throws IOException, FileFormatNotSupportedException{
+    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".","");
+
+    //Check if extension is present in Enum.
+    try{
+      FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
+        switch (fileFormatEnum) {
+            case png:
+            case jpg:
+                saveGeneralFormat(fileFormatEnum.toString().toUpperCase(), filePath, imageModel);
+                break;
+            case ppm:
+                savePPM(filePath, imageModel);
+                break;
+            default:
+                throw new FileFormatNotSupportedException("Unsupported File format");
+        }
+        ;
+    }
+    catch (IllegalArgumentException e){
+      throw new FileFormatNotSupportedException("Unsupported File format");
+    }
+  }
+
+  public static void savePPM(String filePath, ImageData imageData) throws IOException {
+    int width = imageData.getData()[0].length;
+    int height = imageData.getData().length;
+
+    BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+      // Write the PPM header
+      writer.write("P3\n"); // P3 indicates the PPM format
+      writer.write(width + " " + height + "\n"); // Image dimensions
+      writer.write(imageData.getMaxValue() + "\n"); // Maximum color value
+
+      // Write pixel values
+      for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+          int red = imageData.getData()[0][y][x];
+          int green = imageData.getData()[1][y][x];
+          int blue = imageData.getData()[2][y][x];
+          writer.write(red + " " + green + " " + blue + " ");
+        }
+        writer.write("\n");
+      }
+  }
+
+
+  public static void saveGeneralFormat(String imageFormat,String destinationPath, ImageData imageData) throws IOException {
+    int[][][] pixelValues = imageData.getData();
+    int width = pixelValues[0].length;
+    int height = pixelValues.length;
+
+    BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int rgb = pixelValues[0][y][x] << 16 | pixelValues[1][y][x]<< 8 | pixelValues[2][y][x];
+        image.setRGB(x, y, rgb);
+      }
+    }
+    File outputFile = new File(destinationPath);
+    ImageIO.write(image, imageFormat, outputFile);
+//    System.out.println("Image saved as " + imageFormat + " : " + destinationPath);
   }
 }

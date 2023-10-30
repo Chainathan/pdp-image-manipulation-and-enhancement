@@ -82,7 +82,7 @@ public class RgbImage implements RgbImageModel {
             maxPixelValue);
   }
 
-  private RgbImageModel getLumaComponent(){
+  private RgbImageModel getLumaComponent() throws IllegalArgumentException{
     double[][] buffer = {
             {0.2126,0.7152,0.0722},
             {0.2126,0.7152,0.0722},
@@ -134,7 +134,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel blur() {
+  public RgbImageModel blur() throws IllegalArgumentException{
     double[][] kernel = {
             {1.0 / 16, 1.0 / 8, 1.0 / 16},
             {1.0 / 8, 1.0 / 4, 1.0 / 8},
@@ -148,7 +148,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel sharpen() {
+  public RgbImageModel sharpen() throws IllegalArgumentException{
     double[][] kernel = {
             {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
             {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
@@ -164,7 +164,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel sepia() {
+  public RgbImageModel sepia() throws IllegalArgumentException{
     double[][] buffer = {
             {0.393,0.769,0.189},
             {0.349,0.686,0.168},

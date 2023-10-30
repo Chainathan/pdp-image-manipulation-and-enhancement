@@ -43,12 +43,13 @@ public class Channel implements ChannelModel {
     return newValues;
   }
 
+  //Create a Function for flip and buffer.
   @Override
   public ChannelModel getHorizontalFlipChannel() {
     int[][] newValues = new int[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
-        newValues[getWidth() - 1 - x][y] = channelValues[x][y];
+        newValues[getHeight() - 1 - y][x] = channelValues[y][x];
       }
     }
     return new Channel(newValues);
@@ -59,7 +60,7 @@ public class Channel implements ChannelModel {
     int[][] newValues = new int[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
-        newValues[x][getHeight() - 1 - y] = channelValues[x][y];
+        newValues[y][getWidth() - 1 - x] = channelValues[y][x];
       }
     }
     return new Channel(newValues);
@@ -77,27 +78,36 @@ public class Channel implements ChannelModel {
   }
 
   @Override
-  public ChannelModel applyConvolution(double[][] kernel) {
-    /*int[][] newValues = new int[getHeight()][getWidth()];
-    int kernelSize = kernel.length;
-    int kernelRadius = kernelSize / 2;
+  public ChannelModel applyConvolution(double[][] kernel) throws IllegalArgumentException{
+    //Check if kernel is odd dimension .
+    isKernelValid(kernel);
+    int kernelHeight = kernel.length;
+    int kernelWidth = kernel[0].length;
+    int kernelWidthRadius = kernelWidth/2;
+    int kernelHeightRadius = kernelHeight/2;
+    int[][] newValues = new int[getHeight()-kernelHeight+1][getWidth()-kernelWidth+1];
 
-    for (int y = kernelRadius; y < getHeight() - kernelRadius; y++) {
-      for (int x = kernelRadius; x < getWidth() - kernelRadius; x++) {
+    for (int y = kernelHeightRadius; y < getHeight() - kernelHeightRadius; y++) {
+      for (int x = kernelWidthRadius; x < getWidth() - kernelWidthRadius; x++) {
         int pixel = 0;
 
-        for (int ky = 0; ky < kernelSize; ky++) {
-          for (int kx = 0; kx < kernelSize; kx++) {
-            pixel += channelValues[x + kx - kernelRadius][y + ky - kernelRadius];
+        for (int ky = 0; ky < kernelHeight; ky++) {
+          for (int kx = 0; kx < kernelWidth; kx++) {
+            pixel += (int) (channelValues[y + ky - kernelHeightRadius][x + kx - kernelWidthRadius]
+                    *kernel[kx][ky]);
           }
         }
-        newValues[x][y] = pixel;
+        newValues[y-kernelHeightRadius][x-kernelWidthRadius] = pixel;
       }
     }
-    return new Channel(newValues);*/
-    return null;
+    return new Channel(newValues);
   }
 
+  private void isKernelValid(double[][] kernel) throws IllegalArgumentException{
+    if(kernel.length%2==0 || kernel[0].length%2==0){
+      throw new IllegalArgumentException("Invalid Kernel");
+    }
+  }
   @Override
   public int getHeight() {
     return channelValues.length;

@@ -1,11 +1,11 @@
 package Model;
 
 public enum FileFormatEnum {
-    PNG(".png"),
-    JPG(".jpg"),
-    PPM(".ppm");
+    png,
+    jpg,
+    ppm;
 
-    private final String extension;
+    /*private final String extension;
 
     FileFormatEnum(String extension) {
         this.extension = extension;
@@ -13,7 +13,7 @@ public enum FileFormatEnum {
 
     String getExtension(){
         return extension;
-    }
+    }*/
 
     /*RgbImeModel getImeModel() throws FileFormatNotSupportedException{
         if (this.equals(PNG) || this.equals(JPG) || this.equals(PPM)){

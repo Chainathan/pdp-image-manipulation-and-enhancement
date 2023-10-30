@@ -54,21 +54,21 @@ public interface RgbImageModel {
    *
    * @return An ImeModel representing the blurred image.
    */
-  RgbImageModel blur();
+  RgbImageModel blur() throws IllegalArgumentException;
 
   /**
    * Apply a sharpening effect to the image.
    *
    * @return An ImeModel representing the sharpened image.
    */
-  RgbImageModel sharpen();
+  RgbImageModel sharpen() throws IllegalArgumentException;
 
   /**
    * Apply a sepia tone effect to the image.
    *
    * @return An ImeModel representing the image with sepia tone.
    */
-  RgbImageModel sepia();
+  RgbImageModel sepia() throws IllegalArgumentException;
 
   /**
    * Get the raw data of the image in the form of ImageData object.
