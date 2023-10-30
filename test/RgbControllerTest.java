@@ -112,8 +112,7 @@ public class RgbControllerTest {
         }
 
         //THEN
-        assertEquals("Image Processing Program\n>\n" +
-                "Operation performed successfully\nProgram Terminated",out.toString());
+        assertEquals("Image Processing Program\n> \n" +
+                "Operation performed successfully\n> \nProgram Terminated\n",out.toString());
     }
-
 }
