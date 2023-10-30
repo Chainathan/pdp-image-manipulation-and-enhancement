@@ -1,7 +1,6 @@
 package Controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,31 +9,29 @@ import java.util.Scanner;
 
 import DAO.DataDAO;
 import DAO.ImageData;
-import DAO.ImageDataDAO;
 import Model.ImageProcessorModel;
 import View.ImeTextView;
 
 /*
-* TODO -
-* write save in dao
-* Convolution method.
-* Interface for controller.
-* access modifiers.
-* Input output stream.
-* TEST.
-* Error handling.
-* Menu and Exit options?
-*
-* VIEW.
-* Interface for view.
-* */
+ * TODO -
+ * write save in dao
+ * Convolution method.
+ * Interface for controller.
+ * access modifiers.
+ * Input output stream.
+ * TEST.
+ * Error handling.
+ * Menu and Exit options?
+ *
+ * VIEW.
+ * Interface for view.
+ * */
 
-public class RgbController implements ImageController{
+public class RgbController implements ImageController {
   private final ImageProcessorModel rgbImageProcessor;
   private final DataDAO imageDataDAO;
   private final ImeTextView textView;
   private final Readable in;
-
 
   public RgbController(ImageProcessorModel rgbImageProcessor, ImeTextView textView, DataDAO imageDataDAO, Readable in) {
     this.rgbImageProcessor = rgbImageProcessor;
@@ -43,24 +40,22 @@ public class RgbController implements ImageController{
     this.in = in;
   }
 
-  public void run() throws IOException{
+  public void run() throws IOException {
     Scanner scanner = new Scanner(in);
 
     textView.display("Image Processing Program");
-    while(true) {
-      try{
+    while (true) {
+      try {
         textView.display("> ");
         String input = scanner.nextLine();
         String result = processOperation(input);
-        if(result.equals("exit")){
+        if (result.equals("exit")) {
           textView.display("Program Terminated");
           return;
-        }
-        else{
+        } else {
           textView.display(result);
         }
-      }
-      catch(IllegalArgumentException | IOException e){
+      } catch (IllegalArgumentException | IOException e) {
         textView.display(e.getMessage());
       }
     }
@@ -74,16 +69,15 @@ public class RgbController implements ImageController{
     String command = arguments[0];
 
     if (arguments.length == 3) {
-      return executeThreeArgCommand(command,arguments);
+      return executeThreeArgCommand(command, arguments);
     } else if (arguments.length == 4) {
-      return executeFourArgCommand(command,arguments);
+      return executeFourArgCommand(command, arguments);
     } else if (arguments.length == 2) {
       return runScript(arguments[1]);
-    } else if(arguments.length==1 && arguments[0].equals("exit")){
+    } else if (arguments.length == 1 && arguments[0].equals("exit")) {
       return "exit";
-    }
-    else {
-      return "Unknown command: "+command;
+    } else {
+      return "Unknown command: " + command;
     }
   }
 
@@ -98,7 +92,7 @@ public class RgbController implements ImageController{
     return "";
   }
 
-  private String executeFourArgCommand(String command, String[] arguments) throws IllegalArgumentException{
+  private String executeFourArgCommand(String command, String[] arguments) throws IllegalArgumentException {
     switch (command) {
       case "red-component":
       case "green-component":
@@ -136,11 +130,13 @@ public class RgbController implements ImageController{
     switch (command) {
       case "load":
         ImageData imageData = imageDataDAO.load(arguments[1]);
-        rgbImageProcessor.addImage(arguments[2],imageData);
+        rgbImageProcessor.addImage(arguments[2], imageData);
+//        imageData.printImageData();
         break;
       case "save":
         ImageData destImageData = rgbImageProcessor.getImageData(arguments[2]);
-        imageDataDAO.save(arguments[1],destImageData);
+        imageDataDAO.save(arguments[1], destImageData);
+//        destImageData.printImageData();
         break;
       case "horizontal-flip":
         rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);

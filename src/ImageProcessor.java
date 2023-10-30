@@ -15,10 +15,9 @@ public class ImageProcessor {
     ImeTextView textView = new TextView(System.out);
     DataDAO imageDAO = new ImageDataDAO();
     RgbController controller = new RgbController(model, textView, imageDAO, new InputStreamReader(System.in));
-    try{
+    try {
       controller.run();
-    }
-    catch (IOException e){
+    } catch (IOException e) {
       System.out.println(e.getMessage());
     }
   }

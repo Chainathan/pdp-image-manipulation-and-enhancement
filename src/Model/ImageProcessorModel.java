@@ -1,10 +1,8 @@
 package Model;
 
-import java.io.IOException;
 import java.util.List;
 
 import DAO.ImageData;
-import Exceptions.FileFormatNotSupportedException;
 
 public interface ImageProcessorModel {
 

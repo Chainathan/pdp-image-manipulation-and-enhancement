@@ -12,9 +12,10 @@ class RGBModelBuffered implements RgbImageModel {
     this.image = image;
     this.maxPixelValue = maxPixelValue;
   }
+
   public RGBModelBuffered(BufferedImage image) {
     this.image = image;
-    this.maxPixelValue = (int) Math.pow(2,image.getColorModel().getPixelSize())-1;
+    this.maxPixelValue = (int) Math.pow(2, image.getColorModel().getPixelSize()) - 1;
   }
 
   public BufferedImage getImage() {
@@ -26,8 +27,8 @@ class RGBModelBuffered implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException{
-    switch (componentEnum){
+  public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
+    switch (componentEnum) {
       case RED:
         return visualizeRedComponent();
       case GREEN:
@@ -117,7 +118,7 @@ class RGBModelBuffered implements RgbImageModel {
         int b = rgb & 0xFF;
         int luma = (int) (0.2126 * r + 0.7152 * g + 0.0722 * b);
 
-        int grayscaleValue = (luma << 16) | (luma << 8) | luma;  
+        int grayscaleValue = (luma << 16) | (luma << 8) | luma;
         resultImage.setRGB(x, y, grayscaleValue);
       }
     }
@@ -134,7 +135,7 @@ class RGBModelBuffered implements RgbImageModel {
         int red = (pixel >> 16) & 0xFF;
         int green = (pixel >> 8) & 0xFF;
         int blue = pixel & 0xFF;
-        int intensity =  ( red +  green + blue)/3;
+        int intensity = (red + green + blue) / 3;
         int grayscaleValue = (intensity << 16) | (intensity << 8) | intensity;
         resultImage.setRGB(x, y, grayscaleValue);
       }
@@ -150,7 +151,7 @@ class RGBModelBuffered implements RgbImageModel {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int pixel = image.getRGB(x, y);
-        resultImage.setRGB(width - 1 - x, y, pixel); 
+        resultImage.setRGB(width - 1 - x, y, pixel);
       }
     }
     return new RGBModelBuffered(resultImage);
@@ -164,7 +165,7 @@ class RGBModelBuffered implements RgbImageModel {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         int pixel = image.getRGB(x, y);
-        resultImage.setRGB(x, height - 1 - y, pixel); 
+        resultImage.setRGB(x, height - 1 - y, pixel);
       }
     }
     return new RGBModelBuffered(resultImage);

@@ -1,9 +1,9 @@
 package Model;
 
 public enum FileFormatEnum {
-    png,
-    jpg,
-    ppm;
+  png,
+  jpg,
+  ppm;
 
     /*private final String extension;
 

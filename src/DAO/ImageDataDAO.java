@@ -1,34 +1,38 @@
 package DAO;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileInputStream;
+
 import javax.imageio.ImageIO;
+
 import Exceptions.FileFormatNotSupportedException;
 import Model.FileFormatEnum;
+
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
-public class ImageDataDAO implements DataDAO{
+public class ImageDataDAO implements DataDAO {
 
   public ImageData load(String filePath) throws IOException {
-    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".","");;
+    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".", "");
+    ;
     //Check if extension is present in Enum.
-    try{
+    try {
       FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
-        switch (fileFormatEnum) {
-            case png:
-            case jpg:
-                return loadGeneralFormat(filePath);
-            case ppm:
-                return loadPPM(filePath);
-            default:
-                throw new FileFormatNotSupportedException("Unsupported File format");
-        }
-    }
-    catch (IllegalArgumentException e){
+      switch (fileFormatEnum) {
+        case png:
+        case jpg:
+          return loadGeneralFormat(filePath);
+        case ppm:
+          return loadPPM(filePath);
+        default:
+          throw new FileFormatNotSupportedException("Unsupported File format");
+      }
+    } catch (IllegalArgumentException e) {
       throw new FileFormatNotSupportedException("Unsupported File format");
     }
   }
@@ -64,8 +68,9 @@ public class ImageDataDAO implements DataDAO{
         imageData[2][i][j] = blue;
       }
     }
-    return new ImageData(imageData,maxValue); //new RGBModel(image, maxValue);
+    return new ImageData(imageData, maxValue); //new RGBModel(image, maxValue);
   }
+
   private static ImageData loadGeneralFormat(String filePath) throws IOException {
     File imageFile = new File(filePath);
 
@@ -89,32 +94,31 @@ public class ImageDataDAO implements DataDAO{
           imageData[2][i][j] = blue;
         }
       }
-      return new ImageData(imageData,(int) Math.pow(2,image.getColorModel().getPixelSize())-1);
+      return new ImageData(imageData, (int) Math.pow(2, image.getColorModel().getPixelSize()) - 1);
     } else {
       throw new IOException("Failed to load the image.");
     }
   }
 
-  public void save(String filePath, ImageData imageModel) throws IOException, FileFormatNotSupportedException{
-    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".","");
+  public void save(String filePath, ImageData imageModel) throws IOException, FileFormatNotSupportedException {
+    String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".", "");
 
     //Check if extension is present in Enum.
-    try{
+    try {
       FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
-        switch (fileFormatEnum) {
-            case png:
-            case jpg:
-                saveGeneralFormat(fileFormatEnum.toString().toUpperCase(), filePath, imageModel);
-                break;
-            case ppm:
-                savePPM(filePath, imageModel);
-                break;
-            default:
-                throw new FileFormatNotSupportedException("Unsupported File format");
-        }
-        ;
-    }
-    catch (IllegalArgumentException e){
+      switch (fileFormatEnum) {
+        case png:
+        case jpg:
+          saveGeneralFormat(fileFormatEnum.toString().toUpperCase(), filePath, imageModel);
+          break;
+        case ppm:
+          savePPM(filePath, imageModel);
+          break;
+        default:
+          throw new FileFormatNotSupportedException("Unsupported File format");
+      }
+      ;
+    } catch (IllegalArgumentException e) {
       throw new FileFormatNotSupportedException("Unsupported File format");
     }
   }
@@ -124,34 +128,35 @@ public class ImageDataDAO implements DataDAO{
     int height = imageData.getData().length;
 
     BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-      // Write the PPM header
-      writer.write("P3\n"); // P3 indicates the PPM format
-      writer.write(width + " " + height + "\n"); // Image dimensions
-      writer.write(imageData.getMaxValue() + "\n"); // Maximum color value
+    // Write the PPM header
+    writer.write("P3\n"); // P3 indicates the PPM format
+    writer.write(width + " " + height + "\n"); // Image dimensions
+    writer.write(imageData.getMaxValue() + "\n"); // Maximum color value
 
-      // Write pixel values
-      for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-          int red = imageData.getData()[0][y][x];
-          int green = imageData.getData()[1][y][x];
-          int blue = imageData.getData()[2][y][x];
-          writer.write(red + " " + green + " " + blue + " ");
-        }
-        writer.write("\n");
+    // Write pixel values
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        int red = imageData.getData()[0][y][x];
+        int green = imageData.getData()[1][y][x];
+        int blue = imageData.getData()[2][y][x];
+        writer.write(red + " " + green + " " + blue + " ");
       }
+      writer.write("\n");
+    }
   }
 
 
-  public static void saveGeneralFormat(String imageFormat,String destinationPath, ImageData imageData) throws IOException {
+  public static void saveGeneralFormat(String imageFormat, String destinationPath, ImageData imageData)
+          throws IOException {
     int[][][] pixelValues = imageData.getData();
-    int width = pixelValues[0].length;
-    int height = pixelValues.length;
+    int width = pixelValues[0][0].length;
+    int height = pixelValues[0].length;
 
     BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int rgb = pixelValues[0][y][x] << 16 | pixelValues[1][y][x]<< 8 | pixelValues[2][y][x];
+        int rgb = pixelValues[0][y][x] << 16 | pixelValues[1][y][x] << 8 | pixelValues[2][y][x];
         image.setRGB(x, y, rgb);
       }
     }
