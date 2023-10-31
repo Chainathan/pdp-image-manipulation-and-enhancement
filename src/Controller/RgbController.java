@@ -46,14 +46,17 @@ public class RgbController implements ImageController {
     textView.display("Image Processing Program");
     while (true) {
       try {
-        textView.display("> ");
-        String input = scanner.nextLine();
-        String result = processOperation(input);
-        if (result.equals("exit")) {
-          textView.display("Program Terminated");
-          return;
-        } else {
-          textView.display(result);
+        textView.displayInLine("> ");
+        while (scanner.hasNextLine()){
+          String input = scanner.nextLine();
+          String result = processOperation(input);
+          if (result.equals("exit")) {
+            textView.display("Program Terminated");
+            return;
+          } else if (!result.isBlank()){
+            textView.display(result);
+          }
+          textView.displayInLine("> ");
         }
       } catch (IllegalArgumentException | IOException e) {
         textView.display(e.getMessage());
@@ -62,22 +65,30 @@ public class RgbController implements ImageController {
   }
 
   private String processOperation(String operation) throws IOException, IllegalArgumentException {
-    String[] arguments = operation.split("\\s+");
-    if (arguments.length == 0) {
+    String[] arguments = operation.trim().split("\\s+");
+    System.out.println("arg length "+arguments.length);
+    if (arguments.length == 0 || arguments[0].startsWith("#") || arguments[0].isBlank()) {
       return "";
     }
     String command = arguments[0];
+    StringBuilder sb = new StringBuilder("Command: "+command);
+    for (int i = 1; i < arguments.length; i++) {
+      sb.append(", arg "+i+" : ").append(arguments[i]);
+    }
+    System.out.println(sb);
 
     if (arguments.length == 3) {
       return executeThreeArgCommand(command, arguments);
     } else if (arguments.length == 4) {
       return executeFourArgCommand(command, arguments);
+    } else if (arguments.length == 5) {
+      return executeFiveArgCommand(command, arguments);
     } else if (arguments.length == 2) {
       return runScript(arguments[1]);
     } else if (arguments.length == 1 && arguments[0].equals("exit")) {
       return "exit";
     } else {
-      return "Unknown command: " + command;
+      return "Unknown Operation: " + operation;
     }
   }
 
@@ -85,31 +96,15 @@ public class RgbController implements ImageController {
     Scanner sc = new Scanner(new FileInputStream(filePath));
     while (sc.hasNextLine()) {
       String s = sc.nextLine();
-      if (s.charAt(0) != '#') {
-        return processOperation(s);
-      }
+//      if (s.charAt(0) != '#') {
+        processOperation(s);
+//      }
     }
     return "";
   }
 
-  private String executeFourArgCommand(String command, String[] arguments) throws IllegalArgumentException {
+  private String executeFiveArgCommand(String command, String[] arguments) throws IllegalArgumentException {
     switch (command) {
-      case "red-component":
-      case "green-component":
-      case "blue-component":
-      case "value-component":
-      case "luma-component":
-      case "intensity-component":
-        rgbImageProcessor.visualizeComponent(arguments[1], arguments[2], arguments[0]);
-        break;
-      case "brighten":
-        int increment = Integer.parseInt(arguments[1]);
-        rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
-        break;
-      case "darken":
-        int decrement = Integer.parseInt(arguments[1]);
-        rgbImageProcessor.darken(arguments[2], arguments[3], decrement);
-        break;
       case "rgb-split":
         List<String> destComponentList = new ArrayList<>();
         destComponentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
@@ -119,6 +114,22 @@ public class RgbController implements ImageController {
         List<String> componentList = new ArrayList<>();
         componentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
         rgbImageProcessor.combineComponents(arguments[1], componentList);
+        break;
+      default:
+        return "Unknown command: " + command;
+    }
+    return "Operation performed successfully";
+  }
+
+  private String executeFourArgCommand(String command, String[] arguments) throws IllegalArgumentException {
+    switch (command) {
+      case "brighten":
+        int increment = Integer.parseInt(arguments[1]);
+        rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
+        break;
+      case "darken":
+        int decrement = Integer.parseInt(arguments[1]);
+        rgbImageProcessor.darken(arguments[2], arguments[3], decrement);
         break;
       default:
         return "Unknown command: " + command;
@@ -143,6 +154,14 @@ public class RgbController implements ImageController {
         break;
       case "vertical-flip":
         rgbImageProcessor.verticalFlip(arguments[1], arguments[2]);
+        break;
+      case "red-component":
+      case "green-component":
+      case "blue-component":
+      case "value-component":
+      case "luma-component":
+      case "intensity-component":
+        rgbImageProcessor.visualizeComponent(arguments[1], arguments[2], arguments[0]);
         break;
       case "blur":
         rgbImageProcessor.blur(arguments[1], arguments[2]);

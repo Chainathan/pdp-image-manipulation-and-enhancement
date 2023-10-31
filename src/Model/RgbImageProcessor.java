@@ -17,6 +17,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     RgbImageModel imageModel = new RgbImage();
     imageModel.loadImageData(imageData);
     imageList.put(destImageName, imageModel);
+    System.out.println(imageData.getMaxValue());
   }
 
   @Override
@@ -32,7 +33,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
           throws IllegalArgumentException {
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    ComponentEnum componentEnum = ComponentEnum.valueOf(component);
+    ComponentEnum componentEnum = ComponentEnum.fromString(component);
 
     RgbImageModel destImage = imageList.get(imageName).visualizeComponent(componentEnum);
     imageList.put(destImageName, destImage);
@@ -75,7 +76,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
   @Override
   public void splitComponents(String imageName, List<String> destComponentImageList)
           throws IllegalArgumentException {
-    destComponentImageList.forEach(this::checkImageNameExists);
+    destComponentImageList.forEach(RgbImageProcessor::checkValidImageName);
     checkImageNameExists(imageName);
     if (destComponentImageList.size() != 3) {
       throw new IllegalArgumentException("Invalid list of Destination images");
@@ -101,6 +102,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
             new Channel(blue.getHeight(), blue.getWidth()),
             blue,
             imageData.getMaxValue());
+
     imageList.put(destComponentImageList.get(0), newRed);
     imageList.put(destComponentImageList.get(1), newGreen);
     imageList.put(destComponentImageList.get(2), newBlue);

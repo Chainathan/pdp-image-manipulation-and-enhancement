@@ -54,8 +54,17 @@ public class RgbControllerTest {
     }
     @Override
     public void addImage(String destImageName, ImageData imageData) throws IllegalArgumentException {
-        log.append("Dest Image Name : "+destImageName+"\nImage Data : "+imageData.getData()
-        +"\nMax Pixel Size : "+imageData.getMaxValue());
+      log.append("Dest Image Name : "+destImageName+"\nImage Data : ");
+      int width = imageData.getData()[0][0].length;
+      int height = imageData.getData()[0].length;
+      for(int k=0;k<3;k++) {
+        for (int i = 0; i < height; i++) {
+          for (int j = 0; j < width; j++) {
+            log.append(imageData.getData()[k][i][j] + " ");
+          }
+        }
+      }
+        log.append("\nMax Pixel Size : "+imageData.getMaxValue());
     }
 
     @Override
@@ -124,12 +133,24 @@ public class RgbControllerTest {
         DataDAO imageDataDAO = new MockImageDataDAO(daoLog);
         ImeTextView textView = new TextView(out);
         ImageController rgbController = new RgbController(rgbImageProcess, textView, imageDataDAO, in);
+        StringBuilder expected = new StringBuilder();
         int[][][] expectedData = {
                 {{1,2,3,4}, {5,6,7,8}, {9,10,11,12}},
                 {{5,6,7,8}, {1,2,3,4}, {9,10,11,12}},
                 {{1,2,3,4}, {9,10,11,12}, {5,6,7,8}}
         };
         int expectedMaxValue = 255;
+      expected.append("Dest Image Name : imageName\nImage Data : ");
+      int width = expectedData[0][0].length;
+      int height = expectedData[0].length;
+      for(int k=0;k<3;k++) {
+        for (int i = 0; i < height; i++) {
+          for (int j = 0; j < width; j++) {
+            expected.append(expectedData[k][i][j] + " ");
+          }
+        }
+      }
+      expected.append("\nMax Pixel Size : 255");
 
         //WHEN
         try{
@@ -143,7 +164,8 @@ public class RgbControllerTest {
         assertEquals("Image Processing Program\n> \n" +
                 "Operation performed successfully\n> \nProgram Terminated\n",out.toString());
         assertEquals("FilePath : filePath",daoLog.toString());
-        assertEquals("Dest Image Name : imageName\nImage Data : "+expectedData
-                +"\nMax Pixel Size : 255",modelLog.toString());
+//        System.out.println("Expected :"+expected);
+//        System.out.println("Model :"+modelLog.toString());
+        assertEquals(expected.toString(),modelLog.toString());
     }
 }

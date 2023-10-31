@@ -123,13 +123,13 @@ public class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel darken(int decrement) throws IllegalArgumentException {
-    if (decrement > 0) {
-      throw new IllegalArgumentException("Decrement should be non positive");
+    if (decrement < 0) {
+      throw new IllegalArgumentException("Decrement should be non negative");
     }
     return new RgbImage(
-            red.addBuffer(decrement, maxPixelValue),
-            green.addBuffer(decrement, maxPixelValue),
-            blue.addBuffer(decrement, maxPixelValue),
+            red.addBuffer(-decrement, maxPixelValue),
+            green.addBuffer(-decrement, maxPixelValue),
+            blue.addBuffer(-decrement, maxPixelValue),
             maxPixelValue);
   }
 
