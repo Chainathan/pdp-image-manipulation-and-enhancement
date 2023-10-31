@@ -12,11 +12,11 @@ public class Channel implements ChannelModel {
   }
 
   public Channel(int[][] channelValues) {
+    checkRectangularArray(channelValues);
     if(channelValues.length == 0){
       this.channelValues = new int[0][0];
     }
     else{
-      checkRectangularArray(channelValues);
       this.channelValues = new int[channelValues.length][channelValues[0].length];
       for (int i = 0; i < channelValues.length; i++) {
         System.arraycopy(channelValues[i], 0, this.channelValues[i], 0, channelValues[0].length);
@@ -127,7 +127,10 @@ public class Channel implements ChannelModel {
   }
 
   @Override
-  public int getValue(int x, int y) {
-    return channelValues[x][y];
+  public int getValue(int y, int x) throws IllegalArgumentException{
+    if(y >= getHeight() || x >= getWidth()){
+      throw new IllegalArgumentException("Invalid pixel values for the image.");
+    }
+    return channelValues[y][x];
   }
 }

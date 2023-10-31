@@ -10,6 +10,7 @@ import java.util.Scanner;
 import DAO.DataDAO;
 import DAO.ImageData;
 import Model.ImageProcessorModel;
+import Model.RgbImage;
 import View.ImeTextView;
 
 /*

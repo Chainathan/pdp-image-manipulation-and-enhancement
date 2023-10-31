@@ -27,9 +27,9 @@ public class ChannelTest {
             {7, 8, 9}
     };
     int[][] expectedValues = {
-            {3, 2, 1},
-            {6, 5, 4},
-            {9, 8, 7}
+            {7, 8, 9},
+            {4, 5, 6},
+            {1, 2, 3}
     };
     ChannelModel channel = new Channel(values);
     ChannelModel flippedChannel = channel.getHorizontalFlipChannel();
@@ -45,9 +45,9 @@ public class ChannelTest {
             {7, 8, 9}
     };
     int[][] expectedValues = {
-            {7, 8, 9},
-            {4, 5, 6},
-            {1, 2, 3}
+            {3, 2, 1},
+            {6, 5, 4},
+            {9, 8, 7}
     };
     ChannelModel channel = new Channel(values);
     ChannelModel flippedChannel = channel.getVerticalFlipChannel();
@@ -66,9 +66,9 @@ public class ChannelTest {
     int buffer = 10;
     int maxPixelValue = 255;
     int[][] expectedValues = {
-            {11, 12, 13},
-            {14, 15, 16},
-            {17, 18, 19}
+            {110, 210, 130},
+            {160, 255, 255},
+            {10, 120, 255}
     };
     ChannelModel channel = new Channel(values);
     ChannelModel bufferedChannel = channel.addBuffer(buffer, maxPixelValue);

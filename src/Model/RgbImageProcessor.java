@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public class RgbImageProcessor implements ImageProcessorModel {
-  private final Map<String, RgbImageModel> imageList = new HashMap<>();
+  private final Map<String, RgbImageModel> imageList;
 
+  public RgbImageProcessor(){
+    imageList = new HashMap<>();
+  }
   @Override
   public void addImage(String destImageName, ImageData imageData)
           throws IllegalArgumentException {

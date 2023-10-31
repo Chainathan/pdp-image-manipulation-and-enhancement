@@ -8,8 +8,9 @@ public interface ImageProcessorModel {
 
   /**
    * Load an image from the specified file path.
-   *
+   * @param destImageName
    * @param imageData The path to the image file.
+   * @param imageModel
    * @throws IllegalArgumentException If the image does not exist.
    */
   void addImage(String destImageName, ImageData imageData) throws IllegalArgumentException;

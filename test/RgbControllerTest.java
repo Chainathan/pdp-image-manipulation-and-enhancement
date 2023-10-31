@@ -4,6 +4,7 @@ import DAO.DataDAO;
 import DAO.ImageData;
 import DAO.ImageDataDAO;
 import Model.ImageProcessorModel;
+import Model.RgbImageModel;
 import Model.RgbImageProcessor;
 import View.ImeTextView;
 import View.TextView;
@@ -65,6 +66,7 @@ public class RgbControllerTest {
         }
       }
         log.append("\nMax Pixel Size : "+imageData.getMaxValue());
+      //log for imageModel also.
     }
 
     @Override

@@ -17,7 +17,7 @@ public class RgbImage implements RgbImageModel {
     maxPixelValue = 255;
   }
 
-  RgbImage(ChannelModel red, ChannelModel green, ChannelModel blue, int maxPixelValue)
+  public RgbImage(ChannelModel red, ChannelModel green, ChannelModel blue, int maxPixelValue)
           throws IllegalArgumentException {
     if (red.getHeight() != green.getHeight() || red.getHeight() != blue.getHeight()
             || red.getWidth() != green.getWidth() || red.getWidth() != blue.getWidth()) {

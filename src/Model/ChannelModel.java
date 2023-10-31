@@ -63,5 +63,5 @@ public interface ChannelModel {
    * @param y row value.
    * @return
    */
-  int getValue(int x, int y);
+  int getValue(int x, int y) throws IllegalArgumentException;
 }
