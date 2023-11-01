@@ -127,9 +127,14 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException {
-    if (buffer.length != 3 || buffer[0].length != 3) {
+    if (buffer.length != 3) {
       throw new IllegalArgumentException("Invalid tone buffer");
     }
+      for (double[] doubles : buffer) {
+          if (doubles.length != 3) {
+              throw new IllegalArgumentException("Invalid tone buffer");
+          }
+      }
     int[][] newRed = new int[red.getHeight()][red.getWidth()];
     int[][] newGreen = new int[red.getHeight()][red.getWidth()];
     int[][] newBlue = new int[red.getHeight()][red.getWidth()];
@@ -175,23 +180,23 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public void loadImageData(ImageData imageData) throws IllegalArgumentException {
-    checkValidImageData(imageData);
+    checkValidRgbImageData(imageData);
     red = new Channel(imageData.getData()[0]);
     green = new Channel(imageData.getData()[1]);
     blue = new Channel(imageData.getData()[2]);
     this.maxPixelValue = imageData.getMaxValue();
   }
 
-  private void checkValidImageData(ImageData imageData) throws IllegalArgumentException {
+  private void checkValidRgbImageData(ImageData imageData) throws IllegalArgumentException {
     int[][][] data = imageData.getData();
-    if (imageData.getMaxValue() < 0) {
-      throw new IllegalArgumentException("Invalid Maximum pixel value");
-    }
-    if (data == null || data.length != 3) {
+//    if (imageData.getMaxValue() < 0) {
+//      throw new IllegalArgumentException("Invalid Maximum pixel value");
+//    }
+    if (data.length != 3) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");
     }
-    for (int[][] channelValues : data) {
-      Channel.checkRectangularArray(channelValues);
-    }
+//    for (int[][] channelValues : data) {
+//      Channel.checkRectangularArray(channelValues);
+//    }
   }
 }

@@ -8,7 +8,21 @@ public class ImageData {
   private final int[][][] data;
   private final int maxValue;
 
-  public ImageData(int[][][] data, int maxValue) {
+  public ImageData(int[][][] data, int maxValue) throws IllegalArgumentException{
+    if(data==null){
+      throw new IllegalArgumentException("Raw image data cannot be null");
+    }
+    if(maxValue<0){
+      throw new IllegalArgumentException("Max value of an image cannot be negative");
+    }
+    for(int i=1;i<data.length;i++){
+      if(data[i].length!=data[0].length){
+        throw new IllegalArgumentException("Channel Heights are not same");
+      }
+    }
+    for (int[][] channelValues : data) {
+      Channel.checkRectangularArray(channelValues);
+    }
     this.data = data;
     this.maxValue = maxValue;
   }
@@ -24,7 +38,7 @@ public class ImageData {
     int[][][] copy = new int[data.length][data[0].length][data[0][0].length];
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data[0].length; j++) {
-        System.arraycopy(data[i][j], 0, copy[i][j], 0, data[0][0].length);
+        System.arraycopy(data[i][j], 0, copy[i][j], 0, data[i][j].length);
       }
     }
     return copy;

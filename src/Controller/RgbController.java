@@ -47,7 +47,8 @@ public class RgbController implements ImageController {
         String result = processOperation(s);
         if (result.equals("exit")) {
           textView.display("Program Terminated");
-          System.exit(0);
+//          System.exit(0);
+          break;
         } else if (!result.isBlank()) {
           textView.display(result);
         }
@@ -70,12 +71,15 @@ public class RgbController implements ImageController {
     if (operation.isBlank()){
       return "";
     }
-
-    String[] arguments = operation.trim().split("\\s+");
-    System.out.println("arg length "+arguments.length);
+    operation = operation.trim();
+    String[] arguments = operation.split("\\s+");
+//    System.out.println("arg length "+arguments.length);
+//    System.out.println("arg1 : "+arguments[0].equals("random"));
+//    System.out.println("arg2 : "+arguments[2].equals("arg2"));
+//    System.out.println("arg length "+arguments.length);
     String command = arguments[0];
     String result;
-
+    //Should we create Enum for IO Operations : copy, update can also come.
     if (operation.startsWith("load ")
             || operation.startsWith("save ")
             || operation.startsWith("run ")){

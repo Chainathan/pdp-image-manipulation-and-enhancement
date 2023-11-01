@@ -113,26 +113,23 @@ public class RgbImageTest {
     }
 
     private void assertUtility(RgbImageModel actualImage){
-        int[][] expectedChannel = {
-                {11,12,13},
-                {14,15,16},
-                {17,18,19},
-                {20,21,22}
+        int[][][] expectedImage = {
+                {{11,12,13},
+                        {14,15,16},
+                        {17,18,19},
+                        {20,21,22}},
+                {{11,12,13},
+                        {14,15,16},
+                        {17,18,19},
+                        {20,21,22}},
+                {{11,12,13},
+                        {14,15,16},
+                        {17,18,19},
+                        {20,21,22}}
+
+
         };
-        int[][][] actual =  actualImage.getImageData().getData();
-        int height = actual[0].length;
-        int width = actual[0][0].length;
-        //THEN
-        assertEquals(255,actualImage.getImageData().getMaxValue());
-        assertEquals(expectedChannel.length, height);
-        assertEquals(expectedChannel[0].length, width);
-        for(int i=0;i< height;i++){
-            for(int j=0;j<width;j++){
-                assertEquals(expectedChannel[i][j],actual[0][i][j]);
-                assertEquals(expectedChannel[i][j],actual[1][i][j]);
-                assertEquals(expectedChannel[i][j],actual[2][i][j]);
-            }
-        }
+        assertImages(expectedImage,actualImage);
     }
 
     @Test
@@ -165,7 +162,7 @@ public class RgbImageTest {
         );
 
         //WHEN
-        RgbImageModel actualImageModel = rgbImage.brighten(50);
+        RgbImageModel actualImageModel = rgbImage.brighten(-50);
         //THEN
         assertEquals("Buffer : -50 Max pixel value : 255",log.toString());
         assertUtility(actualImageModel);
@@ -236,11 +233,11 @@ public class RgbImageTest {
         expectedLog.append("} \nMax Pixel Size : 255");
 
         //WHEN
-        RgbImageModel sharpenedImage = rbgImage.applyFilter(kernel);
+        RgbImageModel filteredImage = rbgImage.applyFilter(kernel);
 
         //THEN
         assertEquals(expectedLog.toString(),log.toString());
-        assertUtility(sharpenedImage);
+        assertUtility(filteredImage);
     }
 
     @Test
@@ -282,6 +279,45 @@ public class RgbImageTest {
         //WHEN
         RgbImageModel tonedImage = rbgImage.applyTone(buffer);
         assertImages(expectedImage, tonedImage);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testApplyToneForBufferHeightNotThree(){
+        //GIVEN
+        StringBuilder log = new StringBuilder();
+        RgbImageModel rbgImage = new RgbImage(
+                new MockChannel(log),
+                new MockChannel(new StringBuilder()),
+                new MockChannel(new StringBuilder()),
+                255
+        );
+        double[][] buffer = {
+                {1,0,2},
+                {0,1,2}
+        };
+
+        //WHEN
+        rbgImage.applyTone(buffer);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testApplyToneForBufferWidthtNotThree(){
+        //GIVEN
+        StringBuilder log = new StringBuilder();
+        RgbImageModel rbgImage = new RgbImage(
+                new MockChannel(log),
+                new MockChannel(new StringBuilder()),
+                new MockChannel(new StringBuilder()),
+                255
+        );
+        double[][] buffer = {
+                {1,0,2},
+                {0,1,2},
+                {1,1}
+        };
+
+        //WHEN
+        rbgImage.applyTone(buffer);
     }
 
     private void assertImages(int[][][] expectedImage, RgbImageModel rgbImageModel){
@@ -604,7 +640,34 @@ public class RgbImageTest {
     }
 
     @Test
-    public void testLoadImageData(){
+    public void testLoadImageDataForInvalidRgb(){
+        try{
+            RgbImageModel rgbImageModel = new RgbImage();
+            int[][][] values = {
+                    {
+                            {1,2,3},
+                            {4,5,6},
+                            {7,8,9},
+                            {10,11,12}
+                    },
+                    {
+                            {1,2,3},
+                            {4,5,6},
+                            {7,8,9},
+                            {10,11,12}
+                    }
+            };
+            ImageData imageData = new ImageData(values,255);
+            rgbImageModel.loadImageData(imageData);
+            fail("Above line should throw an exception.");
+        }
+        catch (IllegalArgumentException e){
+            //Exception catched.
+        }
+    }
+
+    @Test
+    public void testLoadImageDataForValidRgb(){
         try{
             RgbImageModel rgbImageModel = new RgbImage();
             int[][][] values = {
@@ -624,15 +687,14 @@ public class RgbImageTest {
                             {1,2,3},
                             {4,5,6},
                             {7,8,9},
-                            {10,11}
+                            {10,11,12}
                     }
             };
             ImageData imageData = new ImageData(values,255);
             rgbImageModel.loadImageData(imageData);
-            fail("Above line should throw an exception.");
         }
         catch (IllegalArgumentException e){
-            //Exception catched.
+            fail("Above line should throw an exception.");
         }
     }
 }
