@@ -5,7 +5,9 @@ load "images/koala.ppm" koala
 save "images/test blank/koalaTest.png" koala
 load "images/test blank/koalaTest.png" koala koala
 
-load images/test/koalaTestBright.png koala
+
+
+load images/test/koalaTestBright.png koala #gg
 save images/test/koalaTestOverwrite.png koala
 
 load images/manhatten/manhattan-small.png koala

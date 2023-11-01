@@ -2,15 +2,12 @@ package Model;
 
 import java.util.List;
 
-import DAO.ImageData;
-
 public interface ImageProcessorModel {
 
   /**
    * Load an image from the specified file path.
    * @param destImageName
    * @param imageData The path to the image file.
-   * @param imageModel
    * @throws IllegalArgumentException If the image does not exist.
    */
   void addImage(String destImageName, ImageData imageData) throws IllegalArgumentException;
@@ -53,15 +50,6 @@ public interface ImageProcessorModel {
    * @throws IllegalArgumentException If the increment argument is negative.
    */
   void brighten(String imageName, String destImageName, int increment) throws IllegalArgumentException;
-
-  /**
-   * Darken the image by the decrement value.
-   *
-   * @param decrement decrement value to be applied to each pixel.
-   * @return An ImeModel representing the darkened image.
-   * @throws IllegalArgumentException If the decrement argument is negative.
-   */
-  void darken(String imageName, String destImageName, int decrement) throws IllegalArgumentException;
 
   /**
    * Split the image into multiple grayscale-images based on the channels

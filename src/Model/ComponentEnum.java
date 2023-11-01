@@ -3,7 +3,7 @@ package Model;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum ComponentEnum {
+enum ComponentEnum {
   RED("red-component"),
   GREEN("green-component"),
   BLUE("blue-component"),
@@ -24,7 +24,7 @@ public enum ComponentEnum {
     this.componentString = componentString;
   }
 
-  public static ComponentEnum fromString(String componentString) {
+  static ComponentEnum fromString(String componentString) {
     return stringToEnum.get(componentString);
   }
 }

@@ -1,12 +1,10 @@
 package Model;
 
-import DAO.ImageData;
-
 /**
  * The ImeModel interface defines the core functionality for working with image models.
  * Implementations of this interface provide methods to load, save, manipulate, and visualize image data.
  */
-public interface RgbImageModel {
+interface RgbImageModel {
 
   /**
    * Visualize the image model using the specified component.
@@ -38,37 +36,16 @@ public interface RgbImageModel {
    * @return An ImeModel representing the brightened image.
    * @throws IllegalArgumentException If the increment argument is negative.
    */
-  RgbImageModel brighten(int increment) throws IllegalArgumentException;
+  RgbImageModel brighten(int increment);
 
-  /**
-   * Darken the image by the decrement value.
-   *
-   * @param decrement decrement value to be applied to each pixel.
-   * @return An ImeModel representing the darkened image.
-   * @throws IllegalArgumentException If the decrement argument is negative.
-   */
-  RgbImageModel darken(int decrement) throws IllegalArgumentException;
-
-  /**
-   * Apply a blur effect to the image.
-   *
-   * @return An ImeModel representing the blurred image.
-   */
-  RgbImageModel blur() throws IllegalArgumentException;
-
-  /**
-   * Apply a sharpening effect to the image.
-   *
-   * @return An ImeModel representing the sharpened image.
-   */
-  RgbImageModel sharpen() throws IllegalArgumentException;
+  RgbImageModel applyFilter(double kernel[][]) throws IllegalArgumentException;
 
   /**
    * Apply a sepia tone effect to the image.
    *
    * @return An ImeModel representing the image with sepia tone.
    */
-  RgbImageModel sepia() throws IllegalArgumentException;
+  RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException;
 
   /**
    * Get the raw data of the image in the form of ImageData object.

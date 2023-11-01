@@ -9,7 +9,7 @@ package Model;
  * @param <R> the type of the result
  */
 @FunctionalInterface
-public interface TriFunction<T, U, V, R> {
+interface TriFunction<T, U, V, R> {
   /**
    * Applies this function to the given arguments.
    *

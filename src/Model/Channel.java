@@ -1,17 +1,20 @@
 package Model;
 
-public class Channel implements ChannelModel {
+class Channel implements ChannelModel {
   private final int[][] channelValues;
 
-  public Channel() {
+  Channel() {
     channelValues = new int[0][0];
   }
 
-  public Channel(int height, int width) {
+  Channel(int height, int width) throws IllegalArgumentException {
+    if (height < 0 || width <0){
+      throw new IllegalArgumentException("Invalid height and width for Channel");
+    }
     channelValues = new int[height][width];
   }
 
-  public Channel(int[][] channelValues) {
+  Channel(int[][] channelValues) throws IllegalArgumentException {
     checkRectangularArray(channelValues);
     if(channelValues.length == 0){
       this.channelValues = new int[0][0];
@@ -86,22 +89,24 @@ public class Channel implements ChannelModel {
 
   @Override
   public ChannelModel applyConvolution(double[][] kernel, int maxPixelValue) throws IllegalArgumentException {
-    //Check if kernel is odd dimension .
     isKernelValid(kernel);
     int kernelHeight = kernel.length;
     int kernelWidth = kernel[0].length;
     int kernelWidthRadius = kernelWidth / 2;
     int kernelHeightRadius = kernelHeight / 2;
-    int[][] newValues = new int[getHeight() - kernelHeight + 1][getWidth() - kernelWidth + 1];
+    int[][] newValues = new int[getHeight()][getWidth()];
 
-    for (int y = kernelHeightRadius; y < getHeight() - kernelHeightRadius; y++) {
-      for (int x = kernelWidthRadius; x < getWidth() - kernelWidthRadius; x++) {
+    for (int y = 0; y < getHeight(); y++) {
+      for (int x = 0; x < getWidth(); x++) {
         int pixel = 0;
 
         for (int ky = 0; ky < kernelHeight; ky++) {
           for (int kx = 0; kx < kernelWidth; kx++) {
-            pixel += (int) (channelValues[y + ky - kernelHeightRadius][x + kx - kernelWidthRadius]
-                    * kernel[ky][kx]);
+            int inputX = x - kernelWidthRadius + kx;
+            int inputY = y - kernelHeightRadius + ky;
+            if (inputX >= 0 && inputX < getWidth() && inputY >= 0 && inputY < getHeight()) {
+              pixel += (int) Math.round(channelValues[inputY][inputX] * kernel[ky][kx]);
+            }
           }
         }
         newValues[y - kernelHeightRadius][x - kernelWidthRadius] = Math.max(Math.min(pixel, maxPixelValue), 0);
@@ -128,7 +133,7 @@ public class Channel implements ChannelModel {
 
   @Override
   public int getValue(int y, int x) throws IllegalArgumentException{
-    if(y >= getHeight() || x >= getWidth()){
+    if(y >= getHeight() || y<0 || x >= getWidth() || x<0){
       throw new IllegalArgumentException("Invalid pixel values for the image.");
     }
     return channelValues[y][x];

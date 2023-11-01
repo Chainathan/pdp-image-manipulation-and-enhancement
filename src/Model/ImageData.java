@@ -1,4 +1,4 @@
-package DAO;
+package Model;
 
 /**
  * The ImageData class represents a generic image containing pixel data.

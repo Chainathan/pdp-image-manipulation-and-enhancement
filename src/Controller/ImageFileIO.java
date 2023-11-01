@@ -1,11 +1,14 @@
-package DAO;
+package Controller;
 
 import java.io.IOException;
+
+import Exceptions.FileFormatNotSupportedException;
+import Model.ImageData;
 
 /**
  * The DataDAO interface defines methods for loading and saving image data.
  */
-public interface DataDAO {
+interface ImageFileIO {
 
   /**
    * Load image data from a file.
@@ -14,7 +17,7 @@ public interface DataDAO {
    * @return An ImageData object containing the loaded image data.
    * @throws IOException If an error occurs during file reading or loading.
    */
-  public ImageData load(String filePath) throws IOException;
+  ImageData load(String filePath) throws IOException, FileFormatNotSupportedException;
 
   /**
    * Save image data to a file.
@@ -23,5 +26,5 @@ public interface DataDAO {
    * @param imageModel The ImageData object containing the data to be saved.
    * @throws IOException If an error occurs during file writing or saving.
    */
-  public void save(String filePath, ImageData imageModel) throws IOException;
+  void save(String filePath, ImageData imageModel) throws IOException, FileFormatNotSupportedException;
 }

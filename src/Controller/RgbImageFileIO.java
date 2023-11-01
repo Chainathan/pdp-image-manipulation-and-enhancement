@@ -1,36 +1,28 @@
-package DAO;
+package Controller;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferDouble;
-import java.awt.image.DataBufferFloat;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DataBufferShort;
-import java.awt.image.DataBufferUShort;
-import java.awt.image.Raster;
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.io.FileInputStream;
 
 import javax.imageio.ImageIO;
 
 import Exceptions.FileFormatNotSupportedException;
-import Model.FileFormatEnum;
+import Model.ImageData;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 
-public class ImageDataDAO implements DataDAO {
+class RgbImageFileIO implements ImageFileIO {
 
-  public ImageData load(String filePath) throws IOException {
+  @Override
+  public ImageData load(String filePath) throws IOException, FileFormatNotSupportedException {
     String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".", "");
-    ;
-    //Check if extension is present in Enum.
     try {
       FileFormatEnum fileFormatEnum = FileFormatEnum.valueOf(extension);
       switch (fileFormatEnum) {
@@ -57,28 +49,33 @@ public class ImageDataDAO implements DataDAO {
       }
     }
     sc = new Scanner(builder.toString());
-    String token = sc.next();
-    if (!token.equals("P3")) {
-      throw new IOException("Invalid PPM file: plain RAW file should begin with P3");
-    }
-    int width = sc.nextInt();
-    int height = sc.nextInt();
-    int maxValue = sc.nextInt();
-    //BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    int[][][] imageData = new int[3][height][width];
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        int red = sc.nextInt();
-        int green = sc.nextInt();
-        int blue = sc.nextInt();
-//        int rgb = (red << 16) | (green << 8) | blue;
-        //image.setRGB(i, j, rgb);
-        imageData[0][i][j] = red;
-        imageData[1][i][j] = green;
-        imageData[2][i][j] = blue;
+    try {
+      String token = sc.next();
+      if (!token.equals("P3")) {
+        throw new IOException("Invalid PPM file: plain RAW file should begin with P3");
       }
+      int width = sc.nextInt();
+      int height = sc.nextInt();
+      int maxValue = sc.nextInt();
+      int[][][] imageData = new int[3][height][width];
+      for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+          int red = sc.nextInt();
+          int green = sc.nextInt();
+          int blue = sc.nextInt();
+          if (red < 0 || green < 0 || blue < 0 || red > maxValue || green > maxValue || blue > maxValue) {
+            throw new IOException("Corrupted PPM file");
+          }
+          imageData[0][i][j] = red;
+          imageData[1][i][j] = green;
+          imageData[2][i][j] = blue;
+        }
+      }
+      return new ImageData(imageData, maxValue);
     }
-    return new ImageData(imageData, maxValue); //new RGBModel(image, maxValue);
+    catch(NoSuchElementException e){
+      throw new IOException("Corrupted PPM file");
+    }
   }
 
   private static ImageData loadGeneralFormat(String filePath) throws IOException {
@@ -213,6 +210,7 @@ public class ImageDataDAO implements DataDAO {
     }
   }
 
+  @Override
   public void save(String filePath, ImageData imageModel) throws IOException, FileFormatNotSupportedException {
     String extension = filePath.substring(filePath.lastIndexOf('.')).replace(".", "");
 
@@ -236,7 +234,7 @@ public class ImageDataDAO implements DataDAO {
     }
   }
 
-  public static void savePPM(String filePath, ImageData imageData) throws IOException {
+  private void savePPM(String filePath, ImageData imageData) throws IOException {
     int width = imageData.getData()[0].length;
     int height = imageData.getData().length;
 
@@ -257,8 +255,7 @@ public class ImageDataDAO implements DataDAO {
     }
   }
 
-
-  public static void saveGeneralFormat(String imageFormat, String destinationPath, ImageData imageData)
+  private void saveGeneralFormat(String imageFormat, String destinationPath, ImageData imageData)
           throws IOException {
     int[][][] pixelValues = imageData.getData();
     int width = pixelValues[0][0].length;

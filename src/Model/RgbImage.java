@@ -1,26 +1,24 @@
 package Model;
 
-import DAO.ImageData;
+class RgbImage implements RgbImageModel {
 
-public class RgbImage implements RgbImageModel {
-
-  //private List<ChannelModel> channelList;
   private ChannelModel red;
   private ChannelModel green;
   private ChannelModel blue;
   private int maxPixelValue;
 
-  public RgbImage() {
+  RgbImage() {
     red = new Channel();
     green = new Channel();
     blue = new Channel();
     maxPixelValue = 255;
   }
 
-  public RgbImage(ChannelModel red, ChannelModel green, ChannelModel blue, int maxPixelValue)
+  RgbImage(ChannelModel red, ChannelModel green, ChannelModel blue, int maxPixelValue)
           throws IllegalArgumentException {
     if (red.getHeight() != green.getHeight() || red.getHeight() != blue.getHeight()
-            || red.getWidth() != green.getWidth() || red.getWidth() != blue.getWidth()) {
+            || red.getWidth() != green.getWidth() || red.getWidth() != blue.getWidth()
+    || maxPixelValue < 0) {
       throw new IllegalArgumentException("Invalid Channel Size");
     }
     this.red = red;
@@ -110,10 +108,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel brighten(int increment) throws IllegalArgumentException {
-    if (increment < 0) {
-      throw new IllegalArgumentException("Increment should be non negative");
-    }
+  public RgbImageModel brighten(int increment){
     return new RgbImage(
             red.addBuffer(increment, maxPixelValue),
             green.addBuffer(increment, maxPixelValue),
@@ -122,24 +117,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel darken(int decrement) throws IllegalArgumentException {
-    if (decrement < 0) {
-      throw new IllegalArgumentException("Decrement should be non negative");
-    }
-    return new RgbImage(
-            red.addBuffer(-decrement, maxPixelValue),
-            green.addBuffer(-decrement, maxPixelValue),
-            blue.addBuffer(-decrement, maxPixelValue),
-            maxPixelValue);
-  }
-
-  @Override
-  public RgbImageModel blur() throws IllegalArgumentException {
-    double[][] kernel = {
-            {1.0 / 16, 1.0 / 8, 1.0 / 16},
-            {1.0 / 8, 1.0 / 4, 1.0 / 8},
-            {1.0 / 16, 1.0 / 8, 1.0 / 16}
-    };
+  public RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException {
     return new RgbImage(
             red.applyConvolution(kernel, maxPixelValue),
             green.applyConvolution(kernel, maxPixelValue),
@@ -148,32 +126,7 @@ public class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel sharpen() throws IllegalArgumentException {
-    double[][] kernel = {
-            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
-            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
-            {-1.0 / 8, 1.0 / 4, 1.0, 1.0 / 4, -1.0 / 8},
-            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
-            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8}
-    };
-    return new RgbImage(
-            red.applyConvolution(kernel, maxPixelValue),
-            green.applyConvolution(kernel, maxPixelValue),
-            blue.applyConvolution(kernel, maxPixelValue),
-            maxPixelValue);
-  }
-
-  @Override
-  public RgbImageModel sepia() throws IllegalArgumentException {
-    double[][] buffer = {
-            {0.393, 0.769, 0.189},
-            {0.349, 0.686, 0.168},
-            {0.272, 0.534, 0.131}
-    };
-    return applyTone(buffer);
-  }
-
-  private RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException {
+  public RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException {
     if (buffer.length != 3 || buffer[0].length != 3) {
       throw new IllegalArgumentException("Invalid tone buffer");
     }
@@ -199,8 +152,11 @@ public class RgbImage implements RgbImageModel {
                 buffer[2][0] * redValue + buffer[2][1] * greenValue + buffer[2][2] * blueValue
         );
         newBlue[i][j] = Math.max(Math.min(newBlue[i][j], maxPixelValue), 0);
+
       }
     }
+
+
     return new RgbImage(
             new Channel(newRed),
             new Channel(newGreen),

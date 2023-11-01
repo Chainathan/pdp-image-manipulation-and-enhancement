@@ -1,6 +1,6 @@
 package Model;
 
-public interface ChannelModel {
+interface ChannelModel {
   /**
    * Get the array values of pixel data of the channel.
    *

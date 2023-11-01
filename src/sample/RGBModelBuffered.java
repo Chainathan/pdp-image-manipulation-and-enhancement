@@ -1,8 +1,10 @@
-package Model;
+/*package sample;
 
 import java.awt.image.BufferedImage;
 
-import DAO.ImageData;
+import Model.ComponentEnum;
+import Model.ImageData;
+import Model.RgbImageModel;
 
 class RGBModelBuffered implements RgbImageModel {
   private BufferedImage image;
@@ -307,5 +309,6 @@ class RGBModelBuffered implements RgbImageModel {
       }
     }
   }
-}
 
+}
+*/

@@ -1,6 +1,5 @@
 package Model;
 
-import DAO.ImageData;
 import Exceptions.FileFormatNotSupportedException;
 
 import java.util.HashMap;
@@ -9,7 +8,6 @@ import java.util.Map;
 
 public class RgbImageProcessor implements ImageProcessorModel {
   private final Map<String, RgbImageModel> imageList;
-
   public RgbImageProcessor(){
     imageList = new HashMap<>();
   }
@@ -20,7 +18,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     RgbImageModel imageModel = new RgbImage();
     imageModel.loadImageData(imageData);
     imageList.put(destImageName, imageModel);
-    System.out.println(imageData.getMaxValue());
+//    System.out.println(imageData.getMaxValue());
   }
 
   @Override
@@ -68,18 +66,9 @@ public class RgbImageProcessor implements ImageProcessorModel {
   }
 
   @Override
-  public void darken(String imageName, String destImageName, int decrement)
-          throws IllegalArgumentException {
-    checkValidImageName(destImageName);
-    checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).darken(decrement);
-    imageList.put(destImageName, destImage);
-  }
-
-  @Override
   public void splitComponents(String imageName, List<String> destComponentImageList)
           throws IllegalArgumentException {
-    destComponentImageList.forEach(RgbImageProcessor::checkValidImageName);
+    destComponentImageList.forEach(this::checkValidImageName);
     checkImageNameExists(imageName);
     if (destComponentImageList.size() != 3) {
       throw new IllegalArgumentException("Invalid list of Destination images");
@@ -133,29 +122,46 @@ public class RgbImageProcessor implements ImageProcessorModel {
 
   @Override
   public void blur(String imageName, String destImageName) throws IllegalArgumentException {
+    double[][] blurKernel = {
+            {1.0 / 16, 1.0 / 8, 1.0 / 16},
+            {1.0 / 8, 1.0 / 4, 1.0 / 8},
+            {1.0 / 16, 1.0 / 8, 1.0 / 16}
+    };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).blur();
+    RgbImageModel destImage = imageList.get(imageName).applyFilter(blurKernel);
     imageList.put(destImageName, destImage);
   }
 
   @Override
   public void sharpen(String imageName, String destImageName) throws IllegalArgumentException {
+    double[][] sharpenKernel = {
+            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8}
+    };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).sharpen();
+    RgbImageModel destImage = imageList.get(imageName).applyFilter(sharpenKernel);
     imageList.put(destImageName, destImage);
   }
 
   @Override
   public void sepia(String imageName, String destImageName) throws IllegalArgumentException {
+    double[][] buffer = {
+            {0.393, 0.769, 0.189},
+            {0.349, 0.686, 0.168},
+            {0.272, 0.534, 0.131}
+    };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).sepia();
+    RgbImageModel destImage = imageList.get(imageName).applyTone(buffer);
     imageList.put(destImageName, destImage);
   }
 
-  private static void checkValidImageName(String imageName) throws IllegalArgumentException {
+  private void checkValidImageName(String imageName) throws IllegalArgumentException {
     if (imageName.trim().isEmpty()) {
       throw new IllegalArgumentException("Invalid image name");
     }

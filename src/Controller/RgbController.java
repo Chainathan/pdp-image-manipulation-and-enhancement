@@ -7,101 +7,91 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-import DAO.DataDAO;
-import DAO.ImageData;
+import Model.ImageData;
 import Model.ImageProcessorModel;
-import Model.RgbImage;
 import View.ImeTextView;
 
 /*
  * TODO -
- * write save in dao
- * Convolution method.
- * Interface for controller.
- * access modifiers.
- * Input output stream.
- * TEST.
  * Error handling.
- * Menu and Exit options?
+ *
+ * TEST.
  *
  * VIEW.
  * Interface for view.
+ * Input output stream.
  * */
 
 public class RgbController implements ImageController {
   private final ImageProcessorModel rgbImageProcessor;
-  private final DataDAO imageDataDAO;
+  private final ImageFileIO imageImageFileIO;
   private final ImeTextView textView;
   private final Readable in;
 
-  public RgbController(ImageProcessorModel rgbImageProcessor, ImeTextView textView, DataDAO imageDataDAO, Readable in) {
+  public RgbController(ImageProcessorModel rgbImageProcessor, ImeTextView textView, Readable in) {
     this.rgbImageProcessor = rgbImageProcessor;
-    this.imageDataDAO = imageDataDAO;
+    this.imageImageFileIO = new RgbImageFileIO();
     this.textView = textView;
     this.in = in;
   }
 
   public void run() throws IOException {
+    textView.display("Image Processing program started");
     Scanner scanner = new Scanner(in);
-
-    textView.display("Image Processing Program");
-    while (true) {
+    function(scanner);
+  }
+  private void function(Scanner sc) throws IOException, IllegalArgumentException {
+    while (sc.hasNextLine()) {
+      String s = sc.nextLine();
       try {
-        textView.displayInLine("> ");
-        while (scanner.hasNextLine()){
-          String input = scanner.nextLine();
-          String result = processOperation(input);
-          if (result.equals("exit")) {
-            textView.display("Program Terminated");
-            return;
-          } else if (!result.isBlank()){
-            textView.display(result);
-          }
-          textView.displayInLine("> ");
+        String result = processOperation(s);
+        if (result.equals("exit")) {
+          textView.display("Program Terminated");
+          System.exit(0);
+        } else if (!result.isBlank()) {
+          textView.display(result);
         }
-      } catch (IllegalArgumentException | IOException e) {
+      }
+      catch (Exception e){
         textView.display(e.getMessage());
       }
     }
   }
-
-  private String processOperation(String operation) throws IOException, IllegalArgumentException {
-    String[] arguments = operation.trim().split("\\s+");
-    System.out.println("arg length "+arguments.length);
-    if (arguments.length == 0 || arguments[0].startsWith("#") || arguments[0].isBlank()) {
-      return "";
-    }
-    String command = arguments[0];
-    StringBuilder sb = new StringBuilder("Command: "+command);
-    for (int i = 1; i < arguments.length; i++) {
-      sb.append(", arg "+i+" : ").append(arguments[i]);
-    }
-    System.out.println(sb);
-
-    if (arguments.length == 3) {
-      return executeThreeArgCommand(command, arguments);
-    } else if (arguments.length == 4) {
-      return executeFourArgCommand(command, arguments);
-    } else if (arguments.length == 5) {
-      return executeFiveArgCommand(command, arguments);
-    } else if (arguments.length == 2) {
-      return runScript(arguments[1]);
-    } else if (arguments.length == 1 && arguments[0].equals("exit")) {
-      return "exit";
-    } else {
-      return "Unknown Operation: " + operation;
-    }
-  }
-
   private String runScript(String filePath) throws IOException, IllegalArgumentException {
     Scanner sc = new Scanner(new FileInputStream(filePath));
-    while (sc.hasNextLine()) {
-      String s = sc.nextLine();
-//      if (s.charAt(0) != '#') {
-        processOperation(s);
-//      }
+    function(sc);
+    return "Run Script Operation successful";
+  }
+
+  private String processOperation(String operation) throws IOException, IllegalArgumentException {
+    if (operation.contains("#")) {
+      operation = operation.substring(0, operation.indexOf("#"));
     }
-    return "";
+    if (operation.isBlank()){
+      return "";
+    }
+
+    String[] arguments = operation.trim().split("\\s+");
+    System.out.println("arg length "+arguments.length);
+    String command = arguments[0];
+    String result;
+
+    if (operation.startsWith("load ")
+            || operation.startsWith("save ")
+            || operation.startsWith("run ")){
+      result =  executeIOOperation(command, arguments);
+    } else if (arguments.length == 3) {
+      result =  executeThreeArgCommand(command, arguments);
+    } else if (arguments.length == 4) {
+      result =  executeFourArgCommand(command, arguments);
+    } else if (arguments.length == 5) {
+      result =  executeFiveArgCommand(command, arguments);
+    } else if (arguments.length == 1 && arguments[0].equals("exit")) {
+      result =  "exit";
+    } else {
+      result =  "Unknown Operation: " + operation;
+    }
+    return result;
   }
 
   private String executeFiveArgCommand(String command, String[] arguments) throws IllegalArgumentException {
@@ -119,7 +109,7 @@ public class RgbController implements ImageController {
       default:
         return "Unknown command: " + command;
     }
-    return "Operation performed successfully";
+    return command+" Operation performed successfully";
   }
 
   private String executeFourArgCommand(String command, String[] arguments) throws IllegalArgumentException {
@@ -128,28 +118,58 @@ public class RgbController implements ImageController {
         int increment = Integer.parseInt(arguments[1]);
         rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
         break;
-      case "darken":
-        int decrement = Integer.parseInt(arguments[1]);
-        rgbImageProcessor.darken(arguments[2], arguments[3], decrement);
-        break;
       default:
         return "Unknown command: " + command;
     }
-    return "Operation performed successfully";
+    return command+" Operation performed successfully";
   }
 
-  private String executeThreeArgCommand(String command, String[] arguments) throws IOException, IllegalArgumentException {
+  private String executeIOOperation(String command, String[] arguments) throws IOException {
+    String filePath = arguments[1];
+    int filePathEndIndex = 1;
+    if (arguments[1].startsWith("\"")){
+      StringBuilder sb = new StringBuilder();
+      for (int i = 1; i < arguments.length; i++) {
+        sb.append(arguments[i]).append(" ");
+        filePathEndIndex = i;
+        if (arguments[i].endsWith("\"")){
+          break;
+        }
+      }
+      filePath = sb.toString().trim();
+      if (!filePath.endsWith("\"")){
+        return "Invalid Command";
+      }
+      filePath = filePath.replaceAll("\"","");
+    }
     switch (command) {
       case "load":
-        ImageData imageData = imageDataDAO.load(arguments[1]);
-        rgbImageProcessor.addImage(arguments[2], imageData);
-//        imageData.printImageData();
+        if (filePathEndIndex!=arguments.length-2){
+          return "Invalid Command";
+        }
+        String imageName = arguments[arguments.length-1];
+        ImageData imageData = imageImageFileIO.load(filePath);
+        rgbImageProcessor.addImage(imageName, imageData);
         break;
       case "save":
-        ImageData destImageData = rgbImageProcessor.getImageData(arguments[2]);
-        imageDataDAO.save(arguments[1], destImageData);
-//        destImageData.printImageData();
+        if (filePathEndIndex!=arguments.length-2){
+          return "Invalid Command";
+        }
+        String destImageName = arguments[arguments.length-1];
+        ImageData destImageData = rgbImageProcessor.getImageData(destImageName);
+        imageImageFileIO.save(filePath, destImageData);
         break;
+      case "run":
+        if (filePathEndIndex!=arguments.length-1){
+          return "Invalid Command";
+        }
+        return runScript(filePath);
+    }
+    return command+" Operation performed successfully";
+  }
+  private String executeThreeArgCommand(String command, String[] arguments)
+          throws IllegalArgumentException {
+    switch (command) {
       case "horizontal-flip":
         rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);
         break;
@@ -176,6 +196,6 @@ public class RgbController implements ImageController {
       default:
         return "Unknown command: " + command;
     }
-    return "Operation performed successfully";
+    return command+" Operation performed successfully";
   }
 }
