@@ -74,6 +74,46 @@ public class ImageProcessor {
   }
 }
 ```
+## Supported Command Instructions
+
+The program supports loading, manipulating and saving images using simple text-based commands. Here is a list of example test commands the are supported. The program supports this syntax exactly.
+
+1. `load image-path image-name`: Load an image from the specified path and refer it to henceforth in the program by the given image name.
+
+2. `save image-path image-name`: Save the image with the given name to the specified path which should include the name of the file.
+
+3. `red-component image-name dest-image-name`: Create an image with the red-component of the image with the given name, and refer to it henceforth in the program by the given destination name. Similar commands for green, blue, value, luma, intensity components are supported.
+
+4. `horizontal-flip image-name dest-image-name`: Flip an image horizontally to create a new image, referred to henceforth by the given destination name.
+
+5. `vertical-flip image-name dest-image-name`: Flip an image vertically to create a new image, referred to henceforth by the given destination name.
+
+6. `brighten increment image-name dest-image-name`: brighten the image by the given increment to create a new image, referred to henceforth by the given destination name. The increment may be positive (brightening) or negative (darkening).
+
+7. `rgb-split image-name dest-image-name-red dest-image-name-green dest-image-name-blue`: split the given image into three images containing its red, green and blue components respectively. These would be the same images that would be individually produced with the red-component, green-component and blue-component commands. If duplicate dest-image-name are provided, the duplicate image name will be overridden with the last corresponding component's data. 
+
+8. `rgb-combine image-name red-image green-image blue-image`: Combine the three images that are individually red, green and blue into a single image that gets its red, green and blue components from the three images respectively.
+
+9. `blur image-name dest-image-name`: blur the given image and store the result in another image with the given name.
+
+10. `sharpen image-name dest-image-name`: sharpen the given image and store the result in another image with the given name.
+
+11. `sepia image-name dest-image-name`: produce a sepia-toned version of the given image and store the result in another image with the given name.
+
+12. `run script-file-path`: Load and run the script commands in the specified file.
+
+13. `exit`: To terminate the program.
+
+### Note
+
+1. `image-path`, `script-file-path` : File path should be enclosed in double quotes if the file path contains whitespaces. This is optional if there are no whitespaces present. 
+The file path should contain the relative path of the file from the context of program's root folder.
+2. Supported image formats: PPM, PNG, JPG.
+3. Supported script file format: TXT.
+4. `image-name` : Image name cannot be empty, contain whitespaces, and line breaks.
+5. The program supports single-line comments. Comments can be added by using '#' before starting the comment.
+6. Inputs should be separated by line breaks for each operation.
+
 ---
 ## Run A Script
 
@@ -92,6 +132,7 @@ the given image leo.png. The results are saved in `res/` directory.
 The image used in this project is an original work and is owned by [Aathira Sunil Pillai]. [Aathira Sunil Pillai] authorizes its use in this project.
 
 ![Image Description](res/leo.png)
+
 
 ## Authors
 
