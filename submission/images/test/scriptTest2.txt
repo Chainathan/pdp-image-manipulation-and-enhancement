@@ -1,0 +1,14 @@
+#combine them back, but by using the brightened red we get a red tint
+rgb-combine koala-red-tint koala-red-bright koala-green koala-blue
+save images/temp/koalaTestTint.png koala-red-tint
+
+sepia koala koala-sepia
+save images/temp/koalaTestSepia.png koala-sepia
+blur koala koala-blur
+save images/temp/koalaTestBlur.png koala-blur
+sharpen koala koala-sharpen
+save images/temp/koalaTestSharpen.png koala-sharpen
+
+save \"images/test blank/koalaTestTint.ppm\" koala-red-tint
+load \"images/test blank/koalaTestTint.ppm\" koala
+save \"images/temp/koalaTestOverwriteBlankNameSpace.png\" koala

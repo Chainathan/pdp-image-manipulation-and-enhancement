@@ -1,0 +1,53 @@
+load images/test/test.ppm koala
+save images/temp/koalaTest.png koala #load koala.ppm and call it 'koala'
+save images/temp/koalaTest.jpg koala #save jpg
+save images/temp/koalaTest.ppm koala
+
+#Brighten
+brighten 50 koala koala-brighter
+save images/temp/koalaTestBright.png koala-brighter
+
+brighten -50 koala koala-darker
+save images/temp/koalaTestDark.png koala-darker
+
+brighten -50 koala-brighter koala-brighter-darker
+save images/temp/koalaTestBrightDark.png koala-brighter-darker
+
+vertical-flip koala koala-vertical
+save images/temp/koalaTestVertical.png koala-vertical
+
+horizontal-flip koala-vertical koala-vertical-horizontal
+save images/temp/koalaTestVerticalHorizontal.png koala-vertical-horizontal
+
+#Component visualization
+value-component koala koala-value
+save images/temp/koalaTestValue.png koala-value
+
+intensity-component koala koala-intensity
+save images/temp/koalaTestIntensity.png koala-intensity
+
+luma-component koala koala-luma
+save images/temp/koalaTestLuma.png koala-luma
+
+red-component koala koala-red
+save images/temp/koalaTestRed.png koala-red
+green-component koala koala-green
+save images/temp/koalaTestGreen.png koala-green
+blue-component koala koala-blue
+save images/temp/koalaTestBlue.png koala-blue
+
+#split
+rgb-split koala koala-red koala-green koala-blue
+save images/temp/koalaTestSplitRed.png koala-red
+save images/temp/koalaTestSplitGreen.png koala-green
+save images/temp/koalaTestSplitBlue.png koala-blue
+
+#combine
+rgb-combine koala-combine koala-red koala-green koala-blue
+save images/temp/koalaTestCombine.png koala-combine
+
+#brighten just the red image
+brighten 50 koala-red koala-red-bright
+save images/temp/koalaTestSplitRedBr.png koala-red-bright
+
+run images/test/scriptTest2.txt
