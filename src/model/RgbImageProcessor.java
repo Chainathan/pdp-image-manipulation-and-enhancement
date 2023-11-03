@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class represents a list of images.
+ * This class represents a rgb model that manages a set of rgb images associated with specific
+ * and unique names and provides operations for performing various
+ * manipulations on the available images.
  */
 public class RgbImageProcessor implements ImageProcessorModel {
   private final Map<String, RgbImageModel> imageList;
 
   /**
-   * Constructs an empty imageList.
+   * Constructs an empty set of rgb images with key as image name
+   * and value as single rgb image.
    */
   public RgbImageProcessor() {
     imageList = new HashMap<>();
