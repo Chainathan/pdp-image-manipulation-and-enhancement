@@ -40,7 +40,7 @@ public class RgbControllerIntegrationTest {
     imageName2 = "image2";
     appendable = new StringBuilder();
     textView = new TextView(appendable);
-    int[][][] init = {
+    double[][][] init = {
             {{151, 153, 160, 154, 154},
                     {154, 158, 150, 153, 155},
                     {151, 153, 156, 153, 155},
@@ -147,7 +147,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testBrighten() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{201, 203, 210, 204, 204},
                     {204, 208, 200, 203, 205},
                     {201, 203, 206, 203, 205},
@@ -167,7 +167,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testDarken() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{101, 103, 110, 104, 104},
                     {104, 108, 100, 103, 105},
                     {101, 103, 106, 103, 105},
@@ -187,7 +187,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testBlur() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{86, 116, 117, 116, 87},
                     {117, 154, 157, 154, 116},
                     {115, 155, 156, 155, 116},
@@ -207,7 +207,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testSharpen() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{172, 234, 182, 233, 174},
                     {230, 250, 249, 250, 231},
                     {229, 250, 250, 250, 233},
@@ -227,7 +227,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testSepia() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{140, 143, 148, 142, 142},
                     {144, 147, 136, 140, 143},
                     {140, 142, 145, 139, 143},
@@ -247,7 +247,7 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testRed() {
-    int[][][] expected = {
+    double[][][] expected = {
             {{151, 153, 160, 154, 154},
                     {154, 158, 150, 153, 155},
                     {151, 153, 156, 153, 155},
@@ -268,7 +268,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testBlue() {
     String command = "blue-component";
-    int[][][] expected = {
+    double[][][] expected = {
             {{0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
@@ -288,7 +288,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testGreen() {
     String command = "green-component";
-    int[][][] expected = {
+    double[][][] expected = {
             {{0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
@@ -308,7 +308,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testValue() {
     String command = "value-component";
-    int[][][] expected = {
+    double[][][] expected = {
             {{151, 153, 160, 154, 154},
                     {154, 158, 150, 153, 155},
                     {151, 153, 156, 153, 155},
@@ -328,7 +328,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testIntensity() {
     String command = "intensity-component";
-    int[][][] expected = {
+    double[][][] expected = {
             {{99, 102, 107, 101, 101},
                     {103, 105, 97, 99, 103},
                     {101, 103, 104, 101, 103},
@@ -348,7 +348,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testLuma() {
     String command = "luma-component";
-    int[][][] expected = {
+    double[][][] expected = {
             {{101, 103, 107, 102, 102},
                     {104, 106, 98, 101, 103},
                     {100, 102, 104, 99, 103},
@@ -368,7 +368,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testVerticalFlip() {
     String command = "horizontal-flip";
-    int[][][] expected = {
+    double[][][] expected = {
             {{154, 154, 160, 153, 151},
                     {155, 153, 150, 158, 154},
                     {155, 153, 156, 153, 151},
@@ -388,7 +388,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testHorizontalFlip() {
     String command = "vertical-flip";
-    int[][][] expected = {
+    double[][][] expected = {
             {{153, 155, 161, 160, 154},
                     {151, 153, 156, 153, 155},
                     {154, 158, 150, 153, 155},
@@ -412,7 +412,7 @@ public class RgbControllerIntegrationTest {
     model.addImage(imageName1, imageData);
     command += " " + imageName1 + " red green blue";
     runCommand(command, model);
-    int[][][] expected = {
+    double[][][] expected = {
             {{151, 153, 160, 154, 154},
                     {154, 158, 150, 153, 155},
                     {151, 153, 156, 153, 155},
@@ -429,7 +429,7 @@ public class RgbControllerIntegrationTest {
     ImageData exp = new ImageData(expected, 250);
     ImageData res = model.getImageData("red");
     assertEquals(exp, res);
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0},
@@ -446,7 +446,7 @@ public class RgbControllerIntegrationTest {
     exp = new ImageData(expected, 250);
     res = model.getImageData("green");
     assertEquals(exp, res);
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
@@ -468,7 +468,7 @@ public class RgbControllerIntegrationTest {
   @Test
   public void testCombine() {
     ImageProcessorModel model = new RgbImageProcessor();
-    int[][][] initV = {
+    double[][][] initV = {
             {{151, 153, 160, 154, 154},
                     {154, 158, 150, 153, 155},
                     {151, 153, 156, 153, 155},
@@ -484,7 +484,7 @@ public class RgbControllerIntegrationTest {
     };
     ImageData init = new ImageData(initV, 250);
     model.addImage("red", init);
-    initV = new int[][][]{
+    initV = new double[][][]{
             {{0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
                     {0, 0, 40, 0, 0},
@@ -500,7 +500,7 @@ public class RgbControllerIntegrationTest {
     };
     init = new ImageData(initV, 250);
     model.addImage("green", init);
-    initV = new int[][][]{
+    initV = new double[][][]{
             {{0, 0, 0, 0, 0},
                     {0, 0, 0, 0, 0},
                     {0, 10, 0, 0, 0},
@@ -597,7 +597,7 @@ public class RgbControllerIntegrationTest {
     }
   }
 
-  private boolean compare3DArrays(int[][][] array1, int[][][] array2, int buffer) {
+  private boolean compare3DArrays(double[][][] array1, double[][][] array2, int buffer) {
     if (array1.length != array2.length) {
       return false;
     }
@@ -609,7 +609,7 @@ public class RgbControllerIntegrationTest {
 
       for (int j = 0; j < array1[i].length; j++) {
         for (int k = 0; k < array1[i][j].length; k++) {
-          int diff = Math.abs(array1[i][j][k] - array2[i][j][k]);
+          double diff = Math.abs(array1[i][j][k] - array2[i][j][k]);
           if (diff > buffer) {
             return false;
           }
@@ -630,7 +630,7 @@ public class RgbControllerIntegrationTest {
     }
   }
 
-  private boolean testHelper(String command, int[][][] expected) {
+  private boolean testHelper(String command, double[][][] expected) {
     ImageProcessorModel model = new RgbImageProcessor();
     model.addImage(imageName1, imageData);
     command += " " + imageName1 + " " + imageName2;

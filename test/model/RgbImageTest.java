@@ -25,8 +25,8 @@ public class RgbImageTest {
     }
 
     @Override
-    public int[][] getChannelValues() {
-      int[][] channel = {
+    public double[][] getChannelValues() {
+      double[][] channel = {
               {1, 2, 3},
               {4, 5, 6},
               {7, 8, 9},
@@ -38,7 +38,7 @@ public class RgbImageTest {
     @Override
     public ChannelModel getHorizontalFlipChannel() {
       log.append("HorizontalFlip is called");
-      int[][] flippedChannel = {
+      double[][] flippedChannel = {
               {11, 12, 13},
               {14, 15, 16},
               {17, 18, 19},
@@ -50,7 +50,7 @@ public class RgbImageTest {
     @Override
     public ChannelModel getVerticalFlipChannel() {
       log.append("VerticalFlip is called");
-      int[][] flippedChannel = {
+      double[][] flippedChannel = {
               {11, 12, 13},
               {14, 15, 16},
               {17, 18, 19},
@@ -65,7 +65,7 @@ public class RgbImageTest {
               .append(buffer)
               .append(" Max pixel value : ")
               .append(maxPixelValues);
-      int[][] bufferChannel = {
+      double[][] bufferChannel = {
               {11, 12, 13},
               {14, 15, 16},
               {17, 18, 19},
@@ -87,7 +87,7 @@ public class RgbImageTest {
         log.append("} ");
       }
       log.append("} \nMax Pixel Size : " + maxPixelValues);
-      int[][] convChannel = {
+      double[][] convChannel = {
               {11, 12, 13},
               {14, 15, 16},
               {17, 18, 19},
@@ -107,7 +107,7 @@ public class RgbImageTest {
     }
 
     @Override
-    public int getValue(int x, int y) throws IllegalArgumentException {
+    public double getValue(int x, int y) throws IllegalArgumentException {
       return dummyChannel[x][y];
     }
   }
@@ -304,7 +304,7 @@ public class RgbImageTest {
   }
 
   private void assertImages(int[][][] expectedImage, RgbImageModel rgbImageModel) {
-    int[][][] actual = rgbImageModel.getImageData().getData();
+    double[][][] actual = rgbImageModel.getImageData().getData();
     int height = actual[0].length;
     int width = actual[0][0].length;
     //THEN
@@ -455,7 +455,7 @@ public class RgbImageTest {
     try {
       RgbImageModel rgbImageModel = new RgbImage(
               new Channel(),
-              new Channel(new int[3][4]),
+              new Channel(new double[3][4]),
               new Channel(),
               255
       );
@@ -518,7 +518,7 @@ public class RgbImageTest {
   public void testLoadImageDataForInvalidRgb() {
     try {
       RgbImageModel rgbImageModel = new RgbImage();
-      int[][][] values = {
+      double[][][] values = {
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}
       };
@@ -534,7 +534,7 @@ public class RgbImageTest {
   public void testLoadImageDataForValidRgb() {
     try {
       RgbImageModel rgbImageModel = new RgbImage();
-      int[][][] values = {
+      double[][][] values = {
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}

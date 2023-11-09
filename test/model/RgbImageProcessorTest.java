@@ -15,8 +15,8 @@ import static org.junit.Assert.fail;
 public class RgbImageProcessorTest {
 
   ImageProcessorModel rgbImageProcess;
-  int[][][] imageValues1;
-  int[][][] imageValues2;
+  double[][][] imageValues1;
+  double[][][] imageValues2;
   ImageData imageData1;
   ImageData imageData2;
   String imageName1;
@@ -25,12 +25,12 @@ public class RgbImageProcessorTest {
   @Before
   public void setup() {
     rgbImageProcess = new RgbImageProcessor();
-    imageValues1 = new int[][][]{
+    imageValues1 = new double[][][]{
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{4, 5, 6}, {1, 2, 3}, {7, 8, 9}},
             {{1, 2, 3}, {7, 8, 9}, {4, 5, 6}}
     };
-    imageValues2 = new int[][][]{
+    imageValues2 = new double[][][]{
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{10, 11, 12}, {13, 14, 15}, {16, 17, 18}},
             {{19, 20, 21}, {22, 23, 24}, {25, 26, 27}}
@@ -42,7 +42,7 @@ public class RgbImageProcessorTest {
   }
 
   private void assertImages(int[][][] expectedImage, RgbImageModel rgbImageModel) {
-    int[][][] actual = rgbImageModel.getImageData().getData();
+    double[][][] actual = rgbImageModel.getImageData().getData();
     int height = actual[0].length;
     int width = actual[0][0].length;
     //THEN
@@ -223,7 +223,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "red-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -237,7 +237,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "green-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{10, 11, 12}, {13, 14, 15}, {16, 17, 18}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -251,7 +251,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "blue-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{19, 20, 21}, {22, 23, 24}, {25, 26, 27}}
@@ -265,7 +265,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData1);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "value-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{4, 5, 6}, {7, 8, 9}, {7, 8, 9}},
             {{4, 5, 6}, {7, 8, 9}, {7, 8, 9}},
             {{4, 5, 6}, {7, 8, 9}, {7, 8, 9}}
@@ -279,7 +279,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData1);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "intensity-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{2, 3, 4}, {4, 5, 6}, {6, 7, 8}},
             {{2, 3, 4}, {4, 5, 6}, {6, 7, 8}},
             {{2, 3, 4}, {4, 5, 6}, {6, 7, 8}}
@@ -293,7 +293,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData1);
     rgbImageProcess.visualizeComponent(imageName1, imageName2, "luma-component");
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{3, 4, 5}, {2, 3, 4}, {7, 8, 9}},
             {{3, 4, 5}, {2, 3, 4}, {7, 8, 9}},
             {{3, 4, 5}, {2, 3, 4}, {7, 8, 9}}
@@ -307,7 +307,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.verticalFlip(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{7, 8, 9}, {4, 5, 6}, {1, 2, 3}},
             {{16, 17, 18}, {13, 14, 15}, {10, 11, 12}},
             {{25, 26, 27}, {22, 23, 24}, {19, 20, 21}}
@@ -321,7 +321,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.horizontalFlip(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{3, 2, 1}, {6, 5, 4}, {9, 8, 7}},
             {{12, 11, 10}, {15, 14, 13}, {18, 17, 16}},
             {{21, 20, 19}, {24, 23, 22}, {27, 26, 25}}
@@ -335,7 +335,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData1);
     rgbImageProcess.brighten(imageName1, imageName2, 50);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = {
+    double[][][] expected = {
             {{51, 52, 53}, {54, 55, 56}, {57, 58, 59}},
             {{54, 55, 56}, {51, 52, 53}, {57, 58, 59}},
             {{51, 52, 53}, {57, 58, 59}, {54, 55, 56}}
@@ -344,7 +344,7 @@ public class RgbImageProcessorTest {
     assertEquals(exp, res);
     rgbImageProcess.brighten(imageName1, imageName2, 250);
     res = rgbImageProcess.getImageData(imageName2);
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{251, 252, 253}, {254, 255, 255}, {255, 255, 255}},
             {{254, 255, 255}, {251, 252, 253}, {255, 255, 255}},
             {{251, 252, 253}, {255, 255, 255}, {254, 255, 255}}
@@ -355,7 +355,7 @@ public class RgbImageProcessorTest {
 
   @Test
   public void testDarken() {
-    int[][][] initV = {
+    double[][][] initV = {
             {{251, 252, 253}, {254, 255, 255}, {255, 255, 255}},
             {{254, 255, 255}, {251, 252, 253}, {255, 255, 255}},
             {{251, 252, 253}, {255, 255, 255}, {254, 255, 255}}
@@ -364,7 +364,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, init);
     rgbImageProcess.brighten(imageName1, imageName2, -200);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = {
+    double[][][] expected = {
             {{51, 52, 53}, {54, 55, 55}, {55, 55, 55}},
             {{54, 55, 55}, {51, 52, 53}, {55, 55, 55}},
             {{51, 52, 53}, {55, 55, 55}, {54, 55, 55}}
@@ -374,7 +374,7 @@ public class RgbImageProcessorTest {
 
     rgbImageProcess.brighten(imageName2, imageName2, -53);
     res = rgbImageProcess.getImageData(imageName2);
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{0, 0, 0}, {1, 2, 2}, {2, 2, 2}},
             {{1, 2, 2}, {0, 0, 0}, {2, 2, 2}},
             {{0, 0, 0}, {2, 2, 2}, {1, 2, 2}}
@@ -388,7 +388,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData1);
     rgbImageProcess.splitComponents(imageName1, List.of("red", "green", "blue"));
     ImageData res = rgbImageProcess.getImageData("red");
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -397,7 +397,7 @@ public class RgbImageProcessorTest {
     assertEquals(exp, res);
 
     res = rgbImageProcess.getImageData("green");
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{4, 5, 6}, {1, 2, 3}, {7, 8, 9}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -406,7 +406,7 @@ public class RgbImageProcessorTest {
     assertEquals(exp, res);
 
     res = rgbImageProcess.getImageData("blue");
-    expected = new int[][][]{
+    expected = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{1, 2, 3}, {7, 8, 9}, {4, 5, 6}}
@@ -430,7 +430,7 @@ public class RgbImageProcessorTest {
 
   @Test
   public void testCombine() {
-    int[][][] initV = new int[][][]{
+    double[][][] initV = new double[][][]{
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -438,7 +438,7 @@ public class RgbImageProcessorTest {
     ImageData init = new ImageData(initV, 255);
     rgbImageProcess.addImage("red", init);
 
-    initV = new int[][][]{
+    initV = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{4, 5, 6}, {1, 2, 3}, {7, 8, 9}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
@@ -446,7 +446,7 @@ public class RgbImageProcessorTest {
     init = new ImageData(initV, 255);
     rgbImageProcess.addImage("green", init);
 
-    initV = new int[][][]{
+    initV = new double[][][]{
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
             {{1, 2, 3}, {7, 8, 9}, {4, 5, 6}}
@@ -461,7 +461,7 @@ public class RgbImageProcessorTest {
 
   @Test
   public void testBlur() {
-    int[][][] initV = new int[][][]{
+    double[][][] initV = new double[][][]{
             {{16, 32, 48}, {64, 80, 96}, {112, 128, 144}},
             {{32, 64, 96}, {128, 160, 192}, {224, 256, 288}},
             {{48, 96, 144}, {192, 240, 288}, {336, 384, 432}}
@@ -471,7 +471,7 @@ public class RgbImageProcessorTest {
 
     rgbImageProcess.blur(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{21, 36, 33}, {52, 80, 68}, {57, 84, 69}},
             {{42, 72, 66}, {104, 160, 136}, {114, 168, 138}},
             {{63, 108, 99}, {156, 240, 204}, {171, 252, 207}}
@@ -485,7 +485,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.blur(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{1, 2, 2}, {4, 5, 5}, {4, 5, 4}},
             {{7, 10, 7}, {10, 15, 12}, {9, 12, 10}},
             {{12, 16, 12}, {17, 24, 18}, {13, 19, 14}}
@@ -499,7 +499,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.sharpen(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{0, 4, 4}, {8, 16, 12}, {9, 16, 13}},
             {{11, 22, 14}, {26, 43, 29}, {20, 34, 23}},
             {{21, 39, 24}, {42, 70, 46}, {31, 50, 33}}
@@ -513,7 +513,7 @@ public class RgbImageProcessorTest {
     rgbImageProcess.addImage(imageName1, imageData2);
     rgbImageProcess.sepia(imageName1, imageName2);
     ImageData res = rgbImageProcess.getImageData(imageName2);
-    int[][][] expected = new int[][][]{
+    double[][][] expected = new double[][][]{
             {{12, 13, 14}, {16, 17, 18}, {20, 21, 22}},
             {{10, 12, 13}, {14, 15, 16}, {18, 19, 20}},
             {{8, 9, 10}, {11, 12, 13}, {14, 15, 16}}

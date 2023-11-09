@@ -9,7 +9,7 @@ interface ChannelModel {
    *
    * @return A two-dimensional array of channel values.
    */
-  int[][] getChannelValues();
+  double[][] getChannelValues();
 
   /**
    * Creates a channel with values that are horizontally flipped from the original channel.
@@ -66,5 +66,5 @@ interface ChannelModel {
    * @return The pixel value at the specified position.
    * @throws IllegalArgumentException If the provided coordinates are out of bounds.
    */
-  int getValue(int x, int y) throws IllegalArgumentException;
+  double getValue(int x, int y) throws IllegalArgumentException;
 }

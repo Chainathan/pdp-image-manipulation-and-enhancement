@@ -5,13 +5,13 @@ package model;
  * and represents a channel with pixel data.
  */
 class Channel implements ChannelModel {
-  private final int[][] channelValues;
+  final double[][] channelValues;
 
   /**
    * Constructs an empty Channel with zero height and width.
    */
   Channel() {
-    channelValues = new int[0][0];
+    channelValues = new double[0][0];
   }
 
   /**
@@ -25,7 +25,7 @@ class Channel implements ChannelModel {
     if (height < 0 || width < 0) {
       throw new IllegalArgumentException("Invalid height and width for Channel");
     }
-    channelValues = new int[height][width];
+    channelValues = new double[height][width];
   }
 
   /**
@@ -34,12 +34,12 @@ class Channel implements ChannelModel {
    * @param channelValues The two-dimensional array representing the channel values.
    * @throws IllegalArgumentException If the provided array is not rectangular.
    */
-  Channel(int[][] channelValues) throws IllegalArgumentException {
+  Channel(double[][] channelValues) throws IllegalArgumentException {
     checkRectangularArray(channelValues);
     if (channelValues.length == 0) {
-      this.channelValues = new int[0][0];
+      this.channelValues = new double[0][0];
     } else {
-      this.channelValues = new int[channelValues.length][channelValues[0].length];
+      this.channelValues = new double[channelValues.length][channelValues[0].length];
       for (int i = 0; i < channelValues.length; i++) {
         System.arraycopy(channelValues[i], 0, this.channelValues[i], 0, channelValues[0].length);
       }
@@ -53,7 +53,7 @@ class Channel implements ChannelModel {
    * @param channelValues The two-dimensional array to be checked for rectangularity.
    * @throws IllegalArgumentException If the array is not rectangular or if it is null.
    */
-  static void checkRectangularArray(int[][] channelValues) throws IllegalArgumentException {
+  static void checkRectangularArray(double[][] channelValues) throws IllegalArgumentException {
     if (channelValues == null) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");
     }
@@ -71,8 +71,8 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public int[][] getChannelValues() {
-    int[][] newValues = new int[getHeight()][getWidth()];
+  public double[][] getChannelValues() {
+    double[][] newValues = new double[getHeight()][getWidth()];
     for (int i = 0; i < getHeight(); i++) {
       System.arraycopy(channelValues[i], 0, newValues[i], 0, newValues[0].length);
     }
@@ -81,7 +81,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel getVerticalFlipChannel() {
-    int[][] newValues = new int[getHeight()][getWidth()];
+    double[][] newValues = new double[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[getHeight() - 1 - y][x] = channelValues[y][x];
@@ -92,7 +92,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel getHorizontalFlipChannel() {
-    int[][] newValues = new int[getHeight()][getWidth()];
+    double[][] newValues = new double[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[y][getWidth() - 1 - x] = channelValues[y][x];
@@ -103,7 +103,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel addBuffer(int buffer, int maxPixelValue) {
-    int[][] newValues = new int[getHeight()][getWidth()];
+    double[][] newValues = new double[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[y][x] = Math.max(Math.min(channelValues[y][x] + buffer, maxPixelValue), 0);
@@ -120,7 +120,7 @@ class Channel implements ChannelModel {
     int kernelWidth = kernel[0].length;
     int kernelWidthRadius = kernelWidth / 2;
     int kernelHeightRadius = kernelHeight / 2;
-    int[][] newValues = new int[getHeight()][getWidth()];
+    double[][] newValues = new double[getHeight()][getWidth()];
 
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
@@ -158,7 +158,7 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public int getValue(int y, int x) throws IllegalArgumentException {
+  public double getValue(int y, int x) throws IllegalArgumentException {
     if (y >= getHeight() || y < 0 || x >= getWidth() || x < 0) {
       throw new IllegalArgumentException("Invalid pixel values for the image.");
     }

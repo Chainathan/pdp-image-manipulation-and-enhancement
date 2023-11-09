@@ -10,7 +10,7 @@ import java.util.Objects;
  * controller, and view components.
  */
 public class ImageData {
-  private final int[][][] data;
+  private final double[][][] data;
   private final int maxValue;
 
   /**
@@ -24,7 +24,7 @@ public class ImageData {
    * @throws IllegalArgumentException If the provided data is null, if maxValue is negative,
    *                 or if the channel heights are not the same.
    */
-  public ImageData(int[][][] data, int maxValue) throws IllegalArgumentException {
+  public ImageData(double[][][] data, int maxValue) throws IllegalArgumentException {
     if (data == null) {
       throw new IllegalArgumentException("Raw image data cannot be null");
     }
@@ -36,7 +36,7 @@ public class ImageData {
         throw new IllegalArgumentException("Channel Heights are not the same");
       }
     }
-    for (int[][] channelValues : data) {
+    for (double[][] channelValues : data) {
       Channel.checkRectangularArray(channelValues);
     }
     this.data = data;
@@ -50,8 +50,8 @@ public class ImageData {
    *         The dimensions are [channels][height][width], where channels typically
    *         represent color components like red, green, and blue.
    */
-  public int[][][] getData() {
-    int[][][] copy = new int[data.length][data[0].length][data[0][0].length];
+  public double[][][] getData() {
+    double[][][] copy = new double[data.length][data[0].length][data[0][0].length];
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data[0].length; j++) {
         System.arraycopy(data[i][j], 0, copy[i][j], 0, data[i][j].length);
@@ -80,7 +80,48 @@ public class ImageData {
     }
     ImageData imageData = (ImageData) o;
     return getMaxValue() == imageData.getMaxValue()
-            && Arrays.deepEquals(getData(), imageData.getData());
+            && areArraysEqual(getData(), imageData.getData(),1);
+  }
+
+  private boolean areArraysEqual(double[][][] array1, double[][][] array2, double tolerance) {
+    if (array1 == null || array2 == null || array1.length != array2.length) {
+      return false;
+    }
+
+    for (int i = 0; i < array1.length; i++) {
+      if (!areArraysEqual(array1[i], array2[i], tolerance)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private boolean areArraysEqual(double[][] array1, double[][] array2, double tolerance) {
+    if (array1 == null || array2 == null || array1.length != array2.length) {
+      return false;
+    }
+
+    for (int i = 0; i < array1.length; i++) {
+      if (!areArraysEqual(array1[i], array2[i], tolerance)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  private boolean areArraysEqual(double[] array1, double[] array2, double tolerance) {
+    if (array1 == null || array2 == null || array1.length != array2.length) {
+      return false;
+    }
+    for (int i = 0; i < array1.length; i++) {
+      if (Math.abs(array1[i] - array2[i]) > tolerance) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   @Override

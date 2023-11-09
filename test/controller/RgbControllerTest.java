@@ -38,7 +38,7 @@ public class RgbControllerTest {
     public void addImage(String destImageName, ImageData imageData)
             throws IllegalArgumentException {
       log.append("Dest Image Name : " + destImageName + "\nImage Data : {");
-      int[][][] data = imageData.getData();
+      double[][][] data = imageData.getData();
       int width = data[0][0].length;
       int height = data[0].length;
       for (int k = 0; k < 3; k++) {
@@ -58,7 +58,7 @@ public class RgbControllerTest {
     @Override
     public ImageData getImageData(String imageName) throws IllegalArgumentException {
       log.append("Image Name : ").append(imageName);
-      int[][][] data = {
+      double[][][] data = {
               {{11, 12, 13},
                       {14, 15, 16},
                       {17, 18, 19},
@@ -607,7 +607,7 @@ public class RgbControllerTest {
     ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
     ImageFileIO imageFileIO = new RgbImageFileIO();
     StringBuilder expectedlog = new StringBuilder();
-    ImageData expectedImageData = new ImageData(new int[0][0][0], 255);
+    ImageData expectedImageData = new ImageData(new double[0][0][0], 255);
     //WHEN
     try {
       expectedImageData = imageFileIO.load("images/test/test.ppm");
@@ -616,7 +616,7 @@ public class RgbControllerTest {
     }
 
     expectedlog.append("Dest Image Name : koala" + "\nImage Data : {");
-    int[][][] data = expectedImageData.getData();
+    double[][][] data = expectedImageData.getData();
     int width = data[0][0].length;
     int height = data[0].length;
     for (int k = 0; k < 3; k++) {
@@ -644,7 +644,7 @@ public class RgbControllerTest {
     ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
     ImageFileIO imageFileIO = new RgbImageFileIO();
     StringBuilder expectedlog = new StringBuilder();
-    ImageData expectedImageData = new ImageData(new int[0][0][0], 255);
+    ImageData expectedImageData = new ImageData(new double[0][0][0], 255);
     //WHEN
     try {
       expectedImageData = imageFileIO.load("images/test/test.ppm");
@@ -653,7 +653,7 @@ public class RgbControllerTest {
     }
 
     expectedlog.append("Dest Image Name : koala" + "\nImage Data : {");
-    int[][][] data = expectedImageData.getData();
+    double[][][] data = expectedImageData.getData();
     int width = data[0][0].length;
     int height = data[0].length;
     for (int k = 0; k < 3; k++) {

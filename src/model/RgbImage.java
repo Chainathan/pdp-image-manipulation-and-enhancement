@@ -70,11 +70,11 @@ class RgbImage implements RgbImageModel {
       case LUMA:
         return getLumaComponent();
       case INTENSITY:
-        TriFunction<RgbImage, Integer, Integer, Integer> funIntensity = (img, x, y)
+        TriFunction<RgbImage, Integer, Integer, Double> funIntensity = (img, x, y)
             -> (red.getValue(x, y) + green.getValue(x, y) + blue.getValue(x, y)) / 3;
         return applyFunctionToChannels(funIntensity);
       case VALUE:
-        TriFunction<RgbImage, Integer, Integer, Integer> funValue = (img, x, y)
+        TriFunction<RgbImage, Integer, Integer, Double> funValue = (img, x, y)
             -> Math.max(Math.max(img.red.getValue(x, y), green.getValue(x, y)),
                 blue.getValue(x, y));
         return applyFunctionToChannels(funValue);
@@ -83,9 +83,9 @@ class RgbImage implements RgbImageModel {
     }
   }
 
-  private RgbImage applyFunctionToChannels(TriFunction<RgbImage, Integer, Integer, Integer> fun) {
+  private RgbImage applyFunctionToChannels(TriFunction<RgbImage, Integer, Integer, Double> fun) {
 
-    int[][] values = new int[red.getHeight()][red.getWidth()];
+    double[][] values = new double[red.getHeight()][red.getWidth()];
 
     for (int i = 0; i < red.getHeight(); i++) {
       for (int j = 0; j < red.getWidth(); j++) {
@@ -153,9 +153,9 @@ class RgbImage implements RgbImageModel {
         throw new IllegalArgumentException("Invalid tone buffer");
       }
     }
-    int[][] newRed = new int[red.getHeight()][red.getWidth()];
-    int[][] newGreen = new int[red.getHeight()][red.getWidth()];
-    int[][] newBlue = new int[red.getHeight()][red.getWidth()];
+    double[][] newRed = new double[red.getHeight()][red.getWidth()];
+    double[][] newGreen = new double[red.getHeight()][red.getWidth()];
+    double[][] newBlue = new double[red.getHeight()][red.getWidth()];
 
     for (int i = 0; i < red.getHeight(); i++) {
       for (int j = 0; j < red.getWidth(); j++) {
@@ -188,7 +188,7 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public ImageData getImageData() {
-    int[][][] data = {red.getChannelValues(),
+    double[][][] data = {red.getChannelValues(),
             green.getChannelValues(),
             blue.getChannelValues()
     };
@@ -205,7 +205,7 @@ class RgbImage implements RgbImageModel {
   }
 
   private void checkValidRgbImageData(ImageData imageData) throws IllegalArgumentException {
-    int[][][] data = imageData.getData();
+    double[][][] data = imageData.getData();
     if (data.length != 3) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");
     }

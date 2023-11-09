@@ -111,7 +111,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     ImageData green = imageList.get(componentImageList.get(1)).getImageData();
     ImageData blue = imageList.get(componentImageList.get(2)).getImageData();
 
-    int[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
+    double[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
     ImageData newImageData = new ImageData(newData, red.getMaxValue());
 
     RgbImageModel newImage = new RgbImage();

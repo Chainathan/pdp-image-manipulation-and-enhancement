@@ -9,23 +9,33 @@ import static org.junit.Assert.assertEquals;
  * Test class of Channel class.
  */
 public class ChannelTest {
+//  @Test
+//  public void testTransform(){
+//    double[][] values = {
+//            {1, 2, 3},
+//            {4, 5, 6},
+//            {7, 8, 9}
+//    };
+//    AdvChannel c = new AdvChannel(values);
+//    c.test();
+//  }
 
   //Kernel > image.
   @Test
   public void testGetChannelValues() {
-    int[][] values = {
+    double[][] values = {
             {1, 2, 3},
             {4, 5, 6},
             {7, 8, 9}
     };
     ChannelModel channel = new Channel(values);
-    int[][] channelValues = channel.getChannelValues();
+    double[][] channelValues = channel.getChannelValues();
     assertArrayEquals(values, channelValues);
   }
 
   @Test
   public void testGetVerticalFlipChannel() {
-    int[][] values = {
+    double[][] values = {
             {1, 2, 3},
             {4, 5, 6},
             {7, 8, 9}
@@ -37,13 +47,13 @@ public class ChannelTest {
     };
     ChannelModel channel = new Channel(values);
     ChannelModel flippedChannel = channel.getVerticalFlipChannel();
-    int[][] flippedValues = flippedChannel.getChannelValues();
+    double[][] flippedValues = flippedChannel.getChannelValues();
     assertArrayEquals(expectedValues, flippedValues);
   }
 
   @Test
   public void testGetHorizontalFlipChannel() {
-    int[][] values = {
+    double[][] values = {
             {1, 2, 3},
             {4, 5, 6},
             {7, 8, 9}
@@ -55,14 +65,14 @@ public class ChannelTest {
     };
     ChannelModel channel = new Channel(values);
     ChannelModel flippedChannel = channel.getHorizontalFlipChannel();
-    int[][] flippedValues = flippedChannel.getChannelValues();
+    double[][] flippedValues = flippedChannel.getChannelValues();
 
     assertArrayEquals(expectedValues, flippedValues);
   }
 
   @Test
   public void testPositiveAddBuffer() {
-    int[][] values = {
+    double[][] values = {
             {100, 200, 120},
             {150, 245, 250},
             {0, 110, 255}
@@ -76,14 +86,14 @@ public class ChannelTest {
     };
     ChannelModel channel = new Channel(values);
     ChannelModel bufferedChannel = channel.addBuffer(buffer, maxPixelValue);
-    int[][] bufferedValues = bufferedChannel.getChannelValues();
+    double[][] bufferedValues = bufferedChannel.getChannelValues();
 
     assertArrayEquals(expectedValues, bufferedValues);
   }
 
   @Test
   public void testNegativeAddBuffer() {
-    int[][] values = {
+    double[][] values = {
             {1, 2, 3},
             {4, 5, 6},
             {7, 8, 9}
@@ -97,7 +107,7 @@ public class ChannelTest {
     };
     ChannelModel channel = new Channel(values);
     ChannelModel bufferedChannel = channel.addBuffer(buffer, maxPixelValue);
-    int[][] bufferedValues = bufferedChannel.getChannelValues();
+    double[][] bufferedValues = bufferedChannel.getChannelValues();
 
     assertArrayEquals(expectedValues, bufferedValues);
   }
@@ -105,7 +115,7 @@ public class ChannelTest {
   //Check for Convolution when Kernel > Image Size
   @Test
   public void testApplyConvolution() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4, 5},
             {6, 7, 8, 9, 10},
             {11, 12, 13, 14, 15},
@@ -126,7 +136,7 @@ public class ChannelTest {
             {81, 102, 108, 114, 99},
             {80, 105, 110, 115, 94}
     };
-    int[][] actualOutput = result.getChannelValues();
+    double[][] actualOutput = result.getChannelValues();
     assertArrayEquals(expectedOutput, actualOutput);
   }
 
@@ -139,7 +149,7 @@ public class ChannelTest {
             {16, 17, 18, 19, 20},
             {21, 22, 23, 24, 25}
     };
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {0, 1, 0},
             {1, 2, 1},
             {0, 1, 0}
@@ -151,14 +161,14 @@ public class ChannelTest {
             {84, 78, 72},
             {54, 48, 42}
     };
-    int[][] actualOutput = result.getChannelValues();
+    double[][] actualOutput = result.getChannelValues();
     assertArrayEquals(expectedOutput, actualOutput);
   }
 
   //Check for 0 width and height all methods
   @Test
   public void testVerticalFlipForEmptyChannel() {
-    int[][] inputChannel = new int[0][0];
+    double[][] inputChannel = new double[0][0];
     Channel channel = new Channel(inputChannel);
     ChannelModel actual = channel.getVerticalFlipChannel();
     assertEquals(0, actual.getWidth());
@@ -167,7 +177,7 @@ public class ChannelTest {
 
   @Test
   public void testHorizontalFlipForEmptyChannel() {
-    int[][] inputChannel = new int[0][0];
+    double[][] inputChannel = new double[0][0];
     Channel channel = new Channel(inputChannel);
     ChannelModel actual = channel.getHorizontalFlipChannel();
     assertEquals(0, actual.getWidth());
@@ -176,7 +186,7 @@ public class ChannelTest {
 
   @Test
   public void testBufferEmptyChannel() {
-    int[][] inputChannel = new int[0][0];
+    double[][] inputChannel = new double[0][0];
     Channel channel = new Channel(inputChannel);
     ChannelModel actual = channel.addBuffer(10, 255);
     assertEquals(0, actual.getWidth());
@@ -203,7 +213,7 @@ public class ChannelTest {
 
   @Test
   public void testGetHeight() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
             {11, 12, 13, 14},
@@ -216,7 +226,7 @@ public class ChannelTest {
 
   @Test
   public void testGetWidth() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
             {11, 12, 13, 14},
@@ -229,7 +239,7 @@ public class ChannelTest {
 
   @Test
   public void testGetValue() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
             {11, 12, 13, 14},
@@ -256,7 +266,7 @@ public class ChannelTest {
 
   @Test
   public void testValidChannel() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
             {11, 12, 13, 14},
@@ -273,7 +283,7 @@ public class ChannelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidChannel() {
-    int[][] inputChannel = {
+    double[][] inputChannel = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
             {11, 12, 13},
@@ -290,7 +300,7 @@ public class ChannelTest {
 
   @Test
   public void testEmptyChannel() {
-    int[][] inputChannel = new int[0][0];
+    double[][] inputChannel = new double[0][0];
     Channel channel = new Channel(inputChannel);
     assertEquals(0, channel.getWidth());
     assertEquals(0, channel.getHeight());

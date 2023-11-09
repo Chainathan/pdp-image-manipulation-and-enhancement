@@ -17,12 +17,12 @@ public class ImageDataTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testImageDataForNegativeMaxValue() {
-    new ImageData(new int[3][3][3], -25);
+    new ImageData(new double[3][3][3], -25);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testImageDataForDifferentChannelHeights() {
-    int[][][] values = {
+    double[][][] values = {
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}
@@ -33,7 +33,7 @@ public class ImageDataTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void testImageDataForDifferentChannelWidth() {
-    int[][][] values = {
+    double[][][] values = {
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10}}
@@ -44,7 +44,7 @@ public class ImageDataTest {
   @Test
   public void testImageDataValidImage() {
     try {
-      int[][][] values = {
+      double[][][] values = {
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
               {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}
@@ -58,13 +58,13 @@ public class ImageDataTest {
   @Test
   public void getData() {
     //GIVEN
-    int[][][] values = {
+    double[][][] values = {
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}},
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}
     };
     ImageData imageData = new ImageData(values, 255);
-    int[][][] actual = imageData.getData();
+    double[][][] actual = imageData.getData();
     for (int i = 0; i < values.length; i++) {
       for (int j = 0; j < values[0].length; j++) {
         for (int k = 0; k < values[0][0].length; k++) {
@@ -76,7 +76,7 @@ public class ImageDataTest {
 
   @Test
   public void testGetMaxValue() {
-    int[][][] values = {
+    double[][][] values = {
             {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}}
     };
     ImageData imageData = new ImageData(values, 255);

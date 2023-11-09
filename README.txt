@@ -1,4 +1,21 @@
-﻿Image Manipulation And Enhancement Application
+﻿Compression -
+-> Channel
+Draw histogram -
+-> calculate frequency in channel
+-> draw the histogram using frquency in rgb model
+Color correction
+-> get pixel value which has max frequency() in channel
+-> find avg and difference with the avg from all the maxVlues and call buffer() on the respective channels
+Level Adjustment
+-> level adjust in channel
+Split view
+-> ?
+==========================================
+Changes:
+variable "int[][] channelValues" private to package private in Channel
+variable "int[][] channelValues" to "double[][]" and all the corresponding signatures
+**********************************************
+Image Manipulation And Enhancement Application
 **********************************************
 
 Overview

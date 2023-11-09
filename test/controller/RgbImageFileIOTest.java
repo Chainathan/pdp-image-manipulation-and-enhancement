@@ -112,7 +112,7 @@ public class RgbImageFileIOTest {
   }
 
   private void assertImageData(int[][][] expectedData, ImageData image) {
-    int[][][] actual = image.getData();
+    double[][][] actual = image.getData();
     for (int i = 0; i < actual.length; i++) {
       for (int j = 0; j < actual[0].length; j++) {
         for (int k = 0; k < actual[0][0].length; k++) {
@@ -275,7 +275,7 @@ public class RgbImageFileIOTest {
 
     //WHEN
     try {
-      imageFileIO.save("file", new ImageData(new int[0][0][0], 255));
+      imageFileIO.save("file", new ImageData(new double[0][0][0], 255));
       fail("Above line should throw an exception");
     } catch (FileFormatNotSupportedException e) {
       //Exception catched.
