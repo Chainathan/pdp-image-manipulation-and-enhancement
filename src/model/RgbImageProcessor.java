@@ -41,7 +41,7 @@ public class RgbImageProcessor implements ImageProcessorModel{
 //  }
 
 //  public T createModelInstance(){
-//    return (T) new RgbImage();
+//    return new RgbImage();
 //  }
   @Override
   public void addImage(String destImageName, ImageData imageData)

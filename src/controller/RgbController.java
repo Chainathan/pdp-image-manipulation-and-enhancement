@@ -9,8 +9,10 @@ import java.util.Scanner;
 
 import exceptions.FileFormatNotSupportedException;
 import model.AdvImageProcessorModel;
+import model.Factory;
 import model.ImageData;
 import model.ImageProcessorModel;
+import model.simpleFactory;
 import view.ImageProcessorView;
 
 /**
@@ -165,6 +167,8 @@ private final AdvImageProcessorModel rgbImageProcessor;
         }
         String imageName = arguments[arguments.length - 1];
         ImageData imageData = rgbImageFileIO.load(filePath);
+//        Factory factory = new simpleFactory();
+//        rgbImageProcessor.addImage(imageName, imageData, factory);
         rgbImageProcessor.addImage(imageName, imageData);
         break;
       case "save":
