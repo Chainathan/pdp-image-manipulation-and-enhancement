@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import exceptions.FileFormatNotSupportedException;
+import model.AdvImageProcessorModel;
 import model.ImageData;
 import model.ImageProcessorModel;
 import view.ImageProcessorView;
@@ -17,7 +18,8 @@ import view.ImageProcessorView;
  * interface for controlling RGB image processing.
  */
 public class RgbController implements ImageController {
-  private final ImageProcessorModel rgbImageProcessor;
+//  private final ImageProcessorModel rgbImageProcessor;
+private final AdvImageProcessorModel rgbImageProcessor;
   private final ImageFileIO rgbImageFileIO;
   private final ImageProcessorView textView;
   private final Readable in;
@@ -29,7 +31,7 @@ public class RgbController implements ImageController {
    * @param textView          The view for displaying image processing results.
    * @param in                The input source for user interactions.
    */
-  public RgbController(ImageProcessorModel rgbImageProcessor,
+  public RgbController(AdvImageProcessorModel rgbImageProcessor,
                        ImageProcessorView textView, Readable in) {
     this.rgbImageProcessor = rgbImageProcessor;
     this.rgbImageFileIO = new RgbImageFileIO();
@@ -129,7 +131,8 @@ public class RgbController implements ImageController {
           throws IllegalArgumentException {
     if (command.equals("brighten")) {
       int increment = Integer.parseInt(arguments[1]);
-      rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
+//      rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
+      rgbImageProcessor.compress(arguments[2], arguments[3], increment);
     } else {
       return "Unknown command: " + command;
     }

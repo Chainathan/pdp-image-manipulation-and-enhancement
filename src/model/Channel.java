@@ -7,6 +7,10 @@ package model;
 class Channel implements ChannelModel {
   final double[][] channelValues;
 
+  @Override
+  public ChannelModel createInstance(double[][] channelValues){
+    return new Channel(channelValues);
+  }
   /**
    * Constructs an empty Channel with zero height and width.
    */
@@ -98,7 +102,8 @@ class Channel implements ChannelModel {
         newValues[y][getWidth() - 1 - x] = channelValues[y][x];
       }
     }
-    return new Channel(newValues);
+//    return new Channel(newValues);
+    return this.createInstance(newValues);
   }
 
   @Override
@@ -109,7 +114,8 @@ class Channel implements ChannelModel {
         newValues[y][x] = Math.max(Math.min(channelValues[y][x] + buffer, maxPixelValue), 0);
       }
     }
-    return new Channel(newValues);
+//    return new Channel(newValues);
+    return this.createInstance(newValues);
   }
 
   @Override

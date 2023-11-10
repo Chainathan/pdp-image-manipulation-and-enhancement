@@ -14,6 +14,8 @@ Split view
 Changes:
 variable "int[][] channelValues" private to package private in Channel
 variable "int[][] channelValues" to "double[][]" and all the corresponding signatures
+variables in rgbImage - private to package-private.
+variables in rgbImageProcessor - private to package-private.
 **********************************************
 Image Manipulation And Enhancement Application
 **********************************************

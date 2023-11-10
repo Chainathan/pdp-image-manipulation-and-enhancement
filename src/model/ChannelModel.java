@@ -4,6 +4,8 @@ package model;
  * The ChannelModel interface defines methods for working with image channels.
  */
 interface ChannelModel {
+  ChannelModel createInstance(double[][] channelValues);
+
   /**
    * Get the array values of pixel data of the channel.
    *

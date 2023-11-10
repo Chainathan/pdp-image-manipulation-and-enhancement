@@ -5,10 +5,10 @@ package model;
  * represents an RGB image composed of red, green, and blue channels.
  */
 class RgbImage implements RgbImageModel {
-  private ChannelModel red;
-  private ChannelModel green;
-  private ChannelModel blue;
-  private int maxPixelValue;
+  ChannelModel red;
+  ChannelModel green;
+  ChannelModel blue;
+  int maxPixelValue;
 
   /**
    * Constructs an empty RgbImage with default values for red, green,
@@ -20,7 +20,6 @@ class RgbImage implements RgbImageModel {
     blue = new Channel();
     maxPixelValue = 255;
   }
-
   /**
    * Constructs an RgbImage with the specified red, green,
    * and blue channels, and a maximum pixel value.
@@ -46,23 +45,48 @@ class RgbImage implements RgbImageModel {
   }
 
   @Override
+  public RgbImageModel createInstance(ChannelModel red,
+                                      ChannelModel green,
+                                      ChannelModel blue,
+                                      int maxPixelValue) {
+    return new RgbImage(red,green,blue,maxPixelValue);
+  }
+  //  public RgbImage getModel(){
+//    return new RgbImage();
+//  }
+  @Override
   public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
           throws IllegalArgumentException {
     switch (componentEnum) {
       case RED:
-        return new RgbImage(
+//        return new RgbImage(
+//                red,
+//                new Channel(green.getHeight(), green.getWidth()),
+//                new Channel(blue.getHeight(), blue.getWidth()),
+//                maxPixelValue);
+        return createInstance(
                 red,
                 new Channel(green.getHeight(), green.getWidth()),
                 new Channel(blue.getHeight(), blue.getWidth()),
                 maxPixelValue);
       case GREEN:
-        return new RgbImage(
+//        return new RgbImage(
+//                new Channel(red.getHeight(), red.getWidth()),
+//                green,
+//                new Channel(blue.getHeight(), blue.getWidth()),
+//                maxPixelValue);
+        return createInstance(
                 new Channel(red.getHeight(), red.getWidth()),
                 green,
                 new Channel(blue.getHeight(), blue.getWidth()),
                 maxPixelValue);
       case BLUE:
-        return new RgbImage(
+//        return new RgbImage(
+//                new Channel(red.getHeight(), red.getWidth()),
+//                new Channel(green.getHeight(), green.getWidth()),
+//                blue,
+//                maxPixelValue);
+        return createInstance(
                 new Channel(red.getHeight(), red.getWidth()),
                 new Channel(green.getHeight(), green.getWidth()),
                 blue,
@@ -83,7 +107,7 @@ class RgbImage implements RgbImageModel {
     }
   }
 
-  private RgbImage applyFunctionToChannels(TriFunction<RgbImage, Integer, Integer, Double> fun) {
+  private RgbImageModel applyFunctionToChannels(TriFunction<RgbImage, Integer, Integer, Double> fun) {
 
     double[][] values = new double[red.getHeight()][red.getWidth()];
 
@@ -92,7 +116,11 @@ class RgbImage implements RgbImageModel {
         values[i][j] = Math.max(Math.min(fun.apply(this, i, j), maxPixelValue), 0);
       }
     }
-    return new RgbImage(new Channel(values),
+//    return new RgbImage(new Channel(values),
+//            new Channel(values),
+//            new Channel(values),
+//            maxPixelValue);
+    return createInstance(new Channel(values),
             new Channel(values),
             new Channel(values),
             maxPixelValue);
@@ -109,7 +137,12 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel horizontalFlip() {
-    return new RgbImage(
+//    return new RgbImage(
+//            red.getHorizontalFlipChannel(),
+//            green.getHorizontalFlipChannel(),
+//            blue.getHorizontalFlipChannel(),
+//            maxPixelValue);
+    return createInstance(
             red.getHorizontalFlipChannel(),
             green.getHorizontalFlipChannel(),
             blue.getHorizontalFlipChannel(),
@@ -118,7 +151,12 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel verticalFlip() {
-    return new RgbImage(
+//    return new RgbImage(
+//            red.getVerticalFlipChannel(),
+//            green.getVerticalFlipChannel(),
+//            blue.getVerticalFlipChannel(),
+//            maxPixelValue);
+    return createInstance(
             red.getVerticalFlipChannel(),
             green.getVerticalFlipChannel(),
             blue.getVerticalFlipChannel(),
@@ -127,7 +165,12 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel brighten(int increment) {
-    return new RgbImage(
+//    return new RgbImage(
+//            red.addBuffer(increment, maxPixelValue),
+//            green.addBuffer(increment, maxPixelValue),
+//            blue.addBuffer(increment, maxPixelValue),
+//            maxPixelValue);
+    return createInstance(
             red.addBuffer(increment, maxPixelValue),
             green.addBuffer(increment, maxPixelValue),
             blue.addBuffer(increment, maxPixelValue),
@@ -136,7 +179,12 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException {
-    return new RgbImage(
+//    return new RgbImage(
+//            red.applyConvolution(kernel, maxPixelValue),
+//            green.applyConvolution(kernel, maxPixelValue),
+//            blue.applyConvolution(kernel, maxPixelValue),
+//            maxPixelValue);
+    return createInstance(
             red.applyConvolution(kernel, maxPixelValue),
             green.applyConvolution(kernel, maxPixelValue),
             blue.applyConvolution(kernel, maxPixelValue),
@@ -179,7 +227,12 @@ class RgbImage implements RgbImageModel {
       }
     }
 
-    return new RgbImage(
+//    return new RgbImage(
+//            new Channel(newRed),
+//            new Channel(newGreen),
+//            new Channel(newBlue),
+//            maxPixelValue);
+    return createInstance(
             new Channel(newRed),
             new Channel(newGreen),
             new Channel(newBlue),
@@ -204,7 +257,7 @@ class RgbImage implements RgbImageModel {
     this.maxPixelValue = imageData.getMaxValue();
   }
 
-  private void checkValidRgbImageData(ImageData imageData) throws IllegalArgumentException {
+  void checkValidRgbImageData(ImageData imageData) throws IllegalArgumentException {
     double[][][] data = imageData.getData();
     if (data.length != 3) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");

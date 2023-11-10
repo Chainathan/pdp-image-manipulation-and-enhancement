@@ -4,14 +4,15 @@ import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 class AdvChannel extends Channel implements AdvChannelModel{
-
   AdvChannel(double[][] channel) {
     super(channel);
   }
-
+  AdvChannel() {
+    super();
+  }
   @Override
   public AdvChannelModel applyCompression(double compressionRatio) {
-    return null;
+    return new AdvChannel();
   }
   private double[] transform(double[] s){
     double[] avg = new double[s.length/2];

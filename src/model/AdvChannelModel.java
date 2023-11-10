@@ -1,6 +1,7 @@
 package model;
 
 interface AdvChannelModel extends ChannelModel{
+//interface AdvChannelModel extends ChannelModel{
   AdvChannelModel applyCompression(double compressionRatio);
   int[] getFrequencyValues();
   int getMaxFreqPixel();

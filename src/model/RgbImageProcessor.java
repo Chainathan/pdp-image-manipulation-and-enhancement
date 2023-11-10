@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +10,9 @@ import java.util.Map;
  * and unique names and provides operations for performing various
  * manipulations on the available images.
  */
-public class RgbImageProcessor implements ImageProcessorModel {
-  private final Map<String, RgbImageModel> imageList;
-
+//public class RgbImageProcessor implements ImageProcessorModel<RgbImageModel> {
+public class RgbImageProcessor implements ImageProcessorModel{
+  final Map<String, RgbImageModel> imageList;
   /**
    * Constructs an empty set of rgb images with key as image name
    * and value as single rgb image.
@@ -20,15 +21,64 @@ public class RgbImageProcessor implements ImageProcessorModel {
     imageList = new HashMap<>();
   }
 
+  RgbImageModel createImageModel() {
+    return new RgbImage();
+  }
+
+//  private RgbImageModel createImage() {
+//    try {
+//      // Assuming there is a default constructor for T
+//      return (T) Class.forName("ConcreteRgbImage").getDeclaredConstructor().newInstance();
+//    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
+//      e.printStackTrace(); // Handle the exception according to your needs
+//      return null;
+//    }
+//  }
+
+  //  @Override
+//  public RgbImageModel createModelInstance(){
+//    return new RgbImage();
+//  }
+
+//  public T createModelInstance(){
+//    return (T) new RgbImage();
+//  }
   @Override
   public void addImage(String destImageName, ImageData imageData)
           throws IllegalArgumentException {
     checkValidImageName(destImageName);
-    RgbImageModel imageModel = new RgbImage();
+//    T image = imageList.get(destImageName);
+//    if (image == null) {
+//      image = getModel();
+//    }
+//    image.loadImageData(imageData);
+//    imageList.put(destImageName, image);
+//    T imageModel =  createModelInstance();
+
+    RgbImageModel imageModel = this.createImageModel();//new RgbImage();
     imageModel.loadImageData(imageData);
+
     imageList.put(destImageName, imageModel);
+
+
+//    RgbImageModel imageModel = create();
+//    imageModel.loadImageData(imageData);
+//    imageList.put(destImageName, imageModel);
   }
 
+//  private T createInstance() {
+//    try {
+//      return (T) T.class.getDeclaredConstructor().newInstance();
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//      return null;
+//    }
+//  }
+
+//  @Override
+//  public T createModelInstance(){
+//    return new RgbImage();
+//  }
   @Override
   public ImageData getImageData(String imageName) throws IllegalArgumentException {
     checkImageNameExists(imageName);
@@ -114,7 +164,7 @@ public class RgbImageProcessor implements ImageProcessorModel {
     double[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
     ImageData newImageData = new ImageData(newData, red.getMaxValue());
 
-    RgbImageModel newImage = new RgbImage();
+    RgbImageModel newImage = this.createImageModel();
     newImage.loadImageData(newImageData);
     imageList.put(destImageName, newImage);
   }
@@ -162,13 +212,13 @@ public class RgbImageProcessor implements ImageProcessorModel {
     imageList.put(destImageName, destImage);
   }
 
-  private void checkValidImageName(String imageName) throws IllegalArgumentException {
+  void checkValidImageName(String imageName) throws IllegalArgumentException {
     if (imageName.trim().isEmpty()) {
       throw new IllegalArgumentException("Invalid image name");
     }
   }
 
-  private void checkImageNameExists(String imageName) throws IllegalArgumentException {
+  void checkImageNameExists(String imageName) throws IllegalArgumentException {
     if (!imageList.containsKey(imageName)) {
       throw new IllegalArgumentException("Image does not exist");
     }

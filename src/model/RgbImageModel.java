@@ -6,8 +6,13 @@ package model;
  * interface provide methods to visualize, manipulate, and manage
  * RGB image data.
  */
-interface RgbImageModel {
+interface RgbImageModel{
+  //T getModel();
 
+  RgbImageModel createInstance(ChannelModel red,
+                                    ChannelModel green,
+                                    ChannelModel blue,
+                                    int maxPixelValue);
   /**
    * Visualize the RGB image model using the specified component.
    *

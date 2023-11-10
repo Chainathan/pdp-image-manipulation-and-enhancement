@@ -8,7 +8,11 @@ import java.util.List;
  * and provides operations for performing various manipulations on the available images.
  */
 public interface ImageProcessorModel {
-
+//public interface ImageProcessorModel<T extends RgbImageModel>{
+//  T createModelInstance();
+//  RgbImageModel createModelInstance();
+//  RgbImageModel create();
+//   RgbImageModel createImageModel();
   /**
    * Add an image to the image processor with the specified
    * name and the provided image data.
