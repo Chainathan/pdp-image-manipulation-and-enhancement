@@ -100,6 +100,12 @@ public class RgbController implements ImageController {
       result = executeFiveArgCommand(command, arguments);
     } else if (arguments.length == 1 && arguments[0].equals("exit")) {
       result = "exit";
+    } else if (arguments.length == 6 && operation.startsWith("levels-adjust ")) {
+      int b = Integer.parseInt(arguments[1]);
+      int m = Integer.parseInt(arguments[2]);
+      int w = Integer.parseInt(arguments[3]);
+      rgbImageProcessor.adjustLevels(arguments[4],arguments[5],b,m,w);
+      result = arguments[0] + " Operation performed successfully";
     } else {
       result = "Unknown Operation: " + operation;
     }
@@ -129,9 +135,13 @@ public class RgbController implements ImageController {
           throws IllegalArgumentException {
     if (command.equals("brighten")) {
       int increment = Integer.parseInt(arguments[1]);
-//      rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
-      rgbImageProcessor.compress(arguments[2], arguments[3], increment);
-    } else {
+      rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
+//      rgbImageProcessor.compress(arguments[2], arguments[3], increment);
+    } else if (command.equals("compress")){
+      double compressRatio = Double.parseDouble(arguments[1]);
+      rgbImageProcessor.compress(arguments[2], arguments[3], compressRatio);
+    }
+    else {
       return "Unknown command: " + command;
     }
     return command + " Operation performed successfully";
@@ -212,6 +222,13 @@ public class RgbController implements ImageController {
       case "sepia":
         rgbImageProcessor.sepia(arguments[1], arguments[2]);
         break;
+      case "histogram":
+        rgbImageProcessor.createHistogram(arguments[1], arguments[2]);
+        break;
+      case "color-correct":
+        rgbImageProcessor.correctColor(arguments[1], arguments[2]);
+        break;
+
       default:
         return "Unknown command: " + command;
     }

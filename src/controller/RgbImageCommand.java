@@ -1,8 +1,8 @@
 package controller;
 
-import model.ImageProcessorModel;
 import model.RgbImageModel;
+import java.util.Map;
 
 public interface RgbImageCommand {
-  void execute(RgbImageModel image, String input) throws IllegalArgumentException;
+  void execute(Map<String, RgbImageModel> imageList, String input) throws IllegalArgumentException;
 }

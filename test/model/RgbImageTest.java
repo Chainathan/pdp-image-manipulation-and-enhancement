@@ -25,6 +25,11 @@ public class RgbImageTest {
     }
 
     @Override
+    public ChannelModel createInstance(double[][] channelValues) {
+      return null;
+    }
+
+    @Override
     public double[][] getChannelValues() {
       double[][] channel = {
               {1, 2, 3},
@@ -109,6 +114,36 @@ public class RgbImageTest {
     @Override
     public double getValue(int x, int y) throws IllegalArgumentException {
       return dummyChannel[x][y];
+    }
+
+    @Override
+    public ChannelModel applyCompression(double compressionRatio) {
+      return null;
+    }
+
+    @Override
+    public int[] getFrequencyValues() {
+      return new int[0];
+    }
+
+    @Override
+    public int getMaxFreqPixel() {
+      return 0;
+    }
+
+    @Override
+    public ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
+      return null;
+    }
+
+    @Override
+    public ChannelModel cropVertical(int start, int end) throws IllegalArgumentException {
+      return null;
+    }
+
+    @Override
+    public ChannelModel overlapOnBase(ChannelModel otherChannel, int start) throws IllegalArgumentException {
+      return null;
     }
   }
 

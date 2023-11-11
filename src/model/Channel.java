@@ -180,12 +180,14 @@ class Channel implements ChannelModel {
     int nPixelsToCompress = (int)Math.round((compressionRatio
             * haarTransformed.length * haarTransformed.length)/100);
     double[][] compressed = applyCompressionRatio(haarTransformed,nPixelsToCompress);
+    //Unpad method.
+    //double[][] haarInverse = haarInverse(compressed);
     return createInstance(compressed);
   }
 
   private double[][] pad2DArray(double[][] originalChannel) {
     int originalChannelHeight = originalChannel.length;
-    int originalChannelWidth = originalChannel[0].length;
+    int originalChannelWidth = 512;//originalChannel[0].length;
 
     // Find the smallest power of 2 greater than or equal to the maximum of height and width
     int newSize = Math.max(originalChannelHeight, originalChannelWidth);
@@ -224,10 +226,19 @@ class Channel implements ChannelModel {
   private double[][] haarTransform(double[][] X){
     int c = X.length;
 
+    int test = 2;
     while (c > 1) {
       // Transform Rows
       for (int i = 0; i < c; i++) {
-        X[i] = transform(X[i]);
+        //X[i] = transform(X[i]);
+        double[] row = new double[c];
+        for (int j = 0; j < c; j++) {
+          row[j] = X[i][j];
+        }
+        row = transform(row);
+        for (int j = 0; j < c; j++) {
+          X[i][j] = row[j];
+        }
       }
 
       // Transform Columns
@@ -242,7 +253,9 @@ class Channel implements ChannelModel {
         }
       }
 
-      c = c / 2;
+      //c = c / 2;
+      c=c/2;
+      test-=1;
     }
 
     return X;
@@ -263,6 +276,9 @@ class Channel implements ChannelModel {
   }
 
   private double[][] applyCompressionRatio(double[][] haarTransformed, int nSmallestNonZero) {
+    if(nSmallestNonZero==0){
+      return haarTransformed;
+    }
     double[] flatMatrix = Arrays.stream(haarTransformed)
             .flatMapToDouble(Arrays::stream)
             .toArray();
@@ -343,6 +359,43 @@ class Channel implements ChannelModel {
 //    double[] compressed = applyLossycompression(s,indices);
 //    return res;
 //  }
+
+  private double[][] haarInverse(double[][] X){
+    int c = 2;
+    int test = 2;
+    while (c <= X.length) {
+
+      // Transform Columns
+      for (int j = 0; j < c; j++) {
+        double[] column = new double[c];
+        for (int i = 0; i < c; i++) {
+          column[i] = X[i][j];
+        }
+        column = inverse(column);
+        for (int i = 0; i < c; i++) {
+          X[i][j] = column[i];
+        }
+      }
+
+      // Transform Rows
+      for (int i = 0; i < c; i++) {
+        //X[i] = transform(X[i]);
+        double[] row = new double[c];
+        for (int j = 0; j < c; j++) {
+          row[j] = X[i][j];
+        }
+        row = inverse(row);
+        for (int j = 0; j < c; j++) {
+          X[i][j] = row[j];
+        }
+      }
+
+      c=c*2;
+      test-=1;
+    }
+
+    return X;
+  }
 
   private double[] inverse(double[] s){
     double[] avg = new double[s.length/2];

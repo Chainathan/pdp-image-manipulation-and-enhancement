@@ -122,6 +122,13 @@ The program supports loading, manipulating and saving images using simple text-b
 11. sepia image-name dest-image-name: produce a sepia-toned version of the given image and store the result in another image with the given name.
 12. run script-file-path: Load and run the script commands in the specified file.
 13. exit: To terminate the program.
+// Advanced operations
+compress percentage image-name dest-image-name
+histogram image-name dest-image-name
+color-correct image-name dest-image-name
+levels-adjust b m w image-name dest-image-name
+blur image-name dest-image split p : The operations that must support this are blur, sharpen, sepia, greyscale, color correction and levels adjustment.
+-file name-of-script.txt
 
 Note
 ====
