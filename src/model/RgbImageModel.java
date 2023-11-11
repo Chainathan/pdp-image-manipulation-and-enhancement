@@ -6,13 +6,9 @@ package model;
  * interface provide methods to visualize, manipulate, and manage
  * RGB image data.
  */
-interface RgbImageModel {
-  //T getModel();
-
-  RgbImageModel createInstance(ChannelModel red,
-                                    ChannelModel green,
-                                    ChannelModel blue,
-                                    int maxPixelValue);
+public interface RgbImageModel {
+  RgbImageModel createInstance(ChannelModel...channelModels)
+          throws IllegalArgumentException;
   /**
    * Visualize the RGB image model using the specified component.
    *
@@ -79,4 +75,12 @@ interface RgbImageModel {
    * @param imageData The ImageData object to load.
    */
   void loadImageData(ImageData imageData);
+
+  RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException;
+  RgbImageModel createHistogram();
+  RgbImageModel correctColor();
+  RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;
+  RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException;
+  RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
+          throws IllegalArgumentException;
 }

@@ -1,6 +1,5 @@
 package model;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import java.util.Map;
  * and unique names and provides operations for performing various
  * manipulations on the available images.
  */
-//public class RgbImageProcessor implements ImageProcessorModel<RgbImageModel> {
 public class RgbImageProcessor implements ImageProcessorModel{
   final Map<String, RgbImageModel> imageList;
   /**
@@ -20,65 +18,15 @@ public class RgbImageProcessor implements ImageProcessorModel{
   public RgbImageProcessor() {
     imageList = new HashMap<>();
   }
-
-  RgbImageModel createImageModel() {
-    return new RgbImage();
-  }
-
-//  private RgbImageModel createImage() {
-//    try {
-//      // Assuming there is a default constructor for T
-//      return (T) Class.forName("ConcreteRgbImage").getDeclaredConstructor().newInstance();
-//    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-//      e.printStackTrace(); // Handle the exception according to your needs
-//      return null;
-//    }
-//  }
-
-  //  @Override
-//  public RgbImageModel createModelInstance(){
-//    return new RgbImage();
-//  }
-
-//  public T createModelInstance(){
-//    return new RgbImage();
-//  }
   @Override
   public void addImage(String destImageName, ImageData imageData)
           throws IllegalArgumentException {
     checkValidImageName(destImageName);
-//    T image = imageList.get(destImageName);
-//    if (image == null) {
-//      image = getModel();
-//    }
-//    image.loadImageData(imageData);
-//    imageList.put(destImageName, image);
-//    T imageModel =  createModelInstance();
-
-    RgbImageModel imageModel = this.createImageModel();//new RgbImage();
+// TODO check how to use a factory method for this
+    RgbImageModel imageModel = new RgbImage();
     imageModel.loadImageData(imageData);
-
     imageList.put(destImageName, imageModel);
-
-
-//    RgbImageModel imageModel = create();
-//    imageModel.loadImageData(imageData);
-//    imageList.put(destImageName, imageModel);
   }
-
-//  private T createInstance() {
-//    try {
-//      return (T) T.class.getDeclaredConstructor().newInstance();
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//      return null;
-//    }
-//  }
-
-//  @Override
-//  public T createModelInstance(){
-//    return new RgbImage();
-//  }
   @Override
   public ImageData getImageData(String imageName) throws IllegalArgumentException {
     checkImageNameExists(imageName);
@@ -164,7 +112,7 @@ public class RgbImageProcessor implements ImageProcessorModel{
     double[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
     ImageData newImageData = new ImageData(newData, red.getMaxValue());
 
-    RgbImageModel newImage = this.createImageModel();
+    RgbImageModel newImage = new RgbImage(); //this.createImageModel();
     newImage.loadImageData(newImageData);
     imageList.put(destImageName, newImage);
   }
@@ -212,13 +160,76 @@ public class RgbImageProcessor implements ImageProcessorModel{
     imageList.put(destImageName, destImage);
   }
 
-  void checkValidImageName(String imageName) throws IllegalArgumentException {
+  @Override
+  public void compress(String imageName, String destImageName, double compressionRatio)
+          throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageName);
+    RgbImageModel destImage = imageList.get(imageName).applyCompression(compressionRatio);
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void createHistogram(String imageName, String destImageName)
+          throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageName);
+    RgbImageModel destImage = imageList.get(imageName).createHistogram();
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void correctColor(String imageName, String destImageName)
+          throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageName);
+    RgbImageModel destImage = imageList.get(imageName).correctColor();
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void adjustLevels(String imageName, String destImageName, int b, int m, int w)
+          throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageName);
+    RgbImageModel destImage = imageList.get(imageName).adjustLevels(b,m,w);
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void cropVertical(String imageName, String destImageName, double start, double end)
+          throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageName);
+    RgbImageModel destImage = imageList.get(imageName).cropVertical(start,end);
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void overlapOnBase(String imageNameOriginal, String imageNameAddon,
+                            String destImageName, double start) throws IllegalArgumentException{
+    checkValidImageName(destImageName);
+    checkImageNameExists(imageNameOriginal);
+    checkImageNameExists(imageNameAddon);
+    RgbImageModel imageOriginal = imageList.get(imageNameOriginal);
+    RgbImageModel imageAddon = imageList.get(imageNameAddon);
+    RgbImageModel destImage = imageOriginal.overlapOnBase(imageAddon, start);
+    imageList.put(destImageName, destImage);
+  }
+
+  @Override
+  public void removeImage(String imageName) throws IllegalArgumentException{
+    checkImageNameExists(imageName);
+    imageList.remove(imageName);
+  }
+
+  private void checkValidImageName(String imageName) throws IllegalArgumentException {
     if (imageName.trim().isEmpty()) {
       throw new IllegalArgumentException("Invalid image name");
     }
   }
 
-  void checkImageNameExists(String imageName) throws IllegalArgumentException {
+  private void checkImageNameExists(String imageName) throws IllegalArgumentException {
     if (!imageList.containsKey(imageName)) {
       throw new IllegalArgumentException("Image does not exist");
     }

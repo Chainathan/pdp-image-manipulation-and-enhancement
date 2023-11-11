@@ -1,5 +1,10 @@
 package model;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import controller.RgbImageFileIO;
+
 /**
  * The RgbImage class implements the RgbImageModel interface and
  * represents an RGB image composed of red, green, and blue channels.
@@ -45,52 +50,32 @@ class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel createInstance(ChannelModel red,
-                                      ChannelModel green,
-                                      ChannelModel blue,
-                                      int maxPixelValue) {
-    return new RgbImage(red,green,blue,maxPixelValue);
+  public RgbImageModel createInstance(ChannelModel...channelModels)
+          throws IllegalArgumentException{
+    if (channelModels.length!=3){
+      throw new IllegalArgumentException("Invalid channels to create image model");
+    }
+    return new RgbImage(channelModels[0],channelModels[1],channelModels[2],maxPixelValue);
   }
-  //  public RgbImage getModel(){
-//    return new RgbImage();
-//  }
   @Override
   public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
           throws IllegalArgumentException {
     switch (componentEnum) {
       case RED:
-//        return new RgbImage(
-//                red,
-//                new Channel(green.getHeight(), green.getWidth()),
-//                new Channel(blue.getHeight(), blue.getWidth()),
-//                maxPixelValue);
         return createInstance(
                 red,
                 new Channel(green.getHeight(), green.getWidth()),
-                new Channel(blue.getHeight(), blue.getWidth()),
-                maxPixelValue);
+                new Channel(blue.getHeight(), blue.getWidth()));
       case GREEN:
-//        return new RgbImage(
-//                new Channel(red.getHeight(), red.getWidth()),
-//                green,
-//                new Channel(blue.getHeight(), blue.getWidth()),
-//                maxPixelValue);
         return createInstance(
                 new Channel(red.getHeight(), red.getWidth()),
                 green,
-                new Channel(blue.getHeight(), blue.getWidth()),
-                maxPixelValue);
+                new Channel(blue.getHeight(), blue.getWidth()));
       case BLUE:
-//        return new RgbImage(
-//                new Channel(red.getHeight(), red.getWidth()),
-//                new Channel(green.getHeight(), green.getWidth()),
-//                blue,
-//                maxPixelValue);
         return createInstance(
                 new Channel(red.getHeight(), red.getWidth()),
                 new Channel(green.getHeight(), green.getWidth()),
-                blue,
-                maxPixelValue);
+                blue);
       case LUMA:
         return getLumaComponent();
       case INTENSITY:
@@ -116,14 +101,9 @@ class RgbImage implements RgbImageModel {
         values[i][j] = Math.max(Math.min(fun.apply(this, i, j), maxPixelValue), 0);
       }
     }
-//    return new RgbImage(new Channel(values),
-//            new Channel(values),
-//            new Channel(values),
-//            maxPixelValue);
     return createInstance(new Channel(values),
             new Channel(values),
-            new Channel(values),
-            maxPixelValue);
+            new Channel(values));
   }
 
   private RgbImageModel getLumaComponent() throws IllegalArgumentException {
@@ -137,58 +117,34 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel horizontalFlip() {
-//    return new RgbImage(
-//            red.getHorizontalFlipChannel(),
-//            green.getHorizontalFlipChannel(),
-//            blue.getHorizontalFlipChannel(),
-//            maxPixelValue);
     return createInstance(
             red.getHorizontalFlipChannel(),
             green.getHorizontalFlipChannel(),
-            blue.getHorizontalFlipChannel(),
-            maxPixelValue);
+            blue.getHorizontalFlipChannel());
   }
 
   @Override
   public RgbImageModel verticalFlip() {
-//    return new RgbImage(
-//            red.getVerticalFlipChannel(),
-//            green.getVerticalFlipChannel(),
-//            blue.getVerticalFlipChannel(),
-//            maxPixelValue);
     return createInstance(
             red.getVerticalFlipChannel(),
             green.getVerticalFlipChannel(),
-            blue.getVerticalFlipChannel(),
-            maxPixelValue);
+            blue.getVerticalFlipChannel());
   }
 
   @Override
   public RgbImageModel brighten(int increment) {
-//    return new RgbImage(
-//            red.addBuffer(increment, maxPixelValue),
-//            green.addBuffer(increment, maxPixelValue),
-//            blue.addBuffer(increment, maxPixelValue),
-//            maxPixelValue);
     return createInstance(
             red.addBuffer(increment, maxPixelValue),
             green.addBuffer(increment, maxPixelValue),
-            blue.addBuffer(increment, maxPixelValue),
-            maxPixelValue);
+            blue.addBuffer(increment, maxPixelValue));
   }
 
   @Override
   public RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException {
-//    return new RgbImage(
-//            red.applyConvolution(kernel, maxPixelValue),
-//            green.applyConvolution(kernel, maxPixelValue),
-//            blue.applyConvolution(kernel, maxPixelValue),
-//            maxPixelValue);
     return createInstance(
             red.applyConvolution(kernel, maxPixelValue),
             green.applyConvolution(kernel, maxPixelValue),
-            blue.applyConvolution(kernel, maxPixelValue),
-            maxPixelValue);
+            blue.applyConvolution(kernel, maxPixelValue));
   }
 
   @Override
@@ -226,17 +182,7 @@ class RgbImage implements RgbImageModel {
 
       }
     }
-
-//    return new RgbImage(
-//            new Channel(newRed),
-//            new Channel(newGreen),
-//            new Channel(newBlue),
-//            maxPixelValue);
-    return createInstance(
-            new Channel(newRed),
-            new Channel(newGreen),
-            new Channel(newBlue),
-            maxPixelValue);
+    return createInstance(new Channel(newRed), new Channel(newGreen), new Channel(newBlue));
   }
 
   @Override
@@ -257,10 +203,119 @@ class RgbImage implements RgbImageModel {
     this.maxPixelValue = imageData.getMaxValue();
   }
 
+  @Override
+  public RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException {
+    return this.createInstance(
+            red.applyCompression(compressionRatio),
+            green.applyCompression(compressionRatio),
+            blue.applyCompression(compressionRatio));
+  }
+
+  // Advanced Features
+
+  @Override
+  public RgbImageModel correctColor() {
+    int redMax = red.getMaxFreqPixel();
+    int greenMax = green.getMaxFreqPixel();
+    int blueMax = blue.getMaxFreqPixel();
+
+    int avgMaxFrqPixel = Math.round((float) (redMax+greenMax+blueMax)/3);
+    return this.createInstance(
+            red.addBuffer(avgMaxFrqPixel-redMax,maxPixelValue),
+            green.addBuffer(avgMaxFrqPixel-greenMax,maxPixelValue),
+            blue.addBuffer(avgMaxFrqPixel-blueMax,maxPixelValue));
+  }
+
+  @Override
+  public RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
+    return this.createInstance(
+            red.adjustLevels(b,m,w),
+            green.adjustLevels(b,m,w),
+            blue.adjustLevels(b,m,w));
+  }
+
+  @Override
+  public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
+    if (start < 0 || start > 100 || end < 0 || end > 100 ) {
+      throw new IllegalArgumentException("Invalid start/end percentage for trimming");
+    }
+    int startWidth = (int) Math.round(red.getWidth()*start / 100);
+    int endWidth = (int) Math.round(red.getWidth()*end / 100);
+    return this.createInstance(
+            red.cropVertical(startWidth,endWidth),
+            green.cropVertical(startWidth,endWidth),
+            blue.cropVertical(startWidth,endWidth)
+    );
+  }
+
+  @Override
+  public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
+          throws IllegalArgumentException {
+    if (start < 0 || start > 100) {
+      throw new IllegalArgumentException("Invalid start percentage for Overlap");
+    }
+    int startWidth = (int) Math.round(red.getWidth()*start / 100);
+
+    double[][][] imageData = otherImage.getImageData().getData();
+    ChannelModel otherRed = new Channel(imageData[0]);
+    ChannelModel otherGreen = new Channel(imageData[1]);
+    ChannelModel otherBlue = new Channel(imageData[2]);
+
+    return this.createInstance(
+            red.overlapOnBase(otherRed, startWidth),
+            green.overlapOnBase(otherGreen, startWidth),
+            blue.overlapOnBase(otherBlue, startWidth)
+    );
+  }
+
   void checkValidRgbImageData(ImageData imageData) throws IllegalArgumentException {
     double[][][] data = imageData.getData();
     if (data.length != 3) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");
     }
+  }
+
+  @Override
+  public RgbImageModel createHistogram() {
+    int[][] freqData = {
+            red.getFrequencyValues(),
+            green.getFrequencyValues(),
+            blue.getFrequencyValues()
+    };
+    BufferedImage histogramImage = createHistogramLineGraphs(freqData);
+    ImageData histogramData = RgbImageFileIO.convertBuffImgToImgData(histogramImage);
+
+    double[][][] imageData = histogramData.getData();
+    ChannelModel otherRed = new Channel(imageData[0]);
+    ChannelModel otherGreen = new Channel(imageData[1]);
+    ChannelModel otherBlue = new Channel(imageData[2]);
+    return this.createInstance(otherRed,otherGreen,otherBlue);
+  }
+
+  private static BufferedImage createHistogramLineGraphs(int[][] histograms) {
+    int numComponents = histograms.length;
+    int binCount = histograms[0].length;
+
+    BufferedImage histogramImages = new BufferedImage(binCount, binCount,
+            BufferedImage.TYPE_INT_RGB);
+
+    Graphics2D g = histogramImages.createGraphics();
+    g.setBackground(Color.WHITE);
+    g.clearRect(0, 0, binCount, binCount);
+
+    Color[] colorList = {Color.RED, Color.GREEN, Color.BLUE};
+
+    for (int component = 0; component < numComponents; component++) {
+      g.setColor(colorList[component]);
+      for (int i = 0; i < binCount - 1; i++) {
+        int x1 = i;
+        int x2 = i + 1;
+        int y1 = histograms[component][i];
+        int y2 = histograms[component][i+1];
+        g.drawLine(x1, y1, x2, y2);
+      }
+    }
+
+    return histogramImages;
   }
 }

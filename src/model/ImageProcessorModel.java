@@ -8,11 +8,6 @@ import java.util.List;
  * and provides operations for performing various manipulations on the available images.
  */
 public interface ImageProcessorModel {
-//public interface ImageProcessorModel<T extends RgbImageModel>{
-//  T createModelInstance();
-//  RgbImageModel createModelInstance();
-//  RgbImageModel create();
-//   RgbImageModel createImageModel();
   /**
    * Add an image to the image processor with the specified
    * name and the provided image data.
@@ -140,4 +135,19 @@ public interface ImageProcessorModel {
    *                      is invalid.
    */
   void sepia(String imageName, String destImageName) throws IllegalArgumentException;
+
+  void compress(String imageName, String destImageName, double compressionRatio)
+          throws IllegalArgumentException;
+  void createHistogram(String imageName, String destImageName)
+          throws IllegalArgumentException;
+  void correctColor(String imageName, String destImageName)
+          throws IllegalArgumentException;
+  void adjustLevels(String imageName, String destImageName, int b, int m, int w)
+          throws IllegalArgumentException;
+  void cropVertical(String imageName, String destImageName,
+                    double start, double end) throws IllegalArgumentException;
+  void overlapOnBase(String imageNameOriginal, String imageNameAddon,
+                     String destImageName, double start) throws IllegalArgumentException;
+  void removeImage(String imageName) throws IllegalArgumentException;
+
 }

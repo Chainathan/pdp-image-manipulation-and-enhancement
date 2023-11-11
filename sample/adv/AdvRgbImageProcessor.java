@@ -2,7 +2,7 @@ package model;
 
 import java.util.Map;
 
-public class AdvRgbImageProcessor extends RgbImageProcessor<AdvRgbImageModel> implements AdvImageProcessorModel{
+public class AdvRgbImageProcessor extends RgbImageProcessor implements AdvImageProcessorModel{
 //  Map<String, AdvRgbImageModel> imageList;
   @Override
   public void compress(String imageName, String destImageName, double compressionRatio)

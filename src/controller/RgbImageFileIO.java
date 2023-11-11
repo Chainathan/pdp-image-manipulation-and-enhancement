@@ -23,8 +23,7 @@ import java.io.FileWriter;
  * The RgbImageFileIO class implements the ImageFileIO interface and
  * provides methods for loading and saving RGB image data.
  */
-class RgbImageFileIO implements ImageFileIO {
-
+public class RgbImageFileIO implements ImageFileIO {
   @Override
   public ImageData load(String filePath) throws IOException, FileFormatNotSupportedException {
     int startingIndex = filePath.lastIndexOf(".");
@@ -87,45 +86,42 @@ class RgbImageFileIO implements ImageFileIO {
     }
   }
 
-  private static ImageData loadGeneralFormat(String filePath) throws IOException {
+  private ImageData loadGeneralFormat(String filePath) throws IOException {
     File imageFile = new File(filePath);
     try {
       BufferedImage image = ImageIO.read(imageFile);
-
-      if (image != null) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        double[][][] imageData = new double[3][height][width];
-
-        ColorModel colorModel = image.getColorModel();
-        if (colorModel.getColorSpace().getType() == ColorSpace.TYPE_RGB) {
-
-          for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-              Color pixelColor = new Color(image.getRGB(j, i));
-
-              int red = pixelColor.getRed();
-              int green = pixelColor.getGreen();
-              int blue = pixelColor.getBlue();
-              imageData[0][i][j] = red;
-              imageData[1][i][j] = green;
-              imageData[2][i][j] = blue;
-            }
-          }
-
-          int bitDepth = image.getColorModel().getPixelSize();
-          int numOfChannels = image.getColorModel().getComponentSize().length;
-          int bitDepthPerChannel = bitDepth / numOfChannels;
-          return new ImageData(imageData, (int) Math.pow(2, bitDepthPerChannel) - 1);
-        } else {
-          throw new IOException("Invalid Image");
-        }
-      } else {
-        throw new IOException("Invalid Image.");
+      if (image != null
+              && image.getColorModel().getColorSpace().getType() == ColorSpace.TYPE_RGB) {
+        return convertBuffImgToImgData(image);
+      }
+      else {
+        throw new IOException("Invalid Image");
       }
     } catch (IOException e) {
       throw new IOException("Invalid Image.");
     }
+  }
+  // TODO ask prof abt the placement
+  public static ImageData convertBuffImgToImgData(BufferedImage image){
+    int width = image.getWidth();
+    int height = image.getHeight();
+    double[][][] imageData = new double[3][height][width];
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        Color pixelColor = new Color(image.getRGB(j, i));
+
+        int red = pixelColor.getRed();
+        int green = pixelColor.getGreen();
+        int blue = pixelColor.getBlue();
+        imageData[0][i][j] = red;
+        imageData[1][i][j] = green;
+        imageData[2][i][j] = blue;
+      }
+    }
+    int bitDepth = image.getColorModel().getPixelSize();
+    int numOfChannels = image.getColorModel().getComponentSize().length;
+    int bitDepthPerChannel = bitDepth / numOfChannels;
+    return new ImageData(imageData, (int) Math.pow(2, bitDepthPerChannel) - 1);
   }
 
   @Override

@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import exceptions.FileFormatNotSupportedException;
-import model.AdvImageProcessorModel;
-import model.Factory;
 import model.ImageData;
 import model.ImageProcessorModel;
-import model.simpleFactory;
 import view.ImageProcessorView;
 
 /**
@@ -20,8 +17,7 @@ import view.ImageProcessorView;
  * interface for controlling RGB image processing.
  */
 public class RgbController implements ImageController {
-//  private final ImageProcessorModel rgbImageProcessor;
-private final AdvImageProcessorModel rgbImageProcessor;
+  private final ImageProcessorModel rgbImageProcessor;
   private final ImageFileIO rgbImageFileIO;
   private final ImageProcessorView textView;
   private final Readable in;
@@ -33,7 +29,7 @@ private final AdvImageProcessorModel rgbImageProcessor;
    * @param textView          The view for displaying image processing results.
    * @param in                The input source for user interactions.
    */
-  public RgbController(AdvImageProcessorModel rgbImageProcessor,
+  public RgbController(ImageProcessorModel rgbImageProcessor,
                        ImageProcessorView textView, Readable in) {
     this.rgbImageProcessor = rgbImageProcessor;
     this.rgbImageFileIO = new RgbImageFileIO();

@@ -16,6 +16,12 @@ variable "int[][] channelValues" private to package private in Channel
 variable "int[][] channelValues" to "double[][]" and all the corresponding signatures
 variables in rgbImage - private to package-private.
 variables in rgbImageProcessor - private to package-private.
+RgbFileIO -
+class - package private to public
+load helper method - static to non static
+extracted buffimage to imagedata method into a public static method
+Channel model:
+getValue() - argument name
 **********************************************
 Image Manipulation And Enhancement Application
 **********************************************

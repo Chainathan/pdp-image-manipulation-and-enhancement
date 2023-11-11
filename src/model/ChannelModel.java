@@ -63,10 +63,17 @@ interface ChannelModel {
   /**
    * Get the pixel value at the specified position.
    *
-   * @param x The column value.
    * @param y The row value.
+   * @param x The column value.
    * @return The pixel value at the specified position.
    * @throws IllegalArgumentException If the provided coordinates are out of bounds.
    */
-  double getValue(int x, int y) throws IllegalArgumentException;
+  double getValue(int y, int x) throws IllegalArgumentException;
+  ChannelModel applyCompression(double compressionRatio);
+  int[] getFrequencyValues();
+  int getMaxFreqPixel();
+  ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;
+  ChannelModel cropVertical(int start, int end) throws IllegalArgumentException;
+  ChannelModel overlapOnBase(ChannelModel otherChannel, int start)
+          throws IllegalArgumentException;
 }

@@ -1,6 +1,4 @@
 import controller.RgbController;
-import model.AdvImageProcessorModel;
-import model.AdvRgbImageProcessor;
 import model.ImageProcessorModel;
 import model.RgbImageProcessor;
 import view.ImageProcessorView;
@@ -23,12 +21,11 @@ public abstract class ImageProcessor implements ImageProcessorModel {
    * @param args Command-line arguments (not used in this example).
    */
   public static void main(String[] args) {
-//    ImageProcessorModel model = new RgbImageProcessor<>();
-    AdvImageProcessorModel model = new AdvRgbImageProcessor();
+    ImageProcessorModel model = new RgbImageProcessor();
+//    AdvImageProcessorModel model = new AdvRgbImageProcessor();
     ImageProcessorView textView = new TextView(System.out);
     RgbController controller = new RgbController(model, textView,
             new InputStreamReader(System.in));
-
     try {
       controller.run();
     } catch (IOException e) {
