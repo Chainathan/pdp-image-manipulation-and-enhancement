@@ -162,6 +162,41 @@ public class RgbControllerTest {
               .append(", Dest Image Name : ")
               .append(destImageName);
     }
+
+    @Override
+    public void compress(String imageName, String destImageName, double compressionRatio) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void createHistogram(String imageName, String destImageName) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void correctColor(String imageName, String destImageName) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void cropVertical(String imageName, String destImageName, double start, double end) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void overlapOnBase(String imageNameOriginal, String imageNameAddon, String destImageName, double start) throws IllegalArgumentException {
+
+    }
+
+    @Override
+    public void removeImage(String imageName) throws IllegalArgumentException {
+
+    }
   }
 
   StringBuffer out;

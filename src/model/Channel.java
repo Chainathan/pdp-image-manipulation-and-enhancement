@@ -175,95 +175,12 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel applyCompression(double compressionRatio) {
-    return null;
-  }
-
-  private double[] applyLossycompression(double[] transform, int[] nSmallest){
-    for(int i=0;i<nSmallest.length;i++){
-      if(nSmallest[i]==-1){
-          break;
-      }
-      transform[nSmallest[i]]=0;
-    }
-    return transform;
-  }
-
-  private int[] findIndicesOfNSmallest(double[] array, int n) {
-    // Create an array of indices
-    Integer[] indices = new Integer[array.length];
-    for (int i = 0; i < array.length; i++) {
-      indices[i] = i;
-    }
-
-    // Sort the indices based on the values in the original array
-    //Arrays.sort(indices, (a, b) -> Double.compare(array[a], array[b]));
-    Arrays.sort(indices, Comparator.comparingDouble(i -> array[i]));
-//    Arrays.sort(indices, new java.util.Comparator<Integer>() {
-//      @Override
-//      public int compare(Integer a, Integer b) {
-//        return Double.compare(array[a], array[b]);
-//      }
-//    });
-
-    // Create an array to store the result
-    int[] result = new int[n];
-
-    int count = 0;
-    for (int i = 0; i < indices.length && count < n; i++) {
-      int index = indices[i];
-      if (array[index] > 0) {
-        result[count++] = index;
-      }
-    }
-
-    // If there are less than n non-zero elements, fill the remaining with -1
-    while (count < n) {
-      result[count++] = -1; // or any value that indicates no element found
-    }
-    // Copy the first n indices
-//    System.arraycopy(indices, 0, result, 0, n);
-    return result;
-  }
-
-  private double[] transform(double[] s){
-    double[] avg = new double[s.length/2];
-    double[] diff = new double[s.length/2];
-
-    for (int i=0; i<s.length;i=i+2){
-      double a = s[i];
-      double b = s[i+1];
-      avg[i/2] = (a+b) / Math.sqrt(2);
-      diff[i/2] = (a-b) / Math.sqrt(2);
-    }
-
-    return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
-  }
-  private int nextPowerOf2(int number) {
-    if (number <= 0) {
-      return 1;
-    }
-
-    number--;
-    number |= number >> 1;
-    number |= number >> 2;
-    number |= number >> 4;
-    number |= number >> 8;
-    number |= number >> 16;
-    number++;
-
-    return number;
-  }
-
-  private double[] transformAdv(double[] s){
-    int l = nextPowerOf2(s.length);
-    double[] newS = Arrays.copyOf(s, l);
-    int m = l;
-    while (m>1){
-      double[] temp = transform(Arrays.copyOf(newS,m));
-      System.arraycopy(temp,0,newS,0,m);
-      m = m/2;
-    }
-    return newS;
+    double[][] padded = pad2DArray(getChannelValues());
+    double[][] haarTransformed = haarTransform(padded);
+    int nPixelsToCompress = (int)Math.round((compressionRatio
+            * haarTransformed.length * haarTransformed.length)/100);
+    double[][] compressed = applyCompressionRatio(haarTransformed,nPixelsToCompress);
+    return createInstance(compressed);
   }
 
   private double[][] pad2DArray(double[][] originalChannel) {
@@ -288,9 +205,130 @@ class Channel implements ChannelModel {
     return paddedChannel;
   }
 
-  private double[][] haarTransform(double[][] X,int s){
-    
+  private int nextPowerOf2(int number) {
+    if (number <= 0) {
+      return 1;
+    }
+
+    number--;
+    number |= number >> 1;
+    number |= number >> 2;
+    number |= number >> 4;
+    number |= number >> 8;
+    number |= number >> 16;
+    number++;
+
+    return number;
   }
+
+  private double[][] haarTransform(double[][] X){
+    int c = X.length;
+
+    while (c > 1) {
+      // Transform Rows
+      for (int i = 0; i < c; i++) {
+        X[i] = transform(X[i]);
+      }
+
+      // Transform Columns
+      for (int j = 0; j < c; j++) {
+        double[] column = new double[c];
+        for (int i = 0; i < c; i++) {
+          column[i] = X[i][j];
+        }
+        column = transform(column);
+        for (int i = 0; i < c; i++) {
+          X[i][j] = column[i];
+        }
+      }
+
+      c = c / 2;
+    }
+
+    return X;
+  }
+
+  private double[] transform(double[] s){
+    double[] avg = new double[s.length/2];
+    double[] diff = new double[s.length/2];
+
+    for (int i=0; i<s.length;i=i+2){
+      double a = s[i];
+      double b = s[i+1];
+      avg[i/2] = (a+b) / Math.sqrt(2);
+      diff[i/2] = (a-b) / Math.sqrt(2);
+    }
+
+    return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
+  }
+
+  private double[][] applyCompressionRatio(double[][] haarTransformed, int nSmallestNonZero) {
+    double[] flatMatrix = Arrays.stream(haarTransformed)
+            .flatMapToDouble(Arrays::stream)
+            .toArray();
+    double[] absoluteMatrix = Arrays.stream(flatMatrix)
+            .map(Math::abs)
+            .toArray();
+    int[] indices = findIndicesOfNSmallest(absoluteMatrix, nSmallestNonZero);
+    double[] resettedMatrix = reset(flatMatrix, indices);
+
+    // Reshape the flat array back to the matrix
+    for (int i = 0; i < haarTransformed.length; i++) {
+      for (int j = 0; j < haarTransformed[i].length; j++) {
+        haarTransformed[i][j] = resettedMatrix[i * haarTransformed.length + j];
+      }
+    }
+    return haarTransformed;
+  }
+
+  private int[] findIndicesOfNSmallest(double[] array, int n) {
+    // Create an array of indices
+    Integer[] ind = new Integer[array.length];
+    for (int i = 0; i < array.length; i++) {
+      ind[i] = i;
+    }
+
+    // Sort the indices based on the values in the original array
+    Arrays.sort(ind, Comparator.comparingDouble(i -> array[i]));
+
+    int[] nSmallest = new int[n];
+
+    int count = 0;
+    for (int i = 0; i < ind.length && count < n; i++) {
+      int index = ind[i];
+      if (array[index] != 0) {
+        nSmallest[count++] = index;
+      }
+    }
+    // If there are less than n non-zero elements, fill the remaining with -1
+    while (count < n) {
+      nSmallest[count++] = -1; // or any value that indicates no element found
+    }
+    return nSmallest;
+  }
+
+  private double[] reset(double[] flatTransform, int[] nSmallest){
+    for(int i=0;i<nSmallest.length;i++){
+      if(nSmallest[i]==-1){
+          break;
+      }
+      flatTransform[nSmallest[i]]=0;
+    }
+    return flatTransform;
+  }
+
+//  private double[] transformAdv(double[] s){
+//    int l = nextPowerOf2(s.length);
+//    double[] newS = Arrays.copyOf(s, l);
+//    int m = l;
+//    while (m>1){
+//      double[] temp = transform(Arrays.copyOf(newS,m));
+//      System.arraycopy(temp,0,newS,0,m);
+//      m = m/2;
+//    }
+//    return newS;
+//  }
+
 
 //
 //  private double[] haarTransform(double[] s, double compressionRatio){
@@ -305,6 +343,7 @@ class Channel implements ChannelModel {
 //    double[] compressed = applyLossycompression(s,indices);
 //    return res;
 //  }
+
   private double[] inverse(double[] s){
     double[] avg = new double[s.length/2];
     double[] diff = new double[s.length/2];
