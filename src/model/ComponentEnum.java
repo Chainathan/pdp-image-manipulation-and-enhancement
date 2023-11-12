@@ -7,7 +7,7 @@ import java.util.Map;
  * The ComponentEnum represents various image components,
  * each associated with a descriptive string.
  */
-enum ComponentEnum {
+public enum ComponentEnum {
   /**
    * The red component of an image.
    */
@@ -63,7 +63,7 @@ enum ComponentEnum {
    * @return The ComponentEnum value corresponding to the descriptive string,
    *        or null if not found.
    */
-  static ComponentEnum fromString(String componentString) {
+  public static ComponentEnum fromString(String componentString) {
     return stringToEnum.get(componentString);
   }
 }

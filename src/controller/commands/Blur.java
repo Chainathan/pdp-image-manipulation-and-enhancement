@@ -1,40 +1,46 @@
 package controller.commands;
 
 import controller.AdvRgbController;
-import controller.RgbController;
 import controller.RgbImageCommand;
 import model.RgbImageModel;
 import java.util.Map;
+import java.util.function.Function;
 
 public class Blur implements RgbImageCommand {
-  private final double[][] blurKernel;
-
+  private final int defaultArg;
+  private final Function<RgbImageModel,RgbImageModel> fun;
   public Blur(){
-    blurKernel = new double[][]{
+    double[][] kernel = new double[][]{
             {1.0 / 16, 1.0 / 8, 1.0 / 16},
             {1.0 / 8, 1.0 / 4, 1.0 / 8},
             {1.0 / 16, 1.0 / 8, 1.0 / 16}
     };
+    defaultArg = 3;
+    fun = (RgbImageModel rgb) -> rgb.applyFilter(kernel);
   }
 
   @Override
-  public void execute(Map<String,RgbImageModel> imageList, String input)
+  public void execute(Map<String,RgbImageModel> imageList, String[] arguments)
           throws IllegalArgumentException {
-    String[] arguments = input.split("\\s+");
-    AdvRgbController.checkImageExists(imageList, arguments[1]);
-    RgbImageModel image = imageList.get(arguments[1]);
-    RgbImageModel destImage;
-
-    if (arguments.length == 3){
-      destImage = imageList.get(arguments[1]).applyFilter(blurKernel);
-    } else if (arguments.length == 5 && arguments[3].equals("split")){
-      double splitP = Double.parseDouble(arguments[4]);
-      RgbImageModel left = image.cropVertical(0,splitP);
-      left = left.applyFilter(blurKernel);
-      destImage = image.overlapOnBase(left,0);
-    } else {
-      throw new IllegalArgumentException("Invalid arguments for the command blur");
-    }
-    imageList.put(arguments[2], destImage);
+//    RgbImageCommand.executeHelper(fun,defaultArg,arguments,imageList);
+//    if (arguments.length != defaultArg && arguments.length != defaultArg+2){
+//      throw new IllegalArgumentException("Invalid arguments for the command blur");
+//    }
+//
+//    String imageName = arguments[defaultArg-2];
+//    String destImageName = arguments[defaultArg-1];
+//
+//    AdvRgbController.checkImageExists(imageList, imageName);
+//    RgbImageModel image = imageList.get(imageName);
+//    RgbImageModel destImage;
+//
+//    if (arguments.length == defaultArg){
+//      destImage = fun.apply(image);
+//    } else if (arguments[defaultArg].equals("split")){
+//      destImage = RgbImageCommand.splitHelper(image, fun, arguments[arguments.length-1]);
+//    } else {
+//      throw new IllegalArgumentException("Invalid arguments for the command blur");
+//    }
+//    imageList.put(destImageName, destImage);
   }
 }

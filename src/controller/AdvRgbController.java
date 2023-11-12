@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.function.Function;
 
 import controller.commands.Blur;
+import controller.commands.Brighten;
 import exceptions.FileFormatNotSupportedException;
 import model.FactoryRgbImageModel;
 import model.ImageData;
@@ -34,6 +35,7 @@ public class AdvRgbController implements ImageController{
   }
   private void initKnownCommands(){
     knownCommands.put("blur",s->new Blur());
+    knownCommands.put("brighten",s->new Brighten());
   }
   @Override
   public void run() throws IOException{
@@ -70,8 +72,9 @@ public class AdvRgbController implements ImageController{
       return "";
     }
     operation = operation.trim();
-    String command = operation.substring(0, operation.indexOf(' '));
-    String result = "Unknown operation "+operation;
+    String[] arguments = operation.split("\\s+");
+    String command = arguments[0];
+    String result;
 
     switch (command) {
       case "exit":
@@ -79,26 +82,25 @@ public class AdvRgbController implements ImageController{
       case "load":
       case "save":
       case "run":
-        result = executeIOOperation(command, operation);
+        result = executeIOOperation(command, arguments);
         break;
       default:
-        result = executeFunction(operation,command);
+        result = executeFunction(command, arguments);
     }
     return result;
   }
-  private String executeFunction(String operation, String command)
+  private String executeFunction(String command, String[] arguments)
           throws IllegalArgumentException{
     Function<Scanner, RgbImageCommand> cmd = knownCommands.get(command);
     if (cmd == null) {
-      throw new IllegalArgumentException();
+      throw new IllegalArgumentException("Invalid Command");
     }
     RgbImageCommand commandObject = cmd.apply(new Scanner(in));
-    commandObject.execute(imageModelMap, operation);
+    commandObject.execute(imageModelMap, arguments);
     return command + " Operation performed successfully";
   }
-  private String executeIOOperation(String command, String operation)
+  private String executeIOOperation(String command, String[] arguments)
           throws IOException, FileFormatNotSupportedException {
-    String[] arguments = operation.split("\\s+");
     String filePath = arguments[1];
     int filePathEndIndex = 1;
     if (arguments[1].startsWith("\"")) {

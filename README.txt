@@ -11,6 +11,7 @@ Level Adjustment
 Split view
 -> ?
 ==========================================
+greyscale - split???
 Changes:
 variable "int[][] channelValues" private to package private in Channel
 variable "int[][] channelValues" to "double[][]" and all the corresponding signatures
@@ -127,7 +128,15 @@ compress percentage image-name dest-image-name
 histogram image-name dest-image-name
 color-correct image-name dest-image-name
 levels-adjust b m w image-name dest-image-name
-blur image-name dest-image split p : The operations that must support this are blur, sharpen, sepia, greyscale, color correction and levels adjustment.
+
+blur image-name dest-image split p :
+The operations that must support this are
+blur,
+sharpen,
+sepia,
+greyscale,
+color correction and
+levels adjustment.
 -file name-of-script.txt
 
 Note

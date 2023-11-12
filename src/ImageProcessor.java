@@ -1,4 +1,7 @@
+import controller.AdvRgbController;
 import controller.RgbController;
+import model.FactoryRgbImage;
+import model.FactoryRgbImageModel;
 import model.ImageProcessorModel;
 import model.RgbImageProcessor;
 import view.ImageProcessorView;
@@ -6,6 +9,7 @@ import view.TextView;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 
 /**
  * The ImageProcessor class represents the main entry point
@@ -20,14 +24,48 @@ public abstract class ImageProcessor implements ImageProcessorModel {
    *
    * @param args Command-line arguments (not used in this example).
    */
-  public static void main(String[] args) {
+  public static void main2(String[] args){
+    Readable in = new InputStreamReader(System.in);
+    Appendable out = System.out;
     ImageProcessorModel model = new RgbImageProcessor();
-//    AdvImageProcessorModel model = new AdvRgbImageProcessor();
-    ImageProcessorView textView = new TextView(System.out);
-    RgbController controller = new RgbController(model, textView,
-            new InputStreamReader(System.in));
+    ImageProcessorView textView = new TextView(out);
+
     try {
+      if (args.length == 2 && args[0].equals("-file")) {
+        in = new StringReader("run \"" + args[1] + "\"");
+      } else if (args.length != 0) {
+        textView.display("Invalid arguments");
+        System.exit(-1);
+      } else {
+        in = new InputStreamReader(System.in);
+      }
+
+      RgbController controller = new RgbController(model, textView, in);
       controller.run();
+
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  public static void main(String[] args){
+    Readable in = new InputStreamReader(System.in);
+    Appendable out = System.out;
+    FactoryRgbImageModel factory = new FactoryRgbImage();
+    ImageProcessorView textView = new TextView(out);
+
+    try {
+      if (args.length == 2 && args[0].equals("-file")) {
+        in = new StringReader("run \"" + args[1] + "\"");
+      } else if (args.length != 0) {
+        textView.display("Invalid arguments");
+        System.exit(-1);
+      } else {
+        in = new InputStreamReader(System.in);
+      }
+
+      AdvRgbController controller = new AdvRgbController(factory, textView, in);
+      controller.run();
+
     } catch (IOException e) {
       System.out.println(e.getMessage());
     }
