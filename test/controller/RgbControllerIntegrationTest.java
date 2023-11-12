@@ -59,7 +59,8 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testCompress(){
-    String command = "load ImagesRef/compression/koala-square.png koala";
+   //String command = "load ImagesRef/compression/koala-square.png koala";
+   String command = "load ImagesRef/manhattan/manhattan-small.png manhattan";
     Readable reader = new StringReader(command);
     ImageProcessorModel model = new RgbImageProcessor();
     RgbController controller = new RgbController(model, textView, reader);
@@ -68,8 +69,8 @@ public class RgbControllerIntegrationTest {
     } catch (IOException e) {
       fail("Should not have thrown error");
     }
-    model.compress("koala","koala-compress-test3",0);
-    String command1 = "save ImagesRef/koala-compress-test3.png koala-compress-test3";
+    model.compress("manhattan","manhattan-compress-90",90);
+    String command1 = "save ImagesRef/manhattan-compress-90.png manhattan-compress-90";
     Readable reader1 = new StringReader(command1);
     RgbController controller1 = new RgbController(model, textView, reader1);
     try {

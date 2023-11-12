@@ -2,6 +2,8 @@ package model;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.DoubleStream;
 
 /**
@@ -175,27 +177,24 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel applyCompression(double compressionRatio) {
+    //Check if compressionRatio value is more than 100.
     double[][] padded = pad2DArray(getChannelValues());
     double[][] haarTransformed = haarTransform(padded);
-    int nPixelsToCompress = (int)Math.round((compressionRatio
-            * haarTransformed.length * haarTransformed.length)/100);
-    double[][] compressed = applyCompressionRatio(haarTransformed,nPixelsToCompress);
-    //Unpad method.
-    //double[][] haarInverse = haarInverse(compressed);
-    return createInstance(compressed);
+
+    double[][] compressed = applyCompressionRatio(haarTransformed,compressionRatio);
+    double[][] haarInverse = haarInverse(compressed);
+    double[][] unpadded = unpad2DArray(haarInverse, getWidth(),getHeight());
+    return createInstance(unpadded);
   }
 
   private double[][] pad2DArray(double[][] originalChannel) {
     int originalChannelHeight = originalChannel.length;
-    int originalChannelWidth = 512;//originalChannel[0].length;
+    int originalChannelWidth = originalChannel[0].length;
 
     // Find the smallest power of 2 greater than or equal to the maximum of height and width
     int newSize = Math.max(originalChannelHeight, originalChannelWidth);
     int paddedSize = nextPowerOf2(newSize);
-//    int paddedSize = 1;
-//    while (paddedSize < newSize) {
-//      paddedSize *= 2;
-//    }
+
     // Create a new padded array with zeroes
     double[][] paddedChannel = new double[paddedSize][paddedSize];
 
@@ -226,7 +225,7 @@ class Channel implements ChannelModel {
   private double[][] haarTransform(double[][] X){
     int c = X.length;
 
-    int test = 2;
+    //int test = 2;
     while (c > 1) {
       // Transform Rows
       for (int i = 0; i < c; i++) {
@@ -253,9 +252,8 @@ class Channel implements ChannelModel {
         }
       }
 
-      //c = c / 2;
       c=c/2;
-      test-=1;
+      //test-=1;
     }
 
     return X;
@@ -275,18 +273,23 @@ class Channel implements ChannelModel {
     return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
   }
 
-  private double[][] applyCompressionRatio(double[][] haarTransformed, int nSmallestNonZero) {
-    if(nSmallestNonZero==0){
+  private double[][] applyCompressionRatio(double[][] haarTransformed, double compressionRatio) {
+    if(compressionRatio==0){
       return haarTransformed;
     }
-    double[] flatMatrix = Arrays.stream(haarTransformed)
+    double[] flatArray = Arrays.stream(haarTransformed)
             .flatMapToDouble(Arrays::stream)
             .toArray();
-    double[] absoluteMatrix = Arrays.stream(flatMatrix)
+    double[] absoluteArray = Arrays.stream(flatArray)
             .map(Math::abs)
             .toArray();
-    int[] indices = findIndicesOfNSmallest(absoluteMatrix, nSmallestNonZero);
-    double[] resettedMatrix = reset(flatMatrix, indices);
+
+    double[] uniqueArray = getUniqueValues(absoluteArray);
+//    int[] indices = findIndicesOfNSmallest(absoluteMatrix, nSmallestNonZero);
+    int compressValue = (int)Math.round((compressionRatio
+            *uniqueArray.length)/100);
+    double nthSmallest = findNthSmallest(uniqueArray, compressValue);
+    double[] resettedMatrix = reset(flatArray,nthSmallest);
 
     // Reshape the flat array back to the matrix
     for (int i = 0; i < haarTransformed.length; i++) {
@@ -297,41 +300,72 @@ class Channel implements ChannelModel {
     return haarTransformed;
   }
 
-  private int[] findIndicesOfNSmallest(double[] array, int n) {
-    // Create an array of indices
-    Integer[] ind = new Integer[array.length];
-    for (int i = 0; i < array.length; i++) {
-      ind[i] = i;
-    }
+  private double findNthSmallest(double[] array, int n){
+    if (n > 0 && n <= array.length) {
+      // Sort the array
+      Arrays.sort(array);
 
-    // Sort the indices based on the values in the original array
-    Arrays.sort(ind, Comparator.comparingDouble(i -> array[i]));
-
-    int[] nSmallest = new int[n];
-
-    int count = 0;
-    for (int i = 0; i < ind.length && count < n; i++) {
-      int index = ind[i];
-      if (array[index] != 0) {
-        nSmallest[count++] = index;
-      }
+      // The nth smallest element is at index n-1
+      return array[n - 1];
     }
-    // If there are less than n non-zero elements, fill the remaining with -1
-    while (count < n) {
-      nSmallest[count++] = -1; // or any value that indicates no element found
-    }
-    return nSmallest;
+    return 0;
   }
 
-  private double[] reset(double[] flatTransform, int[] nSmallest){
-    for(int i=0;i<nSmallest.length;i++){
-      if(nSmallest[i]==-1){
-          break;
+  private double[] reset(double[] array, double threshold){
+    for(int i=0;i<array.length;i++){
+      if(Math.abs(array[i]) <= threshold){
+        array[i]=0;
       }
-      flatTransform[nSmallest[i]]=0;
     }
-    return flatTransform;
+    return array;
   }
+
+  private double[] getUniqueValues(double[] array) {
+
+    Set<Double> uniqueElements = new HashSet<>();
+
+    for (double element : array) {
+      uniqueElements.add(element);
+    }
+
+    return uniqueElements.stream().mapToDouble(Double::doubleValue).toArray();
+  }
+
+//  private int[] findIndicesOfNSmallest(double[] array, int n) {
+//    // Create an array of indices
+//    Integer[] ind = new Integer[array.length];
+//    for (int i = 0; i < array.length; i++) {
+//      ind[i] = i;
+//    }
+//
+//    // Sort the indices based on the values in the original array
+//    Arrays.sort(ind, Comparator.comparingDouble(i -> array[i]));
+//
+//    int[] nSmallest = new int[n];
+//
+//    int count = 0;
+//    for (int i = 0; i < ind.length && count < n; i++) {
+//      int index = ind[i];
+//      if (array[index] != 0) {
+//        nSmallest[count++] = index;
+//      }
+//    }
+//    // If there are less than n non-zero elements, fill the remaining with -1
+//    while (count < n) {
+//      nSmallest[count++] = -1; // or any value that indicates no element found
+//    }
+//    return nSmallest;
+//  }
+//
+//  private double[] reset(double[] flatTransform, int[] nSmallest){
+//    for(int i=0;i<nSmallest.length;i++){
+//      if(nSmallest[i]==-1){
+//          break;
+//      }
+//      flatTransform[nSmallest[i]]=0;
+//    }
+//    return flatTransform;
+//  }
 
 //  private double[] transformAdv(double[] s){
 //    int l = nextPowerOf2(s.length);
@@ -362,7 +396,7 @@ class Channel implements ChannelModel {
 
   private double[][] haarInverse(double[][] X){
     int c = 2;
-    int test = 2;
+    //int test = 2;
     while (c <= X.length) {
 
       // Transform Columns
@@ -391,7 +425,7 @@ class Channel implements ChannelModel {
       }
 
       c=c*2;
-      test-=1;
+      //test-=1;
     }
 
     return X;
@@ -416,17 +450,27 @@ class Channel implements ChannelModel {
     return res;
   }
 
-  private double[] inverseAdv(double[] s, int l, double compressionRatio){
-    l = nextPowerOf2(l);
-    s = Arrays.copyOf(s, l);
-    int m =2;
-    while (m<=l){
-      double[] temp = inverse(Arrays.copyOf(s,m));
-      System.arraycopy(temp,0,s,0,m);
-      m = m*2;
+  private double[][] unpad2DArray(double[][] paddedArray, int originalWidth, int originalHeight){
+    double[][] image = new double[originalHeight][originalWidth];
+    for(int i=0;i<originalHeight;i++){
+      for(int j=0;j<originalWidth;j++){
+        image[i][j] = paddedArray[i][j];
+      }
     }
-    return s;
+    return image;
   }
+
+//  private double[] inverseAdv(double[] s, int l, double compressionRatio){
+//    l = nextPowerOf2(l);
+//    s = Arrays.copyOf(s, l);
+//    int m =2;
+//    while (m<=l){
+//      double[] temp = inverse(Arrays.copyOf(s,m));
+//      System.arraycopy(temp,0,s,0,m);
+//      m = m*2;
+//    }
+//    return s;
+//  }
 //  public void test(){
 //    double[] t = {5,3,2,4,2,1,0,3};
 //    double[] tr = transformAdv(t,t.length);
