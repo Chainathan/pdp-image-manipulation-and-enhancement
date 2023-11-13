@@ -116,6 +116,16 @@ class RgbImage implements RgbImageModel {
   }
 
   @Override
+  public RgbImageModel sepia() throws IllegalArgumentException {
+    double[][] buffer = {
+            {0.393, 0.769, 0.189},
+            {0.349, 0.686, 0.168},
+            {0.272, 0.534, 0.131}
+    };
+    return applyTone(buffer);
+  }
+
+  @Override
   public RgbImageModel horizontalFlip() {
     return createInstance(
             red.getHorizontalFlipChannel(),
@@ -140,15 +150,35 @@ class RgbImage implements RgbImageModel {
   }
 
   @Override
-  public RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException {
+  public RgbImageModel blur() {
+    double[][] kernel = new double[][]{
+            {1.0 / 16, 1.0 / 8, 1.0 / 16},
+            {1.0 / 8, 1.0 / 4, 1.0 / 8},
+            {1.0 / 16, 1.0 / 8, 1.0 / 16}
+    };
+    return applyFilter(kernel);
+  }
+
+  @Override
+  public RgbImageModel sharpen() {
+    double[][] kernel = new double[][]{
+            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, 1.0 / 4, 1.0 / 4, 1.0 / 4, -1.0 / 8},
+            {-1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8, -1.0 / 8}
+    };
+    return applyFilter(kernel);
+  }
+
+  private RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException {
     return createInstance(
             red.applyConvolution(kernel, maxPixelValue),
             green.applyConvolution(kernel, maxPixelValue),
             blue.applyConvolution(kernel, maxPixelValue));
   }
 
-  @Override
-  public RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException {
+  private RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException {
     if (buffer.length != 3) {
       throw new IllegalArgumentException("Invalid tone buffer");
     }

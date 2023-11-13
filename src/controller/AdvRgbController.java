@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 
-import controller.commands.Blur;
-import controller.commands.Brighten;
 import exceptions.FileFormatNotSupportedException;
 import model.FactoryRgbImageModel;
 import model.ImageData;
@@ -21,21 +19,16 @@ public class AdvRgbController implements ImageController{
   private final ImageProcessorView textView;
   private final Readable in;
   private final Map<String, RgbImageModel> imageModelMap;
-  private final Map<String, Function<Scanner, RgbImageCommand>> knownCommands;
+  private final Map<String, Function<String[], RgbImageCommand>> knownCommands;
 
-  public AdvRgbController(FactoryRgbImageModel factory,
-                          ImageProcessorView textView, Readable in) {
+  public AdvRgbController(FactoryRgbImageModel factory, ImageProcessorView textView,
+                          Readable in, CommandMapper commandMapper) {
     this.factory = factory;
     this.rgbImageFileIO = new RgbImageFileIO();
     this.textView = textView;
     this.in = in;
+    this.knownCommands = commandMapper.generateCommands(factory);
     imageModelMap = new HashMap<>();
-    knownCommands = new HashMap<>();
-    initKnownCommands();
-  }
-  private void initKnownCommands(){
-    knownCommands.put("blur",s->new Blur());
-    knownCommands.put("brighten",s->new Brighten());
   }
   @Override
   public void run() throws IOException{
@@ -58,7 +51,8 @@ public class AdvRgbController implements ImageController{
           textView.display(result);
         }
       } catch (Exception e) {
-        textView.display(e.getMessage());
+//        textView.display(e.getMessage());
+        e.printStackTrace();
       }
     }
   }
@@ -91,11 +85,11 @@ public class AdvRgbController implements ImageController{
   }
   private String executeFunction(String command, String[] arguments)
           throws IllegalArgumentException{
-    Function<Scanner, RgbImageCommand> cmd = knownCommands.get(command);
+    Function<String[], RgbImageCommand> cmd = knownCommands.get(command);
     if (cmd == null) {
       throw new IllegalArgumentException("Invalid Command");
     }
-    RgbImageCommand commandObject = cmd.apply(new Scanner(in));
+    RgbImageCommand commandObject = cmd.apply(arguments);
     commandObject.execute(imageModelMap, arguments);
     return command + " Operation performed successfully";
   }
@@ -165,7 +159,7 @@ public class AdvRgbController implements ImageController{
   public static void checkImageExists(Map<String, RgbImageModel> map, String imageName)
           throws IllegalArgumentException {
     if (!map.containsKey(imageName)){
-      throw new IllegalArgumentException("Image does not exist");
+      throw new IllegalArgumentException("Image does not exist: "+imageName);
     }
   }
 }

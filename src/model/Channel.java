@@ -517,7 +517,8 @@ class Channel implements ChannelModel {
     int height = getHeight();
     int width = getWidth();
     if(b<0 || m < 0 || w<0
-            || b > m || m > w || w> width){
+            || b > m || m > w || w> 255){ // TODO check chotu
+      System.out.printf("%d %d %d ",b,m,w);
       throw new IllegalArgumentException("Invalid arguments for adjust level");
     }
     double b2 = Math.pow(b,2);
@@ -544,7 +545,7 @@ class Channel implements ChannelModel {
   public ChannelModel cropVertical(int start, int end) throws IllegalArgumentException {
     int height = getHeight();
     int width = getWidth();
-    if(start > width || end < 0 || end > width || start < end){
+    if(start > end || start < 0 || end > width){
       throw new IllegalArgumentException("Invalid arguments for vtrim channel");
     }
     double[][] trimmed = new double[height][end-start];

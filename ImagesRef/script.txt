@@ -1,3 +1,7 @@
+load ImagesRef/Koala.ppm k
+save imagesRef/temp/k.png kb
+brighten 50 k kb split 50
+
 #load koala.ppm and call it 'koala' #comment
 
 load images/koala.ppm koala

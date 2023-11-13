@@ -1,4 +1,7 @@
+import controller.CommandMapper;
+import controller.CommandMapperAdv;
 import controller.AdvRgbController;
+import controller.CommandMapperBasic;
 import controller.RgbController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
@@ -52,7 +55,7 @@ public abstract class ImageProcessor implements ImageProcessorModel {
     Appendable out = System.out;
     FactoryRgbImageModel factory = new FactoryRgbImage();
     ImageProcessorView textView = new TextView(out);
-
+    CommandMapper commandMapper = new CommandMapperAdv();
     try {
       if (args.length == 2 && args[0].equals("-file")) {
         in = new StringReader("run \"" + args[1] + "\"");
@@ -63,7 +66,7 @@ public abstract class ImageProcessor implements ImageProcessorModel {
         in = new InputStreamReader(System.in);
       }
 
-      AdvRgbController controller = new AdvRgbController(factory, textView, in);
+      AdvRgbController controller = new AdvRgbController(factory, textView, in, commandMapper);
       controller.run();
 
     } catch (IOException e) {

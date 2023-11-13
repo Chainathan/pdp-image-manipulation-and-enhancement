@@ -41,25 +41,9 @@ public interface RgbImageModel {
    */
   RgbImageModel brighten(int increment) throws IllegalArgumentException;
 
-  /**
-   * Apply a filter to the RGB image using the provided kernel.
-   *
-   * @param kernel The 2D kernel for the filter.
-   * @return An RgbImageModel representing the image with the applied filter.
-   * @throws IllegalArgumentException If the kernel is invalid or
-   *     the filter operation fails.
-   */
-  RgbImageModel applyFilter(double[][] kernel) throws IllegalArgumentException;
-
-  /**
-   * Apply a sepia tone effect to the RGB image using the specified buffer.
-   *
-   * @param buffer The buffer for applying the sepia tone effect.
-   * @return An RgbImageModel representing the image with sepia tone.
-   * @throws IllegalArgumentException If the buffer is invalid or
-   *     the sepia tone effect fails.
-   */
-  RgbImageModel applyTone(double[][] buffer) throws IllegalArgumentException;
+  RgbImageModel blur();
+  RgbImageModel sepia();
+  RgbImageModel sharpen();
 
   /**
    * Get the raw data of the RGB image in the form of an ImageData object.

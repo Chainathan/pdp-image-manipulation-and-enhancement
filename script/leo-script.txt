@@ -46,11 +46,38 @@ save res/leo-combine.png leo-combine
 #Sepia
 sepia leo leo-sepia
 save res/leo-sepia.png leo-sepia
+sepia leo leo-sepia-sp split 35
+save res/leo-sepia-sp.png leo-sepia-sp
 
 #Blur
 blur leo leo-blur
 save res/leo-blur.png leo-blur
+blur leo leo-blur-sp split 35
+save res/leo-blur-sp.png leo-blur-sp
 
 #Sharpen
 sharpen leo leo-sharpen
 save res/leo-sharpen.png leo-sharpen
+sharpen leo leo-sharpen-sp split 35
+save res/leo-sharpen-sp.png leo-sharpen-sp
+
+#Histogram
+histogram leo leo-histogram
+save res/leo-histogram.png leo-histogram
+
+#Compress
+compress 50 leo leo-compress
+save res/leo-compress.png leo-compress
+
+#ColorCorrect
+color-correct leo leo-color-correct
+save res/leo-color-correct.png leo-color-correct
+color-correct leo leo-color-correct-sp split 35
+save res/leo-color-correct-sp.png leo-color-correct-sp
+
+
+#Levels Adjust
+levels-adjust 20 100 255 leo leo-levels-adjust
+save res/leo-levels-adjust.png leo-levels-adjust
+levels-adjust 20 100 255 leo leo-levels-adjust-sp split 35
+save res/leo-levels-adjust-sp.png leo-levels-adjust-sp

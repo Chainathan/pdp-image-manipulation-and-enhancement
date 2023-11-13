@@ -127,7 +127,7 @@ public class RgbImageProcessor implements ImageProcessorModel{
     };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).applyFilter(blurKernel);
+    RgbImageModel destImage = imageList.get(imageName).blur();
     imageList.put(destImageName, destImage);
   }
 
@@ -143,7 +143,7 @@ public class RgbImageProcessor implements ImageProcessorModel{
     };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).applyFilter(sharpenKernel);
+    RgbImageModel destImage = imageList.get(imageName).sharpen();
     imageList.put(destImageName, destImage);
   }
 
@@ -156,7 +156,7 @@ public class RgbImageProcessor implements ImageProcessorModel{
     };
     checkValidImageName(destImageName);
     checkImageNameExists(imageName);
-    RgbImageModel destImage = imageList.get(imageName).applyTone(buffer);
+    RgbImageModel destImage = imageList.get(imageName).sepia();
     imageList.put(destImageName, destImage);
   }
 

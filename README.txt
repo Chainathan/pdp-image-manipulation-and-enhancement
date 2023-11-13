@@ -23,6 +23,9 @@ load helper method - static to non static
 extracted buffimage to imagedata method into a public static method
 Channel model:
 getValue() - argument name
+ComponentEnum - method
+RgbImageModel-
+added blur sepia sharpen, removed applyfilter, applytone
 **********************************************
 Image Manipulation And Enhancement Application
 **********************************************
@@ -105,30 +108,30 @@ public class ImageProcessor {
 Supported Command Instructions
 ==============================
 The program supports loading, manipulating and saving images using simple text-based commands. Here is a list of example test commands that are supported. The program supports this syntax exactly.
-1. load image-path image-name: Load an image from the specified path and refer it to henceforth in the program by the given image name.
-2. save image-path image-name: Save the image with the given name to the specified path which should include the name of the file.
-3. red-component image-name dest-image-name: Create an image with the red-component of the image with the given name, and refer to it henceforth in the program by the given destination name. 
+-1. load image-path image-name: Load an image from the specified path and refer it to henceforth in the program by the given image name.
+-2. save image-path image-name: Save the image with the given name to the specified path which should include the name of the file.
+-3. red-component image-name dest-image-name: Create an image with the red-component of the image with the given name, and refer to it henceforth in the program by the given destination name.
    Similar commands for green, blue, value, luma, intensity components are supported.
-4. horizontal-flip image-name dest-image-name: Flip an image horizontally to create a new image, referred to henceforth by the given destination name.
-5. vertical-flip image-name dest-image-name: Flip an image vertically to create a new image, referred to henceforth by the given destination name.
-6. brighten increment image-name dest-image-name: brighten the image by the given increment to create a new image, referred to henceforth by the given destination name. 
+-4. horizontal-flip image-name dest-image-name: Flip an image horizontally to create a new image, referred to henceforth by the given destination name.
+-5. vertical-flip image-name dest-image-name: Flip an image vertically to create a new image, referred to henceforth by the given destination name.
+-6. brighten increment image-name dest-image-name: brighten the image by the given increment to create a new image, referred to henceforth by the given destination name.
    The increment may be positive (brightening) or negative (darkening).
-7. rgb-split image-name dest-image-name-red dest-image-name-green dest-image-name-blue: split the given image into three images containing its red, green and blue components respectively. 
+-7. rgb-split image-name dest-image-name-red dest-image-name-green dest-image-name-blue: split the given image into three images containing its red, green and blue components respectively.
    These would be the same images that would be individually produced with the red-component, green-component and blue-component commands. If duplicate dest-image-name are provided,
    the duplicate image name will be overridden with the last corresponding component's data.
-8. rgb-combine image-name red-image green-image blue-image: Combine the three images that are individually red, green and blue into a single image that gets its red, green and 
+-8. rgb-combine image-name red-image green-image blue-image: Combine the three images that are individually red, green and blue into a single image that gets its red, green and
    blue components from the three images respectively.
-9. blur image-name dest-image-name: blur the given image and store the result in another image with the given name.
-10. sharpen image-name dest-image-name: sharpen the given image and store the result in another image with the given name.
-11. sepia image-name dest-image-name: produce a sepia-toned version of the given image and store the result in another image with the given name.
-12. run script-file-path: Load and run the script commands in the specified file.
-13. exit: To terminate the program.
+-9. blur image-name dest-image-name: blur the given image and store the result in another image with the given name.
+-10. sharpen image-name dest-image-name: sharpen the given image and store the result in another image with the given name.
+-11. sepia image-name dest-image-name: produce a sepia-toned version of the given image and store the result in another image with the given name.
+-12. run script-file-path: Load and run the script commands in the specified file.
+-13. exit: To terminate the program.
 // Advanced operations
-compress percentage image-name dest-image-name
-histogram image-name dest-image-name
-color-correct image-name dest-image-name
-levels-adjust b m w image-name dest-image-name
-
+-14.compress percentage image-name dest-image-name
+-15.histogram image-name dest-image-name
+-16.color-correct image-name dest-image-name
+-17.levels-adjust b m w image-name dest-image-name
+7d 13t
 blur image-name dest-image split p :
 The operations that must support this are
 blur,

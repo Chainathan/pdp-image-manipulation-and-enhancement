@@ -33,7 +33,7 @@ public interface RgbImageCommand {
     RgbImageModel image = imageList.get(imageName);
     RgbImageModel destImage;
 
-    if (!supportSplit){
+    if (arguments.length == defaultArg){
       destImage = fun.apply(image);
     } else {
       if (arguments[defaultArg].equals("split")){

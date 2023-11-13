@@ -66,4 +66,7 @@ public enum ComponentEnum {
   public static ComponentEnum fromString(String componentString) {
     return stringToEnum.get(componentString);
   }
+  public String commandName(){
+    return componentString;
+  }
 }
