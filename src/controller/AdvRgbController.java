@@ -51,8 +51,8 @@ public class AdvRgbController implements ImageController{
           textView.display(result);
         }
       } catch (Exception e) {
-//        textView.display(e.getMessage());
-        e.printStackTrace();
+        textView.display(e.getMessage());
+//        e.printStackTrace();
       }
     }
   }
@@ -72,7 +72,9 @@ public class AdvRgbController implements ImageController{
 
     switch (command) {
       case "exit":
-        System.exit(0);
+        result = "exit";
+        break;
+        //System.exit(0);
       case "load":
       case "save":
       case "run":

@@ -305,4 +305,167 @@ public class ChannelTest {
     assertEquals(0, channel.getWidth());
     assertEquals(0, channel.getHeight());
   }
+
+  @Test
+  public void testOverlapOnBase(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] values2 = {
+            {7, 8},
+            {4, 5},
+            {1, 2}
+    };
+
+    double[][] expectedValues = {
+            {7, 8, 3, 4},
+            {4, 5, 8, 9},
+            {1, 2, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel channel2 = new Channel(values2);
+    ChannelModel overlappedChannel = channel1.overlapOnBase(channel2, 0);
+    double[][] overlappedValues = overlappedChannel.getChannelValues();
+    assertArrayEquals(expectedValues, overlappedValues);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testOverlapOnBaseNegativeStart(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] values2 = {
+            {7, 8},
+            {4, 5},
+            {1, 2}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel channel2 = new Channel(values2);
+    ChannelModel overlappedChannel = channel1.overlapOnBase(channel2, -1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testOverlapOnBaseStartGreaterThanWidth(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] values2 = {
+            {7, 8},
+            {4, 5},
+            {1, 2}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel channel2 = new Channel(values2);
+    ChannelModel overlappedChannel = channel1.overlapOnBase(channel2, 10);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testOverlapOnBaseNullChannel(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel overlappedChannel = channel1.overlapOnBase(null, 0);
+  }
+
+  @Test
+  public void testCropVertical(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] expectedValues = {
+            {2, 3},
+            {7, 8},
+            {12, 13},
+            {17, 18},
+            {22, 23}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel overlappedChannel = channel1.cropVertical(1, 3);
+    double[][] overlappedValues = overlappedChannel.getChannelValues();
+    assertArrayEquals(expectedValues, overlappedValues);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCropVerticalNegativeStart(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] expectedValues = {
+            {2, 3},
+            {7, 8},
+            {12, 13},
+            {17, 18},
+            {22, 23}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel overlappedChannel = channel1.cropVertical(-1, 3);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCropVerticalStartGreaterThanEnd(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] expectedValues = {
+            {2, 3},
+            {7, 8},
+            {12, 13},
+            {17, 18},
+            {22, 23}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel overlappedChannel = channel1.cropVertical(3, 1);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testCropVerticalEndGreaterThanWidth(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] expectedValues = {
+            {2, 3},
+            {7, 8},
+            {12, 13},
+            {17, 18},
+            {22, 23}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel overlappedChannel = channel1.cropVertical(0, 5);
+  }
+
 }

@@ -332,20 +332,30 @@ class RgbImage implements RgbImageModel {
     Graphics2D g = histogramImages.createGraphics();
     g.setBackground(Color.WHITE);
     g.clearRect(0, 0, binCount, binCount);
+    //int gridSize = 20;
+    //Color gridColor = Color.GRAY;
+
+    // Draw the grid
+    //g.setColor(gridColor);
 
     Color[] colorList = {Color.RED, Color.GREEN, Color.BLUE};
-
+//    int red = new Color(255, 0, 0).getRGB();
+//    int green = new Color(0, 255, 0).getRGB();
+//    int blue = new Color(0, 0, 255).getRGB();
+//    int[] colorList = {red,green,blue};
+    int scale = 1;
     for (int component = 0; component < numComponents; component++) {
       g.setColor(colorList[component]);
       for (int i = 0; i < binCount - 1; i++) {
         int x1 = i;
         int x2 = i + 1;
-        int y1 = histograms[component][i];
-        int y2 = histograms[component][i+1];
+        int y1 = 256 - histograms[component][i] * scale;
+        int y2 = 256 - histograms[component][i+1] * scale;
         g.drawLine(x1, y1, x2, y2);
+//        g.fillRect(i,histograms[component][i],1,1);
       }
     }
-
+    //g.dispose();
     return histogramImages;
   }
 }

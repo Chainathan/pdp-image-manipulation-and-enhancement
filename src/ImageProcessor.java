@@ -1,7 +1,6 @@
 import controller.CommandMapper;
 import controller.CommandMapperAdv;
 import controller.AdvRgbController;
-import controller.CommandMapperBasic;
 import controller.RgbController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
@@ -60,7 +59,7 @@ public abstract class ImageProcessor implements ImageProcessorModel {
       if (args.length == 2 && args[0].equals("-file")) {
         in = new StringReader("run \"" + args[1] + "\"");
       } else if (args.length != 0) {
-        textView.display("Invalid arguments");
+        textView.display("Invalid arguments");  //Is it okay to call view from main?
         System.exit(-1);
       } else {
         in = new InputStreamReader(System.in);

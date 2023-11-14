@@ -2,6 +2,12 @@ load ImagesRef/Koala.ppm k
 save imagesRef/temp/k.png kb
 brighten 50 k kb split 50
 
+load ImagesRef/ass5Images/galaxy.png galaxy
+color-correct galaxy galaxy-test-corrected
+save ImagesRef/temp/galaxy-test-corrected.png galaxy-test-corrected
+level-adjust 20 100 255 galaxy galaxy-test-adjusted
+save ImagesRef/temp/galaxy-test-adjusted.png galaxy-test-adjusted
+
 #load koala.ppm and call it 'koala' #comment
 
 load images/koala.ppm koala

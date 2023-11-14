@@ -79,6 +79,7 @@ public class RgbControllerIntegrationTest {
       fail("Should not have thrown error");
     }
   }
+
   @Test
   public void testLoad() {
     String command = "load images/test/test.ppm " + imageName1;
@@ -113,7 +114,7 @@ public class RgbControllerIntegrationTest {
       deleteFiles("images/temp");
     } catch (Exception e) {
       deleteFiles("images/temp");
-      e.printStackTrace();
+      //e.printStackTrace();
       fail("Should not have thrown error");
     }
   }

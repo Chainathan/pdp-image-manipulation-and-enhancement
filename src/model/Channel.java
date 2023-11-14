@@ -486,15 +486,34 @@ class Channel implements ChannelModel {
 
     for(int i=0;i<height;i++) {
       for (int j = 0; j < width; j++) {
-        int x = (int)Math.round(getValue(i,j));
-        pixelFreq[x]+=1;
+        int x = (int)Math.round(getValue(i,j));//Math.round(getValue(i,j));
+        pixelFreq[x]++;
       }
     }
     return pixelFreq;
   }
+
+  private int[] normalizeFreq(int[] freq) {
+    int minValue = Integer.MAX_VALUE;
+    int maxValue = Integer.MIN_VALUE;
+
+    for (int value : freq) {
+      minValue = Math.min(minValue, value);
+      maxValue = Math.max(maxValue, value);
+    }
+    int range = maxValue - minValue;
+    int[] normalizedFreq = new int[freq.length];
+
+    for (int i = 0; i < freq.length; i++) {
+      //normalizedFreq[i] = (int)(((freq[i] - minValue) / range) * 255.0);
+      normalizedFreq[i] = (int)((double)freq[i]/maxValue * 256.0);
+    }
+    return normalizedFreq;
+  }
+
   @Override
   public int[] getFrequencyValues() {
-    return getFrequencyOfPixels();
+    return normalizeFreq(getFrequencyOfPixels());
   }
 
   @Override
@@ -548,13 +567,13 @@ class Channel implements ChannelModel {
     if(start > end || start < 0 || end > width){
       throw new IllegalArgumentException("Invalid arguments for vtrim channel");
     }
-    double[][] trimmed = new double[height][end-start];
+    double[][] cropped = new double[height][end-start];
     for(int i=0;i<height;i++){
       for(int j=start;j<end;j++){
-        trimmed[i][j] = getValue(i,j);
+        cropped[i][j-start] = getValue(i,j);
       }
     }
-    return this.createInstance(trimmed);
+    return this.createInstance(cropped);
   }
 
   @Override
