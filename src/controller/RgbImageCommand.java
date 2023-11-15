@@ -8,7 +8,7 @@ public interface RgbImageCommand {
   void execute(Map<String, RgbImageModel> imageList, String[] arguments)
           throws IllegalArgumentException;
 
-  static RgbImageModel splitHelper(RgbImageModel image,
+/*  static RgbImageModel splitHelper(RgbImageModel image,
           Function<RgbImageModel,RgbImageModel> fun,
           String split){
     double splitP = Double.parseDouble(split);
@@ -43,5 +43,5 @@ public interface RgbImageCommand {
       }
     }
     imageList.put(destImageName, destImage);
-  }
+  }*/
 }

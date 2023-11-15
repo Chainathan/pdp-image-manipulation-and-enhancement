@@ -1,0 +1,11 @@
+
+load ImagesRef/temp/galaxy.png img
+histogram img hist
+save ImagesRef/temp/hist2.png hist
+
+levels-adjust 20 100 255 img lvl
+save ImagesRef/temp/galaxy-test-adjusted.png lvl
+
+#load ImagesRef/temp/galaxy-test-adjusted.png lvl
+histogram lvl hist
+save ImagesRef/temp/hist.png hist

@@ -102,7 +102,7 @@ public class RgbImageFileIO implements ImageFileIO {
     }
   }
   // TODO ask prof abt the placement
-  public static ImageData convertBuffImgToImgData(BufferedImage image){
+  static ImageData convertBuffImgToImgData(BufferedImage image){
     int width = image.getWidth();
     int height = image.getHeight();
     double[][][] imageData = new double[3][height][width];

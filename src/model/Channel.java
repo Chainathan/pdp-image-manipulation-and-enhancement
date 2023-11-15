@@ -561,27 +561,28 @@ class Channel implements ChannelModel {
     return pixelFreq;
   }
 
-  private int[] normalizeFreq(int[] freq) {
-    int minValue = Integer.MAX_VALUE;
-    int maxValue = Integer.MIN_VALUE;
-
-    for (int value : freq) {
-      minValue = Math.min(minValue, value);
-      maxValue = Math.max(maxValue, value);
-    }
-    int range = maxValue - minValue;
-    int[] normalizedFreq = new int[freq.length];
-
-    for (int i = 0; i < freq.length; i++) {
-      //normalizedFreq[i] = (int)(((freq[i] - minValue) / range) * 255.0);
-      normalizedFreq[i] = (int)((double)freq[i]/maxValue * 256.0);
-    }
-    return normalizedFreq;
-  }
+//  private int[] normalizeFreq(int[] freq) {
+//    int minValue = Integer.MAX_VALUE;
+//    int maxValue = Integer.MIN_VALUE;
+//
+//    for (int value : freq) {
+//      minValue = Math.min(minValue, value);
+//      maxValue = Math.max(maxValue, value);
+//    }
+//    int range = maxValue - minValue;
+//    int[] normalizedFreq = new int[freq.length];
+//
+//    for (int i = 0; i < freq.length; i++) {
+//      //normalizedFreq[i] = (int)(((freq[i] - minValue) / range) * 255.0);
+//      normalizedFreq[i] = (int)((double)freq[i]/maxValue * 256.0);
+//    }
+//    return normalizedFreq;
+//  }
 
   @Override
   public int[] getFrequencyValues() {
-    return normalizeFreq(getFrequencyOfPixels());
+//    return normalizeFreq(getFrequencyOfPixels());
+    return getFrequencyOfPixels();
   }
 
   @Override
@@ -603,9 +604,9 @@ class Channel implements ChannelModel {
   public ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
     int height = getHeight();
     int width = getWidth();
+    System.out.println(b+" "+m+" "+w);
     if(b<0 || m < 0 || w<0
-            || b > m || m > w || w> 255){ // TODO check chotu
-      //System.out.printf("%d %d %d ",b,m,w);
+            || b > m || m > w || w> 255){ 
       throw new IllegalArgumentException("Invalid arguments for adjust level");
     }
     double b2 = Math.pow(b,2);
@@ -618,13 +619,15 @@ class Channel implements ChannelModel {
     double Qa = Aa/A ;
     double Qb = Ab/A;
     double Qc = Ac/A;
+    System.out.println(Qa+" "+Qb+" "+Qc);
     double[][] leveled = new double[height][width];
     for(int i=0;i<height;i++){
-//      System.out.print("{");
       for(int j=0;j<width;j++){
         double x = getValue(i,j);
-        leveled[i][j] = Qa * Math.pow(x,2) + Qb * x + Qc;
-//        System.out.print(Math.round(leveled[i][j])+", ");
+        double y = Qa * Math.pow(x,2) + Qb * x + Qc;
+        y = Math.max(y,0);
+        y = Math.min(y,255);
+        leveled[i][j] = y;
       }
 //      System.out.println("},");
     }

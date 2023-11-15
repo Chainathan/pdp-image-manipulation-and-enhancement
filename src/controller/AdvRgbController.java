@@ -52,7 +52,7 @@ public class AdvRgbController implements ImageController{
         }
       } catch (Exception e) {
         textView.display(e.getMessage());
-//        e.printStackTrace();
+        e.printStackTrace();
       }
     }
   }
@@ -97,6 +97,7 @@ public class AdvRgbController implements ImageController{
   }
   private String executeIOOperation(String command, String[] arguments)
           throws IOException, FileFormatNotSupportedException {
+    String result = command + "Invalid Command";
     String filePath = arguments[1];
     int filePathEndIndex = 1;
     if (arguments[1].startsWith("\"")) {
@@ -110,14 +111,14 @@ public class AdvRgbController implements ImageController{
       }
       filePath = sb.toString().trim();
       if (!filePath.endsWith("\"")) {
-        return "Invalid Command";
+        return result;
       }
       filePath = filePath.replaceAll("\"", "");
     }
     switch (command) {
       case "load":
         if (filePathEndIndex != arguments.length - 2) {
-          return "Invalid Command";
+          return result;
         }
         String imageName = arguments[arguments.length - 1];
         ImageData imageData = rgbImageFileIO.load(filePath);
@@ -127,7 +128,7 @@ public class AdvRgbController implements ImageController{
         break;
       case "save":
         if (filePathEndIndex != arguments.length - 2) {
-          return "Invalid Command";
+          return result;
         }
         String destImageName = arguments[arguments.length - 1];
         checkImageExists(imageModelMap,destImageName);
@@ -136,11 +137,11 @@ public class AdvRgbController implements ImageController{
         break;
       case "run":
         if (filePathEndIndex != arguments.length - 1) {
-          return "Invalid Command";
+          return result;
         }
         return runScript(filePath);
       default:
-        return "Invalid Command";
+        return result;
     }
     return command + " Operation performed successfully";
   }

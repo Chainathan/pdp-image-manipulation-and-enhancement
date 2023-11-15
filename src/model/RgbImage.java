@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import controller.ImageGraphics;
+import controller.ImageGraphicsImpl;
 import controller.RgbImageFileIO;
 
 /**
@@ -363,50 +365,77 @@ class RgbImage implements RgbImageModel {
             green.getFrequencyValues(),
             blue.getFrequencyValues()
     };
-    BufferedImage histogramImage = createHistogramLineGraphs(freqData);
-    ImageData histogramData = RgbImageFileIO.convertBuffImgToImgData(histogramImage);
+    int maxCount = Math.max(Math.max(getMaxValue(freqData[0]),
+            getMaxValue(freqData[1])), getMaxValue(freqData[2]));
 
-    double[][][] imageData = histogramData.getData();
-    ChannelModel otherRed = new Channel(imageData[0]);
-    ChannelModel otherGreen = new Channel(imageData[1]);
-    ChannelModel otherBlue = new Channel(imageData[2]);
-    return this.createInstance(otherRed,otherGreen,otherBlue);
-  }
+    int numComponents = freqData.length;
+    int binCount = freqData[0].length;
 
-  private static BufferedImage createHistogramLineGraphs(int[][] histograms) {
-    int numComponents = histograms.length;
-    int binCount = histograms[0].length;
+    ImageGraphics graphics = new ImageGraphicsImpl();
+    graphics.initBlankPlane(binCount,binCount);
+    graphics.drawGrid(20);
+    ColorEnum[] colorList = {ColorEnum.RED, ColorEnum.GREEN, ColorEnum.BLUE};
 
-    BufferedImage histogramImages = new BufferedImage(binCount, binCount,
-            BufferedImage.TYPE_INT_RGB);
-
-    Graphics2D g = histogramImages.createGraphics();
-    g.setBackground(Color.WHITE);
-    g.clearRect(0, 0, binCount, binCount);
-    //int gridSize = 20;
-    //Color gridColor = Color.GRAY;
-
-    // Draw the grid
-    //g.setColor(gridColor);
-
-    Color[] colorList = {Color.RED, Color.GREEN, Color.BLUE};
-//    int red = new Color(255, 0, 0).getRGB();
-//    int green = new Color(0, 255, 0).getRGB();
-//    int blue = new Color(0, 0, 255).getRGB();
-//    int[] colorList = {red,green,blue};
-    int scale = 1;
     for (int component = 0; component < numComponents; component++) {
-      g.setColor(colorList[component]);
+      graphics.setColor(colorList[component]);
       for (int i = 0; i < binCount - 1; i++) {
         int x1 = i;
         int x2 = i + 1;
-        int y1 = 256 - histograms[component][i] * scale;
-        int y2 = 256 - histograms[component][i+1] * scale;
-        g.drawLine(x1, y1, x2, y2);
-//        g.fillRect(i,histograms[component][i],1,1);
+        int y1 = (int) (((double) freqData[component][i] / maxCount) * binCount);
+        int y2 = (int) (((double) freqData[component][i+1] / maxCount) * binCount);
+        graphics.drawLine(x1, binCount-y1-1, x2, binCount-y2-1);
       }
     }
-    //g.dispose();
-    return histogramImages;
+    double[][][] data = graphics.getImageData().getData();
+    ChannelModel newRed = red.createInstance(data[0]);
+    ChannelModel newGreen = green.createInstance(data[1]);
+    ChannelModel newBlue = blue.createInstance(data[2]);
+
+    return this.createInstance(newRed, newGreen, newBlue);
   }
+  private static int getMaxValue(int[] array) {
+    int max = array[0];
+    for (int value : array) {
+      if (value > max) {
+        max = value;
+      }
+    }
+    return max;
+  }
+//  private static BufferedImage createHistogramLineGraphs(int[][] histograms) {
+//    int numComponents = histograms.length;
+//    int binCount = histograms[0].length;
+//
+//    BufferedImage histogramImages = new BufferedImage(binCount, binCount,
+//            BufferedImage.TYPE_INT_RGB);
+//
+//    Graphics2D g = histogramImages.createGraphics();
+//    g.setBackground(Color.WHITE);
+//    g.clearRect(0, 0, binCount, binCount);
+//    //int gridSize = 20;
+//    //Color gridColor = Color.GRAY;
+//
+//    // Draw the grid
+//    //g.setColor(gridColor);
+//
+//    Color[] colorList = {Color.RED, Color.GREEN, Color.BLUE};
+////    int red = new Color(255, 0, 0).getRGB();
+////    int green = new Color(0, 255, 0).getRGB();
+////    int blue = new Color(0, 0, 255).getRGB();
+////    int[] colorList = {red,green,blue};
+//    int scale = 1;
+//    for (int component = 0; component < numComponents; component++) {
+//      g.setColor(colorList[component]);
+//      for (int i = 0; i < binCount - 1; i++) {
+//        int x1 = i;
+//        int x2 = i + 1;
+//        int y1 = 256 - histograms[component][i] * scale;
+//        int y2 = 256 - histograms[component][i+1] * scale;
+//        g.drawLine(x1, y1, x2, y2);
+////        g.fillRect(i,histograms[component][i],1,1);
+//      }
+//    }
+//    //g.dispose();
+//    return histogramImages;
+//  }
 }

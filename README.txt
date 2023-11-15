@@ -11,7 +11,15 @@ Level Adjustment
 Split view
 -> ?
 ==========================================
+qs:
 greyscale - split???
+levels adjust is going below 0
+graphics class fits more in model
+since values are double, can we round it? upto how many decimals?
+compression sizes are different from the description images
+do we need to mock test for controller by mocking factory and also imageModel
+which tests shd have mock which shd have unit test, which both?
+
 Changes:
 variable "int[][] channelValues" private to package private in Channel
 variable "int[][] channelValues" to "double[][]" and all the corresponding signatures
