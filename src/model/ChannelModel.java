@@ -69,7 +69,12 @@ interface ChannelModel {
    * @throws IllegalArgumentException If the provided coordinates are out of bounds.
    */
   double getValue(int y, int x) throws IllegalArgumentException;
-  ChannelModel applyCompression(double compressionRatio);
+  //ChannelModel applyCompression(double compressionRatio);
+  ChannelModel applyHaarTransform();
+  ChannelModel applyHaarInverse();
+  ChannelModel applyThreshold(double threshold);
+  ChannelModel applyPadding();
+  ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException;
   int[] getFrequencyValues();
   int getMaxFreqPixel();
   ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;

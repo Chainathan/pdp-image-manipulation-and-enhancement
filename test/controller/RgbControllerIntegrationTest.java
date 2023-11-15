@@ -69,8 +69,8 @@ public class RgbControllerIntegrationTest {
     } catch (IOException e) {
       fail("Should not have thrown error");
     }
-    model.compress("manhattan","manhattan-compress-90",90);
-    String command1 = "save ImagesRef/manhattan-compress-90.png manhattan-compress-90";
+    model.compress("manhattan","manhattan-compress-new-90",90);
+    String command1 = "save ImagesRef/manhattan-compress-new-90.png manhattan-compress-new-90";
     Readable reader1 = new StringReader(command1);
     RgbController controller1 = new RgbController(model, textView, reader1);
     try {

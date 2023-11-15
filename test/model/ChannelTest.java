@@ -2,8 +2,7 @@ package model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Test class of Channel class.
@@ -437,15 +436,8 @@ public class ChannelTest {
             {16, 17, 18, 19},
             {21, 22, 23, 24}
     };
-    double[][] expectedValues = {
-            {2, 3},
-            {7, 8},
-            {12, 13},
-            {17, 18},
-            {22, 23}
-    };
     ChannelModel channel1 = new Channel(values1);
-    ChannelModel overlappedChannel = channel1.cropVertical(3, 1);
+    channel1.cropVertical(3, 1);
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -457,15 +449,293 @@ public class ChannelTest {
             {16, 17, 18, 19},
             {21, 22, 23, 24}
     };
-    double[][] expectedValues = {
-            {2, 3},
-            {7, 8},
-            {12, 13},
-            {17, 18},
-            {22, 23}
-    };
     ChannelModel channel1 = new Channel(values1);
-    ChannelModel overlappedChannel = channel1.cropVertical(0, 5);
+    channel1.cropVertical(0, 5);
   }
 
+  @Test
+  public void adjustLevels(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    double[][] expectedValues = {
+            {7, 14, 20, 27},
+            {40, 47, 53, 60},
+            {73, 79, 85, 92},
+            {104, 110, 116, 122},
+            {134, 140, 146, 151}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel actual = channel1.adjustLevels(0, 20,255);
+    assertTrue(compareArrays(expectedValues, actual.getChannelValues()));
+  }
+
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForNegativeBlack(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(-1, 20,255);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForNegativeMid(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(0, -20,255);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForNegativeWhite(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(0, 20,-255);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForBlackGreatherThanMid(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(30, 20,255);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForMidGreatherThanWhite(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(30, 255,200);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void adjustLevelsForWhiteGreatherThan255(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.adjustLevels(0, 20,260);
+  }
+
+  @Test
+  public void testMaxFreqPixel(){
+    double[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 8},
+            {11, 22, 13, 14},
+            {16, 16, 22, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    int actual = channel1.getMaxFreqPixel();
+    assertEquals(22,actual);
+  }
+
+  @Test
+  public void testMaxFreqPixelForEdgeCase(){
+    double[][] values1 = {
+            {9, 9, 9, 9},
+            {6, 7, 8, 8},
+            {11, 22, 13, 14},
+            {16, 22, 22, 19},
+            {255, 255, 255, 255}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    int actual = channel1.getMaxFreqPixel();
+    assertEquals(22,actual);
+  }
+
+//  @Test
+//  public void testGetFrequencyValues(){
+//    double[][] values1 = {
+//            {9, 9, 9, 9},
+//            {22, 22, 22, 22},
+//            {22, 22, 22, 22},
+//            {255, 255, 255, 255}
+//    };
+//    int[] expected = new int[256];
+//    expected[9] = 4;
+//    expected[22] = 8;
+//    expected[255] = 4;
+//    ChannelModel channel1 = new Channel(values1);
+//    int[] actual = channel1.getFrequencyValues();
+//    assertArrayEquals(expected, actual);
+//  }
+
+  @Test
+  public void testApplyThreshold(){
+    double[][] values1 = {
+            {9, -9, 9, 9},
+            {6, 7, -8, 8},
+            {11, -22, 13, 14},
+            {16, 22, 22, -19},
+            {255, 255, 255, 255}
+    };
+    double[][] expected = {
+            {0, 0, 0, 0},
+            {0, 0, 0, 0},
+            {0, -22, 0, 14},
+            {16, 22, 22, -19},
+            {255, 255, 255, 255}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    ChannelModel actual = channel1.applyThreshold(13);
+    assertArrayEquals(expected,actual.getChannelValues());
+  }
+
+  @Test
+  public void testApplyUnpad(){
+    double[][] padded = {
+            {9, -9, 9, 9, 0, 0},
+            {6, 7, -8, 8, 0, 0},
+            {11, -22, 13, 14, 0, 0},
+            {16, 22, 22, -19, 0, 0},
+            {255, 255, 255, 255, 0, 0},
+            {0, 0, 0, 0, 0, 0}
+    };
+    double[][] expected = {
+            {9, -9, 9, 9},
+            {6, 7, -8, 8},
+            {11, -22, 13, 14},
+            {16, 22, 22, -19},
+            {255, 255, 255, 255}
+    };
+    ChannelModel channel1 = new Channel(padded);
+    ChannelModel actual = channel1.applyUnpad(5,4);
+    assertArrayEquals(expected,actual.getChannelValues());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testApplyUnpadForNegativeHeightAndWidth(){
+    double[][] padded = {
+            {9, -9, 9, 9, 0, 0},
+            {6, 7, -8, 8, 0, 0},
+            {11, -22, 13, 14, 0, 0},
+            {16, 22, 22, -19, 0, 0},
+            {255, 255, 255, 255, 0, 0},
+            {0, 0, 0, 0, 0, 0}
+    };
+    ChannelModel channel1 = new Channel(padded);
+    channel1.applyUnpad(-5,-4);
+  }
+
+  @Test
+  public void testApplyHaarInverse(){
+    double[][] values = {
+            {22, -2, 8, -8},
+            {-6, -1, 14, 20},
+            {-6, 9, 10, 8},
+            {-24, 12, 19, -21}
+    };
+    double[][] expected = {
+            {9, -9, 9, 9},
+            {5, 7, -8, 8},
+            {11, -22, 13, 14},
+            {16, 21, 22, -19}
+    };
+    ChannelModel channel1 = new Channel(values);
+    ChannelModel actual = channel1.applyHaarInverse();
+    assertTrue(compareArrays(expected, actual.getChannelValues()));
+  }
+
+  @Test
+  public void testApplyPadding(){
+    double[][] value = {
+            {9, -9, 9},
+            {6, 7, -8},
+    };
+    double[][] expected = {
+            {9, -9, 9, 0},
+            {6, 7, -8, 0},
+            {0, 0, 0, 0},
+            {0, 0, 0, 0}
+    };
+    ChannelModel channel1 = new Channel(value);
+    ChannelModel actual = channel1.applyPadding();
+    assertArrayEquals(expected,actual.getChannelValues());
+  }
+
+  @Test
+  public void testApplyHaarTransform(){
+    double[][] values = {
+            {9, -9, 9, 9},
+            {6, 7, -8, 8},
+            {11, -22, 13, 14},
+            {16, 22, 22, -19}
+    };
+    double[][] expected = {
+            {22, -2, 8, -8},
+            {-6, -1, 14, 20},
+            {-6, 9, 10, 8},
+            {-24, 12, 19, -21}};
+    ChannelModel channel1 = new Channel(values);
+    ChannelModel actual = channel1.applyHaarTransform();
+    assertTrue(compareArrays(expected, actual.getChannelValues()));
+  }
+
+  private boolean compareArrays(double[][] expected, double[][] actual) {
+    if (expected.length != actual.length) {
+      return false;
+    }
+    for (int i = 0; i < expected.length; i++) {
+      for (int j = 0; j < expected[i].length; j++) {
+        if (expected[i].length != actual[i].length) {
+          return false;
+        }
+        if (Math.abs(expected[i][j] - actual[i][j]) > 0.5) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  @Test
+  public void testCreateInstance(){
+    double[][] values = {
+            {9, -9, 9, 9},
+            {6, 7, -8, 8},
+            {11, -22, 13, 14},
+            {16, 22, 22, -19}
+    };
+    ChannelModel channel1 = new Channel();
+    ChannelModel actual = channel1.createInstance(values);
+    assertArrayEquals(values, actual.getChannelValues());
+  }
 }

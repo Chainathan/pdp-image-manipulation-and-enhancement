@@ -24,6 +24,8 @@ extracted buffimage to imagedata method into a public static method
 Channel model:
 getValue() - argument name
 ComponentEnum - method
+Added applyTransform(), applyInverse(), applyPadding(), applyUnpad(), applyThreshold()
+
 RgbImageModel-
 added blur sepia sharpen, removed applyfilter, applytone
 **********************************************

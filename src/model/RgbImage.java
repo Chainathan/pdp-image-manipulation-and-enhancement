@@ -2,6 +2,9 @@ package model;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import controller.RgbImageFileIO;
 
@@ -235,10 +238,58 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException {
-    return this.createInstance(
-            red.applyCompression(compressionRatio),
-            green.applyCompression(compressionRatio),
-            blue.applyCompression(compressionRatio));
+//    return this.createInstance(
+//            red.applyCompression(compressionRatio),
+//            green.applyCompression(compressionRatio),
+//            blue.applyCompression(compressionRatio));
+    ChannelModel redTransformed = red.applyPadding().applyHaarTransform();
+    ChannelModel greenTransformed = green.applyPadding().applyHaarTransform();
+    ChannelModel blueTransformed = blue.applyPadding().applyHaarTransform();
+    double threshold = getThreshold(compressionRatio, redTransformed, greenTransformed, blueTransformed);
+    ChannelModel redInverse = redTransformed.applyThreshold(threshold)
+            .applyHaarInverse()
+            .applyUnpad(red.getHeight(), red.getWidth());
+    ChannelModel greenInverse = greenTransformed.applyThreshold(threshold)
+            .applyHaarInverse()
+            .applyUnpad(green.getHeight(), green.getWidth());
+    ChannelModel blueInverse = blueTransformed.applyThreshold(threshold)
+            .applyHaarInverse()
+            .applyUnpad(blue.getHeight(), blue.getWidth());
+    return createInstance(redInverse, greenInverse, blueInverse);
+  }
+
+  private double getThreshold(double compressionRatio, ChannelModel redTransformed,
+                              ChannelModel greenTransformed, ChannelModel blueTransformed) {
+    double[] flatRed = getFlatArray(redTransformed.getChannelValues());
+    double[] flatGreen = getFlatArray(greenTransformed.getChannelValues());
+    double[] flatBlue = getFlatArray(blueTransformed.getChannelValues());
+    double[] channelList = getFlatArray(flatRed,flatGreen,flatBlue);
+    double[] absChannelList = Arrays.stream(channelList)
+            .map(Math::abs)
+            .toArray();
+    double[] uniqueChannelList = getUniqueValues(absChannelList);
+    int compressValue = (int)Math.round((compressionRatio
+            *uniqueChannelList.length)/100);
+    Arrays.sort(uniqueChannelList);
+    double nthSmallest = uniqueChannelList[compressValue-1];
+    return nthSmallest;
+  }
+
+  private double[] getFlatArray(double[]... arrays) {
+    return Arrays.stream(arrays)
+            .flatMapToDouble(Arrays::stream)
+            .toArray();
+  }
+
+  private double[] getUniqueValues(double[] channels) {
+
+    Set<Double> uniqueElements = new HashSet<>();
+
+    for (double element : channels) {
+      uniqueElements.add(element);
+    }
+
+    return uniqueElements.stream().mapToDouble(Double::doubleValue).toArray();
   }
 
   // Advanced Features
