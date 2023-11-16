@@ -58,7 +58,7 @@ class RgbImage implements RgbImageModel {
   public RgbImageModel createInstance(ChannelModel...channelModels)
           throws IllegalArgumentException{
     if (channelModels.length!=3){
-      throw new IllegalArgumentException("Invalid channels to create image model");
+      throw new IllegalArgumentException("Invalid channels to create rgb image model");
     }
     return new RgbImage(channelModels[0],channelModels[1],channelModels[2],maxPixelValue);
   }
@@ -552,8 +552,8 @@ class RgbImage implements RgbImageModel {
     for (int component = 0; component < numComponents; component++) {
       graphics.setColor(colorList[component]);
       for (int i = 0; i < binCount - 1; i++) {
-        int x1 = (i/binCount) * histogramWidth;
-        int x2 = ((i + 1)/binCount) * histogramWidth;
+        int x1 = (int)(((double)i*histogramWidth/binCount));
+        int x2 = (int)(((double)(i + 1)* histogramWidth/binCount));
         int y1 = (int) (((double) freqData[component][i] / maxCount) * histogramHeight);
         int y2 = (int) (((double) freqData[component][i+1] / maxCount) * histogramHeight);
         graphics.drawLine(x1, binCount-y1-1, x2, binCount-y2-1);

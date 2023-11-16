@@ -77,7 +77,7 @@ interface ChannelModel {
 //  ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException;
   int[] getFrequencyValues();
   int getMaxFreqPixel();
-  ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;
+  ChannelModel adjustLevels(int b, int m, int w);
   ChannelModel cropVertical(int start, int end) throws IllegalArgumentException;
   ChannelModel overlapOnBase(ChannelModel otherChannel, int start)
           throws IllegalArgumentException;

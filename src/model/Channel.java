@@ -595,7 +595,7 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
+  public ChannelModel adjustLevels(int b, int m, int w){
     int height = getHeight();
     int width = getWidth();
     double b2 = Math.pow(b,2);
