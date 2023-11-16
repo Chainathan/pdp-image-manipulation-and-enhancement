@@ -5,7 +5,6 @@ import controller.RgbController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
 import model.ImageProcessorModel;
-import model.RgbImageProcessor;
 import view.ImageProcessorView;
 import view.TextView;
 
@@ -26,29 +25,29 @@ public abstract class ImageProcessor implements ImageProcessorModel {
    *
    * @param args Command-line arguments (not used in this example).
    */
-  public static void main2(String[] args){
-    Readable in = new InputStreamReader(System.in);
-    Appendable out = System.out;
-    ImageProcessorModel model = new RgbImageProcessor();
-    ImageProcessorView textView = new TextView(out);
-
-    try {
-      if (args.length == 2 && args[0].equals("-file")) {
-        in = new StringReader("run \"" + args[1] + "\"");
-      } else if (args.length != 0) {
-        textView.display("Invalid arguments");
-        System.exit(-1);
-      } else {
-        in = new InputStreamReader(System.in);
-      }
-
-      RgbController controller = new RgbController(model, textView, in);
-      controller.run();
-
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
-    }
-  }
+//  public static void main2(String[] args){
+//    Readable in = new InputStreamReader(System.in);
+//    Appendable out = System.out;
+//    ImageProcessorModel model = new RgbImageProcessor();
+//    ImageProcessorView textView = new TextView(out);
+//
+//    try {
+//      if (args.length == 2 && args[0].equals("-file")) {
+//        in = new StringReader("run \"" + args[1] + "\"");
+//      } else if (args.length != 0) {
+//        textView.display("Invalid arguments");
+//        System.exit(-1);
+//      } else {
+//        in = new InputStreamReader(System.in);
+//      }
+//
+//      RgbController controller = new RgbController(model, textView, in);
+//      controller.run();
+//
+//    } catch (IOException e) {
+//      System.out.println(e.getMessage());
+//    }
+//  }
   public static void main(String[] args){
     Readable in = new InputStreamReader(System.in);
     Appendable out = System.out;

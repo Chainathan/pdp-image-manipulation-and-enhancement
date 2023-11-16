@@ -145,7 +145,6 @@ public class AdvRgbController implements ImageController{
     }
     return command + " Operation performed successfully";
   }
-
   private String runScript(String filePath)
           throws IOException, IllegalArgumentException, FileFormatNotSupportedException {
     int startingIndex = filePath.lastIndexOf(".");
@@ -158,7 +157,6 @@ public class AdvRgbController implements ImageController{
     sc.close();
     return "Run Script Operation successful";
   }
-
   public static void checkImageExists(Map<String, RgbImageModel> map, String imageName)
           throws IllegalArgumentException {
     if (!map.containsKey(imageName)){

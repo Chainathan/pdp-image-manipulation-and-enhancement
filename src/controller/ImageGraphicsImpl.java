@@ -13,25 +13,24 @@ public class ImageGraphicsImpl implements ImageGraphics{
   private Graphics2D g;
   private final Map<ColorEnum,Color> colorMap;
   private Color penColor;
-  public ImageGraphicsImpl() {
-    this.image = new BufferedImage(256,256,BufferedImage.TYPE_INT_RGB);
+
+  public ImageGraphicsImpl(int height, int width, int gridSize) throws IllegalArgumentException{
+    if (height <=0 || width <=0 || gridSize<0){
+      throw new IllegalArgumentException("Invalid arguments for the Image Graphics");
+    }
+    this.image = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
     g = image.createGraphics();
+    g.setBackground(Color.WHITE);
+    g.clearRect(0, 0, width, height);
+
+    drawGrid(gridSize);
+
     penColor = Color.BLACK;
+
     colorMap = new HashMap<>();
     colorMap.put(ColorEnum.RED,Color.RED);
     colorMap.put(ColorEnum.GREEN,Color.GREEN);
     colorMap.put(ColorEnum.BLUE,Color.BLUE);
-  }
-
-  @Override
-  public void initBlankPlane(int height, int width) throws IllegalArgumentException {
-    if (height <=0 || width <=0){
-      throw new IllegalArgumentException("Height and Width of the Graphics place must be positive");
-    }
-    image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    g = image.createGraphics();
-    g.setBackground(Color.WHITE);
-    g.clearRect(0, 0, width, height);
   }
 
   @Override
@@ -53,28 +52,17 @@ public class ImageGraphicsImpl implements ImageGraphics{
     penColor = colorMap.get(color);
   }
 
-  @Override
-  public void drawGrid(int gridSize) {
+  private void drawGrid(int gridSize) {
+
     g.setColor(Color.LIGHT_GRAY);
     int height = image.getHeight();
     int width = image.getWidth();
 
     for (int i = 1; i <= gridSize; i++) {
-      int x = i*width/gridSize;
+      int x = i*width/ gridSize;
       g.drawLine(x,height,x,0);
-      int y = i*height/gridSize;
+      int y = i*height/ gridSize;
       g.drawLine(0,y,width,y);
     }
-    // Draw horizontal grid lines
-//    for (int i = 0; i <= gridSize; i++) {
-//      int yGrid = i * (height / gridSize);
-//      g.drawLine(0, yGrid, width, yGrid);
-//    }
-//
-//    // Draw vertical grid lines
-//    for (int i = 0; i <= gridSize; i++) {
-//      int xGrid = i * (width / gridSize);
-//      g.drawLine(xGrid, 0, xGrid, height);
-//    }
   }
 }

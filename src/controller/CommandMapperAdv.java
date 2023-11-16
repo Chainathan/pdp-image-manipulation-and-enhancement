@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 import controller.commands.GenericCommand;
+import model.ComponentEnum;
 import model.FactoryRgbImageModel;
 import model.RgbImageModel;
 
@@ -16,7 +17,9 @@ public class CommandMapperAdv extends CommandMapperBasic{
             args->new GenericCommand(3, RgbImageModel::correctColor,true)
     );
     knownCommands.put("histogram",
-            args->new GenericCommand(3, RgbImageModel::createHistogram,false)
+            args->new GenericCommand(3,
+                    rgb -> rgb.createHistogram(new ImageGraphicsImpl(256,256,20)),
+                    false)
     );
     knownCommands.put("compress",
             args->new GenericCommand(4,
@@ -28,6 +31,11 @@ public class CommandMapperAdv extends CommandMapperBasic{
                     rgb -> rgb.adjustLevels(Integer.parseInt(args[1]),
                             Integer.parseInt(args[2]),
                             Integer.parseInt(args[3])),
+                    true)
+    );
+    knownCommands.put("luma-component",
+            args->new GenericCommand(3,
+                    rgb -> rgb.visualizeComponent(ComponentEnum.LUMA),
                     true)
     );
     return knownCommands;

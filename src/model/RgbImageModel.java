@@ -1,5 +1,7 @@
 package model;
 
+import controller.ImageGraphics;
+
 /**
  * The RgbImageModel interface defines the core functionality
  * for working with RGB image models. Implementations of this
@@ -7,8 +9,6 @@ package model;
  * RGB image data.
  */
 public interface RgbImageModel {
-  RgbImageModel createInstance(ChannelModel...channelModels)
-          throws IllegalArgumentException;
   /**
    * Visualize the RGB image model using the specified component.
    *
@@ -61,7 +61,7 @@ public interface RgbImageModel {
   void loadImageData(ImageData imageData);
 
   RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException;
-  RgbImageModel createHistogram();
+  RgbImageModel createHistogram(ImageGraphics graphics);
   RgbImageModel correctColor();
   RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;
   RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException;

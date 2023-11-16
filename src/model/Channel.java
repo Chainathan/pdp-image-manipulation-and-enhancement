@@ -1,9 +1,6 @@
 package model;
 
 import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.DoubleStream;
 
 /**
@@ -11,17 +8,17 @@ import java.util.stream.DoubleStream;
  * and represents a channel with pixel data.
  */
 class Channel implements ChannelModel {
-  final double[][] channelValues;
+  final int[][] channelValues;
 
   @Override
-  public ChannelModel createInstance(double[][] channelValues){
+  public ChannelModel createInstance(int[][] channelValues){
     return new Channel(channelValues);
   }
   /**
    * Constructs an empty Channel with zero height and width.
    */
   Channel() {
-    channelValues = new double[0][0];
+    channelValues = new int[0][0];
   }
 
   /**
@@ -35,7 +32,7 @@ class Channel implements ChannelModel {
     if (height < 0 || width < 0) {
       throw new IllegalArgumentException("Invalid height and width for Channel");
     }
-    channelValues = new double[height][width];
+    channelValues = new int[height][width];
   }
 
   /**
@@ -44,12 +41,12 @@ class Channel implements ChannelModel {
    * @param channelValues The two-dimensional array representing the channel values.
    * @throws IllegalArgumentException If the provided array is not rectangular.
    */
-  Channel(double[][] channelValues) throws IllegalArgumentException {
+  Channel(int[][] channelValues) throws IllegalArgumentException {
     checkRectangularArray(channelValues);
     if (channelValues.length == 0) {
-      this.channelValues = new double[0][0];
+      this.channelValues = new int[0][0];
     } else {
-      this.channelValues = new double[channelValues.length][channelValues[0].length];
+      this.channelValues = new int[channelValues.length][channelValues[0].length];
       for (int i = 0; i < channelValues.length; i++) {
         System.arraycopy(channelValues[i], 0, this.channelValues[i], 0, channelValues[0].length);
       }
@@ -63,7 +60,7 @@ class Channel implements ChannelModel {
    * @param channelValues The two-dimensional array to be checked for rectangularity.
    * @throws IllegalArgumentException If the array is not rectangular or if it is null.
    */
-  static void checkRectangularArray(double[][] channelValues) throws IllegalArgumentException {
+  static void checkRectangularArray(int[][] channelValues) throws IllegalArgumentException {
     if (channelValues == null) {
       throw new IllegalArgumentException("Invalid Channel Value Matrix");
     }
@@ -81,8 +78,8 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public double[][] getChannelValues() {
-    double[][] newValues = new double[getHeight()][getWidth()];
+  public int[][] getChannelValues() {
+    int[][] newValues = new int[getHeight()][getWidth()];
     for (int i = 0; i < getHeight(); i++) {
       System.arraycopy(channelValues[i], 0, newValues[i], 0, newValues[0].length);
     }
@@ -91,7 +88,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel getVerticalFlipChannel() {
-    double[][] newValues = new double[getHeight()][getWidth()];
+    int[][] newValues = new int[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[getHeight() - 1 - y][x] = channelValues[y][x];
@@ -102,7 +99,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel getHorizontalFlipChannel() {
-    double[][] newValues = new double[getHeight()][getWidth()];
+    int[][] newValues = new int[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[y][getWidth() - 1 - x] = channelValues[y][x];
@@ -113,7 +110,7 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel addBuffer(int buffer, int maxPixelValue) {
-    double[][] newValues = new double[getHeight()][getWidth()];
+    int[][] newValues = new int[getHeight()][getWidth()];
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
         newValues[y][x] = Math.max(Math.min(channelValues[y][x] + buffer, maxPixelValue), 0);
@@ -130,7 +127,7 @@ class Channel implements ChannelModel {
     int kernelWidth = kernel[0].length;
     int kernelWidthRadius = kernelWidth / 2;
     int kernelHeightRadius = kernelHeight / 2;
-    double[][] newValues = new double[getHeight()][getWidth()];
+    int[][] newValues = new int[getHeight()][getWidth()];
 
     for (int y = 0; y < getHeight(); y++) {
       for (int x = 0; x < getWidth(); x++) {
@@ -168,7 +165,7 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public double getValue(int y, int x) throws IllegalArgumentException {
+  public int getValue(int y, int x) throws IllegalArgumentException {
     if (y >= getHeight() || y < 0 || x >= getWidth() || x < 0) {
       throw new IllegalArgumentException("Invalid pixel values for the image.");
     }
@@ -187,150 +184,147 @@ class Channel implements ChannelModel {
 //    return createInstance(unpadded);
 //  }
 
-  @Override
-  public ChannelModel applyPadding() {
-    double[][] originalChannel = getChannelValues();
-    int originalChannelHeight = originalChannel.length;
-    int originalChannelWidth = originalChannel[0].length;
-
-    int newSize = Math.max(originalChannelHeight, originalChannelWidth);
-    int paddedSize = nextPowerOf2(newSize);
-
-    double[][] paddedChannel = new double[paddedSize][paddedSize];
-
-    for (int i = 0; i < originalChannelHeight; i++) {
-      paddedChannel[i] = Arrays.copyOf(originalChannel[i], paddedSize);
-    }
-
-    return createInstance(paddedChannel);
-  }
-
-  private int nextPowerOf2(int number) {
-    if (number <= 0) {
-      return 1;
-    }
-
-    number--;
-    number |= number >> 1;
-    number |= number >> 2;
-    number |= number >> 4;
-    number |= number >> 8;
-    number |= number >> 16;
-    number++;
-
-    return number;
-  }
-
-
-  @Override
-  public ChannelModel applyHaarTransform() {
-    double[][] channel = getChannelValues();
-    int c = channel.length;
-    while (c > 1) {
-      // Transform Rows
-      for (int i = 0; i < c; i++) {
-        //X[i] = transform(X[i]);
-        double[] row = new double[c];
-        for (int j = 0; j < c; j++) {
-          row[j] = channel[i][j];
-        }
-        row = transform(row);
-        for (int j = 0; j < c; j++) {
-          channel[i][j] = row[j];
-        }
-      }
-
-      // Transform Columns
-      for (int j = 0; j < c; j++) {
-        double[] column = new double[c];
-        for (int i = 0; i < c; i++) {
-          column[i] = channel[i][j];
-        }
-        column = transform(column);
-        for (int i = 0; i < c; i++) {
-          channel[i][j] = column[i];
-        }
-      }
-
-      c=c/2;
-    }
-    return createInstance(channel);
-  }
-
-
-  private double[] transform(double[] s){
-    double[] avg = new double[s.length/2];
-    double[] diff = new double[s.length/2];
-
-    for (int i=0; i<s.length;i=i+2){
-      double a = s[i];
-      double b = s[i+1];
-      avg[i/2] = (a+b) / Math.sqrt(2);
-      diff[i/2] = (a-b) / Math.sqrt(2);
-    }
-
-    return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
-  }
-
-  @Override
-  public ChannelModel applyHaarInverse() {
-    double[][] channel = getChannelValues();
-    int c = 2;
-    //int test = 2;
-    while (c <= channel.length) {
-
-      // Transform Columns
-      for (int j = 0; j < c; j++) {
-        double[] column = new double[c];
-        for (int i = 0; i < c; i++) {
-          column[i] = channel[i][j];
-        }
-        column = inverse(column);
-        for (int i = 0; i < c; i++) {
-          channel[i][j] = column[i];
-        }
-      }
-
-      // Transform Rows
-      for (int i = 0; i < c; i++) {
-        //X[i] = transform(X[i]);
-        double[] row = new double[c];
-        for (int j = 0; j < c; j++) {
-          row[j] = channel[i][j];
-        }
-        row = inverse(row);
-        for (int j = 0; j < c; j++) {
-          channel[i][j] = row[j];
-        }
-      }
-
-      c=c*2;
-      //test-=1;
-    }
-//    for(int i=0;i<getHeight();i++){
-//      System.out.print("{");
-//      for(int j=0;j<getWidth();j++){
-//        System.out.print(Math.round(channel[i][j])+", "); ;
-//      }
-//      System.out.println("},");
+//  @Override
+//  public ChannelModel applyPadding() {
+//    int[][] originalChannel = getChannelValues();
+//    int originalChannelHeight = originalChannel.length;
+//    int originalChannelWidth = originalChannel[0].length;
+//
+//    int newSize = Math.max(originalChannelHeight, originalChannelWidth);
+//    int paddedSize = nextPowerOf2(newSize);
+//
+//    int[][] paddedChannel = new int[paddedSize][paddedSize];
+//
+//    for (int i = 0; i < originalChannelHeight; i++) {
+//      paddedChannel[i] = Arrays.copyOf(originalChannel[i], paddedSize);
 //    }
-    return createInstance(channel);
-  }
-
-  @Override
-  public ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException{
-    if(originalHeight < 0 || originalWidth < 0){
-      throw new IllegalArgumentException("Height or width cannot be negative");
-    }
-    double[][] paddedImage = getChannelValues();
-    double[][] image = new double[originalHeight][originalWidth];
-    for(int i=0;i<originalHeight;i++){
-      for(int j=0;j<originalWidth;j++){
-        image[i][j] = paddedImage[i][j];
-      }
-    }
-    return createInstance(image);
-  }
+//
+//    return createInstance(paddedChannel);
+//  }
+//
+//  private int nextPowerOf2(int number) {
+//    if (number <= 0) {
+//      return 1;
+//    }
+//
+//    number--;
+//    number |= number >> 1;
+//    number |= number >> 2;
+//    number |= number >> 4;
+//    number |= number >> 8;
+//    number |= number >> 16;
+//    number++;
+//
+//    return number;
+//  }
+//
+//
+//  @Override
+//  public double[][] applyHaarTransform() {
+//    int[][] original = getChannelValues();
+//    double[][] channel = Arrays.stream(original)
+//            .map(row -> Arrays.stream(row).asDoubleStream().toArray())
+//            .toArray(double[][]::new);
+//    int c = channel.length;
+//    while (c > 1) {
+//      // Transform Rows
+//      for (int i = 0; i < c; i++) {
+//        //X[i] = transform(X[i]);
+//        double[] row = new double[c];
+//        for (int j = 0; j < c; j++) {
+//          row[j] = channel[i][j];
+//        }
+//        row = transform(row);
+//        for (int j = 0; j < c; j++) {
+//          channel[i][j] = row[j];
+//        }
+//      }
+//
+//      // Transform Columns
+//      for (int j = 0; j < c; j++) {
+//        double[] column = new double[c];
+//        for (int i = 0; i < c; i++) {
+//          column[i] = channel[i][j];
+//        }
+//        column = transform(column);
+//        for (int i = 0; i < c; i++) {
+//          channel[i][j] = column[i];
+//        }
+//      }
+//
+//      c=c/2;
+//    }
+//
+//    return channel;
+//  }
+//
+//
+//  private double[] transform(double[] s){
+//    double[] avg = new double[s.length/2];
+//    double[] diff = new double[s.length/2];
+//
+//    for (int i=0; i<s.length;i=i+2){
+//      double a = s[i];
+//      double b = s[i+1];
+//      avg[i/2] = (a+b) / Math.sqrt(2);
+//      diff[i/2] = (a-b) / Math.sqrt(2);
+//    }
+//
+//    return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
+//  }
+//
+//  @Override
+//  public ChannelModel applyHaarInverse(double[][] haarTransformed) {
+//    double[][] channel = haarTransformed;
+//    int c = 2;
+//    //int test = 2;
+//    while (c <= channel.length) {
+//
+//      // Transform Columns
+//      for (int j = 0; j < c; j++) {
+//        double[] column = new double[c];
+//        for (int i = 0; i < c; i++) {
+//          column[i] = channel[i][j];
+//        }
+//        column = inverse(column);
+//        for (int i = 0; i < c; i++) {
+//          channel[i][j] = column[i];
+//        }
+//      }
+//
+//      // Transform Rows
+//      for (int i = 0; i < c; i++) {
+//        //X[i] = transform(X[i]);
+//        double[] row = new double[c];
+//        for (int j = 0; j < c; j++) {
+//          row[j] = channel[i][j];
+//        }
+//        row = inverse(row);
+//        for (int j = 0; j < c; j++) {
+//          channel[i][j] = row[j];
+//        }
+//      }
+//
+//      c=c*2;
+//      //test-=1;
+//    }
+//    return createInstance(channel);
+//  }
+//
+//  @Override
+//  public ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException{
+//    if(originalHeight < 0 || originalWidth < 0){
+//      throw new IllegalArgumentException("Height or width cannot be negative");
+//    }
+//    double[][] paddedImage = getChannelValues();
+//    double[][] image = new double[originalHeight][originalWidth];
+//    for(int i=0;i<originalHeight;i++){
+//      for(int j=0;j<originalWidth;j++){
+//        image[i][j] = paddedImage[i][j];
+//      }
+//    }
+//    return createInstance(image);
+//  }
 
 //  private double[][] haarTransform(){
 //    double[][] X = getChannelValues();
@@ -371,20 +365,20 @@ class Channel implements ChannelModel {
 //  }
 
 
-  @Override
-  public ChannelModel applyThreshold(double threshold){
-    double[][] channel = getChannelValues();
-    int height = getHeight();
-    int width = getWidth();
-    for(int i=0;i<height;i++){
-      for(int j=0;j<width;j++){
-        if(Math.abs(channel[i][j]) <= threshold){
-          channel[i][j]=0;
-        }
-      }
-    }
-    return createInstance(channel);
-  }
+//  @Override
+//  public ChannelModel applyThreshold(double threshold){
+//    double[][] channel = getChannelValues();
+//    int height = getHeight();
+//    int width = getWidth();
+//    for(int i=0;i<height;i++){
+//      for(int j=0;j<width;j++){
+//        if(Math.abs(channel[i][j]) <= threshold){
+//          channel[i][j]=0;
+//        }
+//      }
+//    }
+//    return createInstance(channel);
+//  }
 
 
 //  private double[] reset(double[] array, double threshold){
@@ -497,24 +491,24 @@ class Channel implements ChannelModel {
 //    return X;
 //  }
 
-  private double[] inverse(double[] s){
-    double[] avg = new double[s.length/2];
-    double[] diff = new double[s.length/2];
-
-    for (int i=0; i<s.length/2;i++){
-      double a = s[i];
-      double b = s[i+s.length/2];
-      avg[i] = (a+b) / Math.sqrt(2);
-      diff[i] = (a-b) / Math.sqrt(2);
-    }
-
-    double[] res = new double[s.length];
-    for (int i = 0; i < s.length/2; i++) {
-      res[i*2] = avg[i];
-      res[i*2+1] = diff[i];
-    }
-    return res;
-  }
+//  private double[] inverse(double[] s){
+//    double[] avg = new double[s.length/2];
+//    double[] diff = new double[s.length/2];
+//
+//    for (int i=0; i<s.length/2;i++){
+//      double a = s[i];
+//      double b = s[i+s.length/2];
+//      avg[i] = (a+b) / Math.sqrt(2);
+//      diff[i] = (a-b) / Math.sqrt(2);
+//    }
+//
+//    double[] res = new double[s.length];
+//    for (int i = 0; i < s.length/2; i++) {
+//      res[i*2] = avg[i];
+//      res[i*2+1] = diff[i];
+//    }
+//    return res;
+//  }
 
 //  private double[][] unpad2DArray(double[][] paddedArray){
 //    int height = getHeight();
@@ -604,11 +598,6 @@ class Channel implements ChannelModel {
   public ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
     int height = getHeight();
     int width = getWidth();
-    System.out.println(b+" "+m+" "+w);
-    if(b<0 || m < 0 || w<0
-            || b > m || m > w || w> 255){ 
-      throw new IllegalArgumentException("Invalid arguments for adjust level");
-    }
     double b2 = Math.pow(b,2);
     double m2 = Math.pow(m,2);
     double w2 = Math.pow(w,2);
@@ -619,15 +608,14 @@ class Channel implements ChannelModel {
     double Qa = Aa/A ;
     double Qb = Ab/A;
     double Qc = Ac/A;
-    System.out.println(Qa+" "+Qb+" "+Qc);
-    double[][] leveled = new double[height][width];
+    int[][] leveled = new int[height][width];
     for(int i=0;i<height;i++){
       for(int j=0;j<width;j++){
         double x = getValue(i,j);
         double y = Qa * Math.pow(x,2) + Qb * x + Qc;
         y = Math.max(y,0);
         y = Math.min(y,255);
-        leveled[i][j] = y;
+        leveled[i][j] = (int) Math.round(y);
       }
 //      System.out.println("},");
     }
@@ -641,7 +629,7 @@ class Channel implements ChannelModel {
     if(start > end || start < 0 || end > width){
       throw new IllegalArgumentException("Invalid arguments for vtrim channel");
     }
-    double[][] cropped = new double[height][end-start];
+    int[][] cropped = new int[height][end-start];
     for(int i=0;i<height;i++){
       for(int j=start;j<end;j++){
         cropped[i][j-start] = getValue(i,j);
@@ -661,7 +649,7 @@ class Channel implements ChannelModel {
     int minWidth = Math.min(width, start+otherChannel.getWidth());
     int minHeight = Math.min(height, otherChannel.getHeight());
 
-    double[][] overlappedChannel = getChannelValues();
+    int[][] overlappedChannel = getChannelValues();
     for(int i=0;i<minHeight;i++){
       for(int j=start;j<minWidth;j++){
         overlappedChannel[i][j] = otherChannel.getValue(i,j-start);

@@ -5,9 +5,7 @@ import model.ImageData;
 
 // for working with 2d place graphics operations in a single channel
 public interface ImageGraphics {
-  void initBlankPlane(int height, int width) throws IllegalArgumentException;
   void drawLine(int x1, int y1, int x2, int y2) throws IllegalArgumentException;
   ImageData getImageData();
   void setColor(ColorEnum color);
-  void drawGrid(int gridSize);
 }

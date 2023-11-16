@@ -34,7 +34,7 @@ public class RgbCombine implements RgbImageCommand {
     ImageData green = imageList.get(imageNameList[1]).getImageData();
     ImageData blue = imageList.get(imageNameList[2]).getImageData();
 
-    double[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
+    int[][][] newData = {red.getData()[0], green.getData()[1], blue.getData()[2]};
     ImageData newImageData = new ImageData(newData, red.getMaxValue());
 
     RgbImageModel newImage = factoryRgbImageModel.createImageModel();

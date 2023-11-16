@@ -4,14 +4,14 @@ package model;
  * The ChannelModel interface defines methods for working with image channels.
  */
 interface ChannelModel {
-  ChannelModel createInstance(double[][] channelValues);
+  ChannelModel createInstance(int[][] channelValues);
 
   /**
    * Get the array values of pixel data of the channel.
    *
    * @return A two-dimensional array of channel values.
    */
-  double[][] getChannelValues();
+  int[][] getChannelValues();
 
   /**
    * Creates a channel with values that are horizontally flipped from the original channel.
@@ -68,13 +68,13 @@ interface ChannelModel {
    * @return The pixel value at the specified position.
    * @throws IllegalArgumentException If the provided coordinates are out of bounds.
    */
-  double getValue(int y, int x) throws IllegalArgumentException;
+  int getValue(int y, int x) throws IllegalArgumentException;
   //ChannelModel applyCompression(double compressionRatio);
-  ChannelModel applyHaarTransform();
-  ChannelModel applyHaarInverse();
-  ChannelModel applyThreshold(double threshold);
-  ChannelModel applyPadding();
-  ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException;
+//  ChannelModel applyHaarTransform();
+//  ChannelModel applyHaarInverse();
+//  ChannelModel applyThreshold(double threshold);
+//  ChannelModel applyPadding();
+//  ChannelModel applyUnpad(int originalHeight, int originalWidth) throws IllegalArgumentException;
   int[] getFrequencyValues();
   int getMaxFreqPixel();
   ChannelModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;

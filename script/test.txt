@@ -1,3 +1,6 @@
+load ImagesRef/manhattan/manhattan-small.png img
+compress 50 img cimg
+save images/temp/comptest.png cimg
 
 load ImagesRef/temp/galaxy.png img
 histogram img hist

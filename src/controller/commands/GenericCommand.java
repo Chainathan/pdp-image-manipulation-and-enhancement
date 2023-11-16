@@ -12,7 +12,10 @@ public class GenericCommand implements RgbImageCommand {
   private final Function<RgbImageModel,RgbImageModel> fun;
   private final boolean supportSplit;
   public GenericCommand(int defaultArg, Function<RgbImageModel, RgbImageModel> fun,
-                  boolean supportSplit) {
+                  boolean supportSplit) throws IllegalArgumentException{
+    if (defaultArg<=0){
+      throw new IllegalArgumentException("Invalid Default arguments for the Command");
+    }
     this.defaultArg = defaultArg;
     this.fun = fun;
     this.supportSplit = supportSplit;

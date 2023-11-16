@@ -63,7 +63,7 @@ public class RgbImageFileIO implements ImageFileIO {
       int width = sc.nextInt();
       int height = sc.nextInt();
       int maxValue = sc.nextInt();
-      double[][][] imageData = new double[3][height][width];
+      int[][][] imageData = new int[3][height][width];
       for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
           int red = sc.nextInt();
@@ -101,11 +101,10 @@ public class RgbImageFileIO implements ImageFileIO {
       throw new IOException("Invalid Image.");
     }
   }
-  // TODO ask prof abt the placement
   static ImageData convertBuffImgToImgData(BufferedImage image){
     int width = image.getWidth();
     int height = image.getHeight();
-    double[][][] imageData = new double[3][height][width];
+    int[][][] imageData = new int[3][height][width];
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         Color pixelColor = new Color(image.getRGB(j, i));
@@ -150,7 +149,7 @@ public class RgbImageFileIO implements ImageFileIO {
   }
 
   private void savePPM(String filePath, ImageData imageData) throws IOException {
-    double[][][] data = imageData.getData();
+    int[][][] data = imageData.getData();
     int width = data[0][0].length;
     int height = data[0].length;
 
@@ -160,9 +159,9 @@ public class RgbImageFileIO implements ImageFileIO {
     writer.write(imageData.getMaxValue() + "\n");
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int red = (int) data[0][y][x];
-        int green = (int) data[1][y][x];
-        int blue = (int) data[2][y][x];
+        int red = data[0][y][x];
+        int green = data[1][y][x];
+        int blue = data[2][y][x];
         writer.write(red + "\n" + green + "\n" + blue + "\n");
       }
     }
@@ -171,7 +170,7 @@ public class RgbImageFileIO implements ImageFileIO {
 
   private void saveGeneralFormat(String imageFormat, String destinationPath, ImageData imageData)
           throws IOException {
-    double[][][] pixelValues = imageData.getData();
+    int[][][] pixelValues = imageData.getData();
     int width = pixelValues[0][0].length;
     int height = pixelValues[0].length;
 
@@ -179,7 +178,7 @@ public class RgbImageFileIO implements ImageFileIO {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int rgb =  (int)pixelValues[0][y][x] << 16 | (int)pixelValues[1][y][x] << 8 | (int)pixelValues[2][y][x];
+        int rgb =  pixelValues[0][y][x] << 16 | pixelValues[1][y][x] << 8 | pixelValues[2][y][x];
         image.setRGB(x, y, rgb);
       }
     }

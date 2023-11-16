@@ -25,6 +25,8 @@ save res/leo-intensity.png leo-intensity
 
 luma-component leo leo-luma
 save res/leo-luma.png leo-luma
+luma-component leo leo-luma-split split 35
+save res/leo-luma-split.png leo-luma-split
 
 red-component leo leo-red
 save res/leo-red.png leo-red
