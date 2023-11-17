@@ -33,10 +33,30 @@ Channel model:
 getValue() - argument name
 ComponentEnum - method
 ColorEnum
-Added applyTransform(), applyInverse(), applyPadding(), applyUnpad(), applyThreshold()
+Added getFrequencyValues, getMaxFreqPixel, adjustLevels, cropVertical, overlapOnBase, createInstance.
 
+Channel :
+getFrequencyOfPixels
+
+RgbImage -
+createInstance
+getMaxValue
+applyTransform()
+applyInverse()
+applyPadding()
+applyUnpad()
+applyThreshold()
+inverse
+transform
+nextPowerOf2
+getUniqueValues
+getFlatArray
+getThreshold
+
+Created FactoryRgbImageModel and FactoryRgbImage
 RgbImageModel-
 added blur sepia sharpen, removed applyfilter, applytone
+Added overlapOnBase, cropVertical, adjustLevels, correctColor, createHistogram, applyCompression
 **********************************************
 Image Manipulation And Enhancement Application
 **********************************************
