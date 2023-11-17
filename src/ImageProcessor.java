@@ -1,6 +1,5 @@
 import controller.CommandMapper;
 import controller.CommandMapperAdv;
-import controller.AdvRgbController;
 import controller.RgbController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
@@ -64,7 +63,7 @@ public abstract class ImageProcessor implements ImageProcessorModel {
         in = new InputStreamReader(System.in);
       }
 
-      AdvRgbController controller = new AdvRgbController(factory, textView, in, commandMapper);
+      RgbController controller = new RgbController(factory, textView, in, commandMapper);
       controller.run();
 
     } catch (IOException e) {

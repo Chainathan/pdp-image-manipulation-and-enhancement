@@ -1,19 +1,31 @@
 package controller;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Map;
-
 import model.ColorEnum;
 import model.ImageData;
+import java.awt.Color;
+import java.util.Map;
 
+/**
+ * The ImageGraphicsImpl class implements the ImageGraphics interface and provides
+ * a graphics plane for drawing lines, setting colors, and obtaining image data.
+ */
 public class ImageGraphicsImpl implements ImageGraphics{
   private BufferedImage image;
   private Graphics2D g;
   private final Map<ColorEnum,Color> colorMap;
   private Color penColor;
 
+  /**
+   * Constructs an ImageGraphicsImpl instance with the specified height, width, and grid size.
+   *
+   * @param height   The height of the graphics plane.
+   * @param width    The width of the graphics plane.
+   * @param gridSize The size of the grid to be drawn on the graphics plane.
+   * @throws IllegalArgumentException If the height/width is non-positive or gridSize is negative.
+   */
   public ImageGraphicsImpl(int height, int width, int gridSize) throws IllegalArgumentException{
     if (height <=0 || width <=0 || gridSize<0){
       throw new IllegalArgumentException("Invalid arguments for the Image Graphics");

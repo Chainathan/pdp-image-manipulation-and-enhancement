@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import controller.ImageGraphics;
-import model.ComponentEnum;
+import controller.ComponentEnum;
 import model.ImageData;
 import model.RgbImageModel;
 

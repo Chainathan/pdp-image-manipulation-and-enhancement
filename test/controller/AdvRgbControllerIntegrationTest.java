@@ -665,7 +665,7 @@ public class AdvRgbControllerIntegrationTest {
 
     private void runCommand(String command) {
         Readable reader = new StringReader(command);
-        ImageController controller = new AdvRgbController(factory, textView, reader, commandMapper);
+        ImageController controller = new RgbController(factory, textView, reader, commandMapper);
         try {
             controller.run();
         } catch (IOException e) {

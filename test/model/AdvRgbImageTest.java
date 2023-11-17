@@ -1,5 +1,6 @@
 package model;
 
+import controller.ComponentEnum;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,36 +30,36 @@ public class AdvRgbImageTest {
         rgbImage = new RgbImage(channel1,channel2,channel3,255);
     }
 
-    private void printData(ImageData data){
-        System.out.print("{");
-        for(int k=0;k<3;k++){
-            System.out.print("{");
-            for(int i=0;i<data.getData()[0].length;i++){
-                System.out.print("{");
-                for(int j=0;j<data.getData()[0][0].length;j++){
-                    if(j+1==data.getData()[0][0].length){
-                        System.out.print(data.getData()[k][i][j]);
-                    }
-                    else{
-                        System.out.print(data.getData()[k][i][j] + ", ");
-                    }
-                }
-                if(i+1==data.getData()[0].length){
-                    System.out.print("}");
-                }
-                else{
-                    System.out.println("},");
-                }
-            }
-            if(k+1==3){
-                System.out.println("}");
-            }
-            else{
-                System.out.println("},");
-            }
-        }
-        System.out.print("}");
-    }
+//    private void printData(ImageData data){
+//        System.out.print("{");
+//        for(int k=0;k<3;k++){
+//            System.out.print("{");
+//            for(int i=0;i<data.getData()[0].length;i++){
+//                System.out.print("{");
+//                for(int j=0;j<data.getData()[0][0].length;j++){
+//                    if(j+1==data.getData()[0][0].length){
+//                        System.out.print(data.getData()[k][i][j]);
+//                    }
+//                    else{
+//                        System.out.print(data.getData()[k][i][j] + ", ");
+//                    }
+//                }
+//                if(i+1==data.getData()[0].length){
+//                    System.out.print("}");
+//                }
+//                else{
+//                    System.out.println("},");
+//                }
+//            }
+//            if(k+1==3){
+//                System.out.println("}");
+//            }
+//            else{
+//                System.out.println("},");
+//            }
+//        }
+//        System.out.print("}");
+//    }
 
     private boolean assertImages(int[][][] expectedImage, RgbImageModel rgbImageModel) {
         int[][][] actual = rgbImageModel.getImageData().getData();
@@ -205,46 +206,6 @@ public class AdvRgbImageTest {
         RgbImageModel sepiaImage = rgbImage.sepia();
         assertTrue(assertImages(expectedImage, sepiaImage));
     }
-//
-////    @Test(expected = IllegalArgumentException.class)
-////    public void testApplyToneForBufferHeightNotThree() {
-////        //GIVEN
-////        StringBuilder log = new StringBuilder();
-////        RgbImageModel rbgImage = new RgbImage(
-////                new MockChannel(log),
-////                new MockChannel(new StringBuilder()),
-////                new MockChannel(new StringBuilder()),
-////                255
-////        );
-////        double[][] buffer = {
-////                {1, 0, 2},
-////                {0, 1, 2}
-////        };
-////
-////        //WHEN
-////        rbgImage.applyTone(buffer);
-////    }
-//
-////    @Test(expected = IllegalArgumentException.class)
-////    public void testApplyToneForBufferWidthtNotThree() {
-////        //GIVEN
-////        StringBuilder log = new StringBuilder();
-////        RgbImageModel rbgImage = new RgbImage(
-////                new MockChannel(log),
-////                new MockChannel(new StringBuilder()),
-////                new MockChannel(new StringBuilder()),
-////                255
-////        );
-////        double[][] buffer = {
-////                {1, 0, 2},
-////                {0, 1, 2},
-////                {1, 1}
-////        };
-////
-////        //WHEN
-////        rbgImage.applyTone(buffer);
-////    }
-//
 
     @Test
     public void visualizeComponentForRed() {
@@ -724,7 +685,6 @@ public class AdvRgbImageTest {
         );
         //WHEN
         rgbImage.cropVertical(120, 50);
-
 
     }
 

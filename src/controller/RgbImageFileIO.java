@@ -101,6 +101,12 @@ public class RgbImageFileIO implements ImageFileIO {
       throw new IOException("Invalid Image.");
     }
   }
+
+  /**
+   * Method to convert Buffered Image to Image Data.
+   * @param image Buffered Image to be converted.
+   * @return an Image Data with the data and the max pixel value.
+   */
   static ImageData convertBuffImgToImgData(BufferedImage image){
     int width = image.getWidth();
     int height = image.getHeight();

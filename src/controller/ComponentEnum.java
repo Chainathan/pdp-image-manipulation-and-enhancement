@@ -1,4 +1,4 @@
-package model;
+package controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,16 +57,12 @@ public enum ComponentEnum {
   }
 
   /**
-   * Retrieves the ComponentEnum value associated with the provided descriptive string.
+   * Retrieves the descriptive string associated with the ComponentEnum value.
    *
-   * @param componentString The descriptive string to map to a ComponentEnum value.
-   * @return The ComponentEnum value corresponding to the descriptive string,
-   *        or null if not found.
+   * @return The descriptive string corresponding to the ComponentEnum value.
+   *
    */
-  public static ComponentEnum fromString(String componentString) {
-    return stringToEnum.get(componentString);
-  }
-  public String commandName(){
+  public String getComponentString(){
     return componentString;
   }
 }

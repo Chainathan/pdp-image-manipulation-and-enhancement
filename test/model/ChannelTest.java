@@ -2,24 +2,14 @@ package model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Test class of Channel class.
+ * Test class for Channel class.
  */
 public class ChannelTest {
-//  @Test
-//  public void testTransform(){
-//    double[][] values = {
-//            {1, 2, 3},
-//            {4, 5, 6},
-//            {7, 8, 9}
-//    };
-//    AdvChannel c = new AdvChannel(values);
-//    c.test();
-//  }
 
-  //Kernel > image.
   @Test
   public void testGetChannelValues() {
     int[][] values = {
@@ -164,7 +154,6 @@ public class ChannelTest {
     assertArrayEquals(expectedOutput, actualOutput);
   }
 
-  //Check for 0 width and height all methods
   @Test
   public void testVerticalFlipForEmptyChannel() {
     int[][] inputChannel = new int[0][0];
@@ -382,7 +371,7 @@ public class ChannelTest {
             {21, 22, 23, 24}
     };
     ChannelModel channel1 = new Channel(values1);
-    ChannelModel overlappedChannel = channel1.overlapOnBase(null, 0);
+    channel1.overlapOnBase(null, 0);
   }
 
   @Test
@@ -416,13 +405,6 @@ public class ChannelTest {
             {16, 17, 18, 19},
             {21, 22, 23, 24}
     };
-    int[][] expectedValues = {
-            {2, 3},
-            {7, 8},
-            {12, 13},
-            {17, 18},
-            {22, 23}
-    };
     ChannelModel channel1 = new Channel(values1);
     channel1.cropVertical(-1, 3);
   }
@@ -453,6 +435,19 @@ public class ChannelTest {
     channel1.cropVertical(0, 5);
   }
 
+  @Test(expected = IllegalArgumentException.class)
+  public void testCropVerticalNegativeEnd(){
+    int[][] values1 = {
+            {1, 2, 3, 4},
+            {6, 7, 8, 9},
+            {11, 12, 13, 14},
+            {16, 17, 18, 19},
+            {21, 22, 23, 24}
+    };
+    ChannelModel channel1 = new Channel(values1);
+    channel1.cropVertical(1, -1);
+  }
+
   @Test
   public void adjustLevels(){
     int[][] values1 = {
@@ -471,7 +466,7 @@ public class ChannelTest {
     };
     ChannelModel channel1 = new Channel(values1);
     ChannelModel actual = channel1.adjustLevels(0, 20,255);
-    assertTrue(compareArrays(expectedValues, actual.getChannelValues()));
+    assertArrayEquals(expectedValues, actual.getChannelValues());
   }
 
   @Test
@@ -519,117 +514,6 @@ public class ChannelTest {
     assertArrayEquals(expected, actual);
   }
 
-//  @Test
-//  public void testApplyThreshold(){
-//    double[][] values1 = {
-//            {9, -9, 9, 9},
-//            {6, 7, -8, 8},
-//            {11, -22, 13, 14},
-//            {16, 22, 22, -19},
-//            {255, 255, 255, 255}
-//    };
-//    double[][] expected = {
-//            {0, 0, 0, 0},
-//            {0, 0, 0, 0},
-//            {0, -22, 0, 14},
-//            {16, 22, 22, -19},
-//            {255, 255, 255, 255}
-//    };
-//    ChannelModel channel1 = new Channel(values1);
-//    ChannelModel actual = channel1.applyThreshold(13);
-//    assertArrayEquals(expected,actual.getChannelValues());
-//  }
-//
-//  @Test
-//  public void testApplyUnpad(){
-//    double[][] padded = {
-//            {9, -9, 9, 9, 0, 0},
-//            {6, 7, -8, 8, 0, 0},
-//            {11, -22, 13, 14, 0, 0},
-//            {16, 22, 22, -19, 0, 0},
-//            {255, 255, 255, 255, 0, 0},
-//            {0, 0, 0, 0, 0, 0}
-//    };
-//    double[][] expected = {
-//            {9, -9, 9, 9},
-//            {6, 7, -8, 8},
-//            {11, -22, 13, 14},
-//            {16, 22, 22, -19},
-//            {255, 255, 255, 255}
-//    };
-//    ChannelModel channel1 = new Channel(padded);
-//    ChannelModel actual = channel1.applyUnpad(5,4);
-//    assertArrayEquals(expected,actual.getChannelValues());
-//  }
-//
-//  @Test(expected = IllegalArgumentException.class)
-//  public void testApplyUnpadForNegativeHeightAndWidth(){
-//    double[][] padded = {
-//            {9, -9, 9, 9, 0, 0},
-//            {6, 7, -8, 8, 0, 0},
-//            {11, -22, 13, 14, 0, 0},
-//            {16, 22, 22, -19, 0, 0},
-//            {255, 255, 255, 255, 0, 0},
-//            {0, 0, 0, 0, 0, 0}
-//    };
-//    ChannelModel channel1 = new Channel(padded);
-//    channel1.applyUnpad(-5,-4);
-//  }
-//
-//  @Test
-//  public void testApplyHaarInverse(){
-//    double[][] values = {
-//            {22, -2, 8, -8},
-//            {-6, -1, 14, 20},
-//            {-6, 9, 10, 8},
-//            {-24, 12, 19, -21}
-//    };
-//    double[][] expected = {
-//            {9, -9, 9, 9},
-//            {5, 7, -8, 8},
-//            {11, -22, 13, 14},
-//            {16, 21, 22, -19}
-//    };
-//    ChannelModel channel1 = new Channel(values);
-//    ChannelModel actual = channel1.applyHaarInverse();
-//    assertTrue(compareArrays(expected, actual.getChannelValues()));
-//  }
-//
-//  @Test
-//  public void testApplyPadding(){
-//    double[][] value = {
-//            {9, -9, 9},
-//            {6, 7, -8},
-//    };
-//    double[][] expected = {
-//            {9, -9, 9, 0},
-//            {6, 7, -8, 0},
-//            {0, 0, 0, 0},
-//            {0, 0, 0, 0}
-//    };
-//    ChannelModel channel1 = new Channel(value);
-//    ChannelModel actual = channel1.applyPadding();
-//    assertArrayEquals(expected,actual.getChannelValues());
-//  }
-//
-//  @Test
-//  public void testApplyHaarTransform(){
-//    double[][] values = {
-//            {9, -9, 9, 9},
-//            {6, 7, -8, 8},
-//            {11, -22, 13, 14},
-//            {16, 22, 22, -19}
-//    };
-//    double[][] expected = {
-//            {22, -2, 8, -8},
-//            {-6, -1, 14, 20},
-//            {-6, 9, 10, 8},
-//            {-24, 12, 19, -21}};
-//    ChannelModel channel1 = new Channel(values);
-//    ChannelModel actual = channel1.applyHaarTransform();
-//    assertTrue(compareArrays(expected, actual.getChannelValues()));
-//  }
-
   private boolean compareArrays(int[][] expected, int[][] actual) {
     if (expected.length != actual.length) {
       return false;
@@ -639,7 +523,7 @@ public class ChannelTest {
         if (expected[i].length != actual[i].length) {
           return false;
         }
-        if (Math.abs(expected[i][j] - actual[i][j]) > 0.5) {
+        if ((expected[i][j] - actual[i][j])==0) {
           return false;
         }
       }

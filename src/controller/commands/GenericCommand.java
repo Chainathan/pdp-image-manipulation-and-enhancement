@@ -3,14 +3,29 @@ package controller.commands;
 import java.util.Map;
 import java.util.function.Function;
 
-import controller.AdvRgbController;
+import controller.RgbController;
 import controller.RgbImageCommand;
 import model.RgbImageModel;
 
+/**
+ * The GenericCommand class implements the RgbImageCommand interface and represents a
+ * generic image processing command with a default argument, a function to apply on an
+ * RGB image model, and an indication of whether the command supports splitting images.
+ */
 public class GenericCommand implements RgbImageCommand {
   private final int defaultArg;
   private final Function<RgbImageModel,RgbImageModel> fun;
   private final boolean supportSplit;
+
+  /**
+   * Constructs a GenericCommand with the specified default argument, function, and
+   * support for splitting images.
+   *
+   * @param defaultArg    The default number of arguments for the command.
+   * @param fun            The function to apply on an RGB image model.
+   * @param supportSplit   A boolean indicating whether the command supports splitting images.
+   * @throws IllegalArgumentException If the default argument is non-positive.
+   */
   public GenericCommand(int defaultArg, Function<RgbImageModel, RgbImageModel> fun,
                   boolean supportSplit) throws IllegalArgumentException{
     if (defaultArg<=0){
@@ -32,7 +47,7 @@ public class GenericCommand implements RgbImageCommand {
     String imageName = arguments[defaultArg-2];
     String destImageName = arguments[defaultArg-1];
 
-    AdvRgbController.checkImageExists(imageList, imageName);
+    RgbController.checkImageExists(imageList, imageName);
     RgbImageModel image = imageList.get(imageName);
     RgbImageModel destImage;
 

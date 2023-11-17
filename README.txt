@@ -32,6 +32,7 @@ extracted buffimage to imagedata method into a public static method
 Channel model:
 getValue() - argument name
 ComponentEnum - method
+ColorEnum
 Added applyTransform(), applyInverse(), applyPadding(), applyUnpad(), applyThreshold()
 
 RgbImageModel-
@@ -135,7 +136,7 @@ The program supports loading, manipulating and saving images using simple text-b
 -10. sharpen image-name dest-image-name: sharpen the given image and store the result in another image with the given name.
 -11. sepia image-name dest-image-name: produce a sepia-toned version of the given image and store the result in another image with the given name.
 -12. run script-file-path: Load and run the script commands in the specified file.
--13. exit: To terminate the program.
+-13. exit: If the command is used inside a script file then the program will end running the script file. If the command is used in a command-line script the program will terminate.
 // Advanced operations
 -14.compress percentage image-name dest-image-name
 -15.histogram image-name dest-image-name

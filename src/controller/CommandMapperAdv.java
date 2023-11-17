@@ -4,10 +4,13 @@ import java.util.Map;
 import java.util.function.Function;
 
 import controller.commands.GenericCommand;
-import model.ComponentEnum;
 import model.FactoryRgbImageModel;
 import model.RgbImageModel;
 
+/**
+ * The CommandMapperAdv class extends CommandMapperBasic and provides additional
+ * commands specific to advanced RGB image processing operations.
+ */
 public class CommandMapperAdv extends CommandMapperBasic{
   @Override
   public Map<String, Function<String[], RgbImageCommand>> generateCommands(

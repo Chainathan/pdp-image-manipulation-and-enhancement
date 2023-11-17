@@ -1,44 +1,50 @@
 package controller;
 
-import java.io.IOException;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import exceptions.FileFormatNotSupportedException;
+import model.FactoryRgbImageModel;
 import model.ImageData;
-import model.ImageProcessorModel;
+import model.RgbImageModel;
 import view.ImageProcessorView;
 
 /**
  * The RgbController class implements the ImageController
- * interface for controlling RGB image processing.
+ * interface for controlling RGB image processing. The controller maintains the list of rgb images on which
+ * the manipulation will be performed. It also maintains the list of commands that the program offers.
  */
-public class RgbController implements ImageController {
-  private final ImageProcessorModel rgbImageProcessor;
+public class RgbController implements ImageController{
+  private final FactoryRgbImageModel factory;
   private final ImageFileIO rgbImageFileIO;
   private final ImageProcessorView textView;
   private final Readable in;
+  private final Map<String, RgbImageModel> imageModelMap;
+  private final Map<String, Function<String[], RgbImageCommand>> knownCommands;
 
   /**
-   * Constructs an RgbController with the provided components.
+   * Constructs an AdvRgbController with the specified components.
    *
-   * @param rgbImageProcessor The model for managing RGB image data.
-   * @param textView          The view for displaying image processing results.
-   * @param in                The input source for user interactions.
+   * @param factory        The factory responsible for creating instances of RgbImageModel.
+   * @param textView       The view responsible for displaying text output.
+   * @param in             The input stream to read user commands.
+   * @param commandMapper  The mapper responsible for generating commands based on the factory.
    */
-  public RgbController(ImageProcessorModel rgbImageProcessor,
-                       ImageProcessorView textView, Readable in) {
-    this.rgbImageProcessor = rgbImageProcessor;
+  public RgbController(FactoryRgbImageModel factory, ImageProcessorView textView,
+                       Readable in, CommandMapper commandMapper) {
+    this.factory = factory;
     this.rgbImageFileIO = new RgbImageFileIO();
     this.textView = textView;
     this.in = in;
+    this.knownCommands = commandMapper.generateCommands(factory);
+    imageModelMap = new HashMap<>();
   }
-
   @Override
-  public void run() throws IOException {
+  public void run() throws IOException{
     textView.display("Image Processing program started");
     Scanner scanner = new Scanner(in);
     processScanner(scanner);
@@ -59,21 +65,9 @@ public class RgbController implements ImageController {
         }
       } catch (Exception e) {
         textView.display(e.getMessage());
+        e.printStackTrace();
       }
     }
-  }
-
-  private String runScript(String filePath)
-          throws IOException, IllegalArgumentException, FileFormatNotSupportedException {
-    int startingIndex = filePath.lastIndexOf(".");
-    String extension = filePath.substring(startingIndex == -1 ? 0 : startingIndex).replace(".", "");
-    if (extension.equals(".txt")) {
-      throw new FileFormatNotSupportedException("Unsupported File format");
-    }
-    Scanner sc = new Scanner(new FileInputStream(filePath));
-    processScanner(sc);
-    sc.close();
-    return "Run Script Operation successful";
   }
 
   private String processOperation(String operation)
@@ -88,67 +82,35 @@ public class RgbController implements ImageController {
     String[] arguments = operation.split("\\s+");
     String command = arguments[0];
     String result;
-    if (operation.startsWith("load ")
-            || operation.startsWith("save ")
-            || operation.startsWith("run ")) {
-      result = executeIOOperation(command, arguments);
-    } else if (arguments.length == 3) {
-      result = executeThreeArgCommand(command, arguments);
-    } else if (arguments.length == 4) {
-      result = executeFourArgCommand(command, arguments);
-    } else if (arguments.length == 5) {
-      result = executeFiveArgCommand(command, arguments);
-    } else if (arguments.length == 1 && arguments[0].equals("exit")) {
-      result = "exit";
-    } else if (arguments.length == 6 && operation.startsWith("levels-adjust ")) {
-      int b = Integer.parseInt(arguments[1]);
-      int m = Integer.parseInt(arguments[2]);
-      int w = Integer.parseInt(arguments[3]);
-      rgbImageProcessor.adjustLevels(arguments[4],arguments[5],b,m,w);
-      result = arguments[0] + " Operation performed successfully";
-    } else {
-      result = "Unknown Operation: " + operation;
+
+    switch (command) {
+      case "exit":
+        result = "exit";
+        break;
+        //System.exit(0);
+      case "load":
+      case "save":
+      case "run":
+        result = executeIOOperation(command, arguments);
+        break;
+      default:
+        result = executeFunction(command, arguments);
     }
     return result;
   }
-
-  private String executeFiveArgCommand(String command, String[] arguments)
-          throws IllegalArgumentException {
-    switch (command) {
-      case "rgb-split":
-        List<String> destComponentList = new ArrayList<>();
-        destComponentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
-        rgbImageProcessor.splitComponents(arguments[1], destComponentList);
-        break;
-      case "rgb-combine":
-        List<String> componentList = new ArrayList<>();
-        componentList.addAll(Arrays.asList(arguments).subList(2, arguments.length));
-        rgbImageProcessor.combineComponents(arguments[1], componentList);
-        break;
-      default:
-        return "Unknown command: " + command;
+  private String executeFunction(String command, String[] arguments)
+          throws IllegalArgumentException{
+    Function<String[], RgbImageCommand> cmd = knownCommands.get(command);
+    if (cmd == null) {
+      throw new IllegalArgumentException("Invalid Command");
     }
+    RgbImageCommand commandObject = cmd.apply(arguments);
+    commandObject.execute(imageModelMap, arguments);
     return command + " Operation performed successfully";
   }
-
-  private String executeFourArgCommand(String command, String[] arguments)
-          throws IllegalArgumentException {
-    if (command.equals("brighten")) {
-      int increment = Integer.parseInt(arguments[1]);
-      rgbImageProcessor.brighten(arguments[2], arguments[3], increment);
-//      rgbImageProcessor.compress(arguments[2], arguments[3], increment);
-    } else if (command.equals("compress")){
-      double compressRatio = Double.parseDouble(arguments[1]);
-      rgbImageProcessor.compress(arguments[2], arguments[3], compressRatio);
-    }
-    else {
-      return "Unknown command: " + command;
-    }
-    return command + " Operation performed successfully";
-  }
-
   private String executeIOOperation(String command, String[] arguments)
           throws IOException, FileFormatNotSupportedException {
+    String result = command + "Invalid Command";
     String filePath = arguments[1];
     int filePathEndIndex = 1;
     if (arguments[1].startsWith("\"")) {
@@ -162,76 +124,65 @@ public class RgbController implements ImageController {
       }
       filePath = sb.toString().trim();
       if (!filePath.endsWith("\"")) {
-        return "Invalid Command";
+        return result;
       }
       filePath = filePath.replaceAll("\"", "");
     }
     switch (command) {
       case "load":
         if (filePathEndIndex != arguments.length - 2) {
-          return "Invalid Command";
+          return result;
         }
         String imageName = arguments[arguments.length - 1];
         ImageData imageData = rgbImageFileIO.load(filePath);
-//        Factory factory = new simpleFactory();
-//        rgbImageProcessor.addImage(imageName, imageData, factory);
-        rgbImageProcessor.addImage(imageName, imageData);
+        RgbImageModel image = factory.createImageModel();
+        image.loadImageData(imageData);
+        imageModelMap.put(imageName,image);
         break;
       case "save":
         if (filePathEndIndex != arguments.length - 2) {
-          return "Invalid Command";
+          return result;
         }
         String destImageName = arguments[arguments.length - 1];
-        ImageData destImageData = rgbImageProcessor.getImageData(destImageName);
+        checkImageExists(imageModelMap,destImageName);
+        ImageData destImageData = imageModelMap.get(destImageName).getImageData();
         rgbImageFileIO.save(filePath, destImageData);
         break;
       case "run":
         if (filePathEndIndex != arguments.length - 1) {
-          return "Invalid Command";
+          return result;
         }
         return runScript(filePath);
       default:
-        return "Invalid Command";
+        return result;
     }
     return command + " Operation performed successfully";
   }
-
-  private String executeThreeArgCommand(String command, String[] arguments)
-          throws IllegalArgumentException {
-    switch (command) {
-      case "horizontal-flip":
-        rgbImageProcessor.horizontalFlip(arguments[1], arguments[2]);
-        break;
-      case "vertical-flip":
-        rgbImageProcessor.verticalFlip(arguments[1], arguments[2]);
-        break;
-      case "red-component":
-      case "green-component":
-      case "blue-component":
-      case "value-component":
-      case "luma-component":
-      case "intensity-component":
-        rgbImageProcessor.visualizeComponent(arguments[1], arguments[2], arguments[0]);
-        break;
-      case "blur":
-        rgbImageProcessor.blur(arguments[1], arguments[2]);
-        break;
-      case "sharpen":
-        rgbImageProcessor.sharpen(arguments[1], arguments[2]);
-        break;
-      case "sepia":
-        rgbImageProcessor.sepia(arguments[1], arguments[2]);
-        break;
-      case "histogram":
-        rgbImageProcessor.createHistogram(arguments[1], arguments[2]);
-        break;
-      case "color-correct":
-        rgbImageProcessor.correctColor(arguments[1], arguments[2]);
-        break;
-
-      default:
-        return "Unknown command: " + command;
+  private String runScript(String filePath)
+          throws IOException, IllegalArgumentException, FileFormatNotSupportedException {
+    int startingIndex = filePath.lastIndexOf(".");
+    String extension = filePath.substring(startingIndex == -1 ? 0 : startingIndex).replace(".", "");
+    if (extension.equals(".txt")) {
+      throw new FileFormatNotSupportedException("Unsupported File format");
     }
-    return command + " Operation performed successfully";
+    Scanner sc = new Scanner(new FileInputStream(filePath));
+    processScanner(sc);
+    sc.close();
+    return "Run Script Operation successful";
+  }
+
+  /**
+   * Checks whether an image with the specified name exists in the given map.
+   * If the image does not exist, an IllegalArgumentException is thrown.
+   *
+   * @param map        The map containing image names as keys and corresponding RgbImageModel objects as values.
+   * @param imageName  The name of the image to check for existence.
+   * @throws IllegalArgumentException If the specified image does not exist in the map.
+   */
+  public static void checkImageExists(Map<String, RgbImageModel> map, String imageName)
+          throws IllegalArgumentException {
+    if (!map.containsKey(imageName)){
+      throw new IllegalArgumentException("Image does not exist: "+imageName);
+    }
   }
 }
