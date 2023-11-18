@@ -1,9 +1,8 @@
 package controller.commands;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,20 +11,29 @@ import controller.ComponentEnum;
 import model.ImageData;
 import model.RgbImageModel;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 public class RgbSplitTest {
   StringBuilder log;
+
   @Before
-  public void setup(){
+  public void setup() {
     log = new StringBuilder();
   }
-  class MockRgbImage implements RgbImageModel{
-    private StringBuilder log;
-    MockRgbImage(StringBuilder log){
+
+  static class MockRgbImage implements RgbImageModel {
+    private final StringBuilder log;
+
+    MockRgbImage(StringBuilder log) {
       this.log = log;
     }
-    MockRgbImage(){
+
+    MockRgbImage() {
       this.log = new StringBuilder();
     }
+
     @Override
     public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
       log.append(componentEnum.toString()).append(" ");
@@ -111,12 +119,12 @@ public class RgbSplitTest {
 
     imageList.put("originalImage", originalImage);
 
-    String[] arguments = {"command", "originalImage", "redImage", "greenImage", "blueImage"};
+    String[] arguments = {"rgb-split", "originalImage", "redImage", "greenImage", "blueImage"};
 
     RgbSplit rgbSplit = new RgbSplit();
     try {
       rgbSplit.execute(imageList, arguments);
-      assertEquals("RED GREEN BLUE ",log.toString());
+      assertEquals("RED GREEN BLUE ", log.toString());
       assertTrue(imageList.containsKey("redImage"));
       assertTrue(imageList.containsKey("greenImage"));
       assertTrue(imageList.containsKey("blueImage"));

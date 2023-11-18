@@ -295,7 +295,7 @@ public class ChannelTest {
   }
 
   @Test
-  public void testOverlapOnBase(){
+  public void testOverlapOnBase() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -324,7 +324,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testOverlapOnBaseNegativeStart(){
+  public void testOverlapOnBaseNegativeStart() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -343,7 +343,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testOverlapOnBaseStartGreaterThanWidth(){
+  public void testOverlapOnBaseStartGreaterThanWidth() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -362,7 +362,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testOverlapOnBaseNullChannel(){
+  public void testOverlapOnBaseNullChannel() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -375,7 +375,7 @@ public class ChannelTest {
   }
 
   @Test
-  public void testCropVertical(){
+  public void testCropVertical() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -397,7 +397,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testCropVerticalNegativeStart(){
+  public void testCropVerticalNegativeStart() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -410,7 +410,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testCropVerticalStartGreaterThanEnd(){
+  public void testCropVerticalStartGreaterThanEnd() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -423,7 +423,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testCropVerticalEndGreaterThanWidth(){
+  public void testCropVerticalEndGreaterThanWidth() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -436,7 +436,7 @@ public class ChannelTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testCropVerticalNegativeEnd(){
+  public void testCropVerticalNegativeEnd() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -449,7 +449,7 @@ public class ChannelTest {
   }
 
   @Test
-  public void adjustLevels(){
+  public void adjustLevels() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 9},
@@ -465,12 +465,12 @@ public class ChannelTest {
             {134, 140, 146, 151}
     };
     ChannelModel channel1 = new Channel(values1);
-    ChannelModel actual = channel1.adjustLevels(0, 20,255);
+    ChannelModel actual = channel1.adjustLevels(0, 20, 255);
     assertArrayEquals(expectedValues, actual.getChannelValues());
   }
 
   @Test
-  public void testMaxFreqPixel(){
+  public void testMaxFreqPixel() {
     int[][] values1 = {
             {1, 2, 3, 4},
             {6, 7, 8, 8},
@@ -480,11 +480,11 @@ public class ChannelTest {
     };
     ChannelModel channel1 = new Channel(values1);
     int actual = channel1.getMaxFreqPixel();
-    assertEquals(22,actual);
+    assertEquals(22, actual);
   }
 
   @Test
-  public void testMaxFreqPixelForEdgeCase(){
+  public void testMaxFreqPixelForEdgeCase() {
     int[][] values1 = {
             {9, 9, 9, 9},
             {6, 7, 8, 8},
@@ -494,11 +494,11 @@ public class ChannelTest {
     };
     ChannelModel channel1 = new Channel(values1);
     int actual = channel1.getMaxFreqPixel();
-    assertEquals(22,actual);
+    assertEquals(22, actual);
   }
 
   @Test
-  public void testGetFrequencyValues(){
+  public void testGetFrequencyValues() {
     int[][] values1 = {
             {9, 9, 9, 9},
             {22, 22, 22, 22},
@@ -514,25 +514,8 @@ public class ChannelTest {
     assertArrayEquals(expected, actual);
   }
 
-  private boolean compareArrays(int[][] expected, int[][] actual) {
-    if (expected.length != actual.length) {
-      return false;
-    }
-    for (int i = 0; i < expected.length; i++) {
-      for (int j = 0; j < expected[i].length; j++) {
-        if (expected[i].length != actual[i].length) {
-          return false;
-        }
-        if ((expected[i][j] - actual[i][j])==0) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
   @Test
-  public void testCreateInstance(){
+  public void testCreateInstance() {
     int[][] values = {
             {9, -9, 9, 9},
             {6, 7, -8, 8},

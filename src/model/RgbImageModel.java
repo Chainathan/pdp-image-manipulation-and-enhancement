@@ -83,7 +83,8 @@ public interface RgbImageModel {
    *
    * @param compressionRatio The compression ratio is the percentage of compression to be applied.
    * @return An RgbImageModel representing the compressed image.
-   * @throws IllegalArgumentException If the compression ratio percentage is negative or greater than 100.
+   * @throws IllegalArgumentException If the compression ratio percentage is negative
+   *                                  or greater than 100.
    */
   RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException;
 
@@ -115,7 +116,8 @@ public interface RgbImageModel {
   RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException;
 
   /**
-   * Crop the RGB image vertically based on the provided start and end percentage of width of the image.
+   * Crop the RGB image vertically based on the provided start and end percentage
+   * of width of the image.
    *
    * @param start The start percentage of width for cropping.
    * @param end   The end percentage of width for cropping.
@@ -131,7 +133,7 @@ public interface RgbImageModel {
    * @param start      The percentage of overlapping.
    * @return An RgbImageModel with the overlapped values.
    * @throws IllegalArgumentException If otherImage is null or if start percentage is negative or
-   *         greater than 100.
+   *                                  greater than 100.
    */
   RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
           throws IllegalArgumentException;

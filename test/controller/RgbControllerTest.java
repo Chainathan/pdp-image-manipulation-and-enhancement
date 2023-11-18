@@ -1,882 +1,668 @@
-//package controller;
-//
-//import model.ImageData;
-//import model.ImageProcessorModel;
-//import view.ImageProcessorView;
-//import view.TextView;
-//
-//import org.junit.Before;
-//import org.junit.Test;
-//
-//import java.io.IOException;
-//import java.io.Reader;
-//import java.io.StringReader;
-//import java.nio.file.FileVisitOption;
-//import java.nio.file.FileVisitResult;
-//import java.nio.file.Files;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.nio.file.SimpleFileVisitor;
-//import java.nio.file.attribute.BasicFileAttributes;
-//import java.util.EnumSet;
-//import java.util.List;
-//
-//import static org.junit.Assert.assertEquals;
-//
-///**
-// * Test class for Mock test of RGB controller.
-// */
-//public class RgbControllerTest {
-//  class MockRgbImageProcess implements ImageProcessorModel {
-//    private StringBuilder log;
-//
-//    public MockRgbImageProcess(StringBuilder log) {
-//      this.log = log;
-//    }
-//
-//    @Override
-//    public void addImage(String destImageName, ImageData imageData)
-//            throws IllegalArgumentException {
-//      log.append("Dest Image Name : " + destImageName + "\nImage Data : {");
-//      double[][][] data = imageData.getData();
-//      int width = data[0][0].length;
-//      int height = data[0].length;
-//      for (int k = 0; k < 3; k++) {
-//        log.append("{");
-//        for (int i = 0; i < height; i++) {
-//          log.append("{");
-//          for (int j = 0; j < width; j++) {
-//            log.append(data[k][i][j] + " ");
-//          }
-//          log.append("}");
-//        }
-//        log.append("}");
-//      }
-//      log.append("}\nMax Pixel Size : " + imageData.getMaxValue());
-//    }
-//
-//    @Override
-//    public ImageData getImageData(String imageName) throws IllegalArgumentException {
-//      log.append("Image Name : ").append(imageName);
-//      double[][][] data = {
-//              {{11, 12, 13},
-//                      {14, 15, 16},
-//                      {17, 18, 19},
-//                      {20, 21, 22}},
-//              {{11, 12, 13},
-//                      {14, 15, 16},
-//                      {17, 18, 19},
-//                      {20, 21, 22}},
-//              {{11, 12, 13},
-//                      {14, 15, 16},
-//                      {17, 18, 19},
-//                      {20, 21, 22}}
-//      };
-//      return new ImageData(data, 255);
-//    }
-//
-//    @Override
-//    public void visualizeComponent(String imageName, String destImageName, String component)
-//            throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName)
-//              .append(", Component : ")
-//              .append(component);
-//    }
-//
-//    @Override
-//    public void horizontalFlip(String imageName, String destImageName)
-//            throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName);
-//    }
-//
-//    @Override
-//    public void verticalFlip(String imageName, String destImageName)
-//            throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName);
-//    }
-//
-//    @Override
-//    public void brighten(String imageName, String destImageName, int increment)
-//            throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName)
-//              .append(", Increment : ")
-//              .append(increment);
-//    }
-//
-//    @Override
-//    public void splitComponents(String imageName, List<String> destComponentImageList)
-//            throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image List : [ ");
-//      for (String destImg : destComponentImageList) {
-//        log.append(destImg).append(" ");
-//      }
-//      log.append("]");
-//    }
-//
-//    @Override
-//    public void combineComponents(String destImageName, List<String> componentImageList)
-//            throws IllegalArgumentException {
-//      log.append("Dest Image Name : ")
-//              .append(destImageName)
-//              .append(", Image List : [ ");
-//      for (String imgComponents : componentImageList) {
-//        log.append(imgComponents).append(" ");
-//      }
-//      log.append("]");
-//    }
-//
-//    @Override
-//    public void blur(String imageName, String destImageName) throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName);
-//    }
-//
-//    @Override
-//    public void sharpen(String imageName, String destImageName) throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName);
-//    }
-//
-//    @Override
-//    public void sepia(String imageName, String destImageName) throws IllegalArgumentException {
-//      log.append("Image Name : ")
-//              .append(imageName)
-//              .append(", Dest Image Name : ")
-//              .append(destImageName);
-//    }
-//
-//    @Override
-//    public void compress(String imageName, String destImageName, double compressionRatio) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void createHistogram(String imageName, String destImageName) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void correctColor(String imageName, String destImageName) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void adjustLevels(String imageName, String destImageName, int b, int m, int w) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void cropVertical(String imageName, String destImageName, double start, double end) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void overlapOnBase(String imageNameOriginal, String imageNameAddon, String destImageName, double start) throws IllegalArgumentException {
-//
-//    }
-//
-//    @Override
-//    public void removeImage(String imageName) throws IllegalArgumentException {
-//
-//    }
-//  }
-//
-//  StringBuffer out;
-//  StringBuilder modelLog;
-//  Reader in;
-//  ImageProcessorModel rgbImageProcess;
-//  ImageProcessorView textView;
-//
-//  @Before
-//  public void setUp() {
-//    //GIVEN
-//    out = new StringBuffer();
-//    modelLog = new StringBuilder();
-//    rgbImageProcess = new MockRgbImageProcess(modelLog);
-//    textView = new TextView(out);
-//  }
-//
-//  @Test
-//  public void testRedComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("red-component image red-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : red-image, " +
-//            "Component : red-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "red-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testGreenComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("green-component image green-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : green-image, " +
-//            "Component : green-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "green-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testBlueComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("blue-component image blue-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : blue-image, " +
-//            "Component : blue-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "blue-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testValueComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("value-component image value-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : value-image, " +
-//            "Component : value-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "value-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testLumaComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("luma-component image luma-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : luma-image, " +
-//            "Component : luma-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "luma-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testIntensityComponentCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("intensity-component image intensity-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : intensity-image, " +
-//            "Component : intensity-component", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "intensity-component Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testVerticalFlipCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("vertical-flip image flipped-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : flipped-image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "vertical-flip Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testHorizontalFlipCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("horizontal-flip image flipped-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : flipped-image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "horizontal-flip Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testBlurCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("blur image blurred-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : blurred-image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "blur Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testSharpenCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("sharpen image sharpened-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : sharpened-image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "sharpen Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testSepiaCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("sepia image sepia-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : sepia-image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "sepia Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testDefaultFor3Args() {
-//    //GIVEN
-//    Reader in = new StringReader("command arg1 arg2\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Unknown command: command\nProgram Terminated\n", out.toString());
-//  }
-//
-//  // 4 Args Command
-//  @Test
-//  public void testBrightenCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("brighten 50 image brightened-image\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image, " +
-//            "Dest Image Name : brightened-image, " +
-//            "Increment : 50", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "brighten Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testDefaultFor4Arg() {
-//    //GIVEN
-//    Reader in = new StringReader("command arg1 arg2 arg3\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Unknown command: command\nProgram Terminated\n", out.toString());
-//  }
-//
-//  // 5 Arg Command
-//  @Test
-//  public void testRgbSplitCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("rgb-split image img1 img2 img3\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//
-//    assertEquals("Image Name : image, " +
-//            "Dest Image List : [ img1 img2 img3 ]", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "rgb-split Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testRgbCombineCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("rgb-combine image img1 img2 img3\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//
-//    assertEquals("Dest Image Name : image, " +
-//            "Image List : [ img1 img2 img3 ]", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//                    "rgb-combine Operation performed successfully\nProgram Terminated\n",
-//            out.toString());
-//  }
-//
-//  @Test
-//  public void testDefaultFor5Args() {
-//    //GIVEN
-//    Reader in = new StringReader("command arg1 arg2 arg3 arg4\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Unknown command: command\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testRandomOperation() {
-//    //GIVEN
-//    Reader in = new StringReader("random\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Unknown Operation: random\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testOperationWithHashWithNoComment() {
-//    //GIVEN
-//    Reader in = new StringReader("random    #this is a cmd\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Unknown Operation: random\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testOperationWithHashForValidCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("load images/test/test.ppm test    #this is a cmd\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "load Operation performed successfully\nProgram Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testOperationWithHash() {
-//    //GIVEN
-//    Reader in = new StringReader("#this is a cmd");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testBlankOperation() {
-//    //GIVEN
-//    Reader in = new StringReader("   \nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPM() {
-//    //GIVEN
-//    Reader in = new StringReader("load images/test/test.ppm koala\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    ImageFileIO imageFileIO = new RgbImageFileIO();
-//    StringBuilder expectedlog = new StringBuilder();
-//    ImageData expectedImageData = new ImageData(new double[0][0][0], 255);
-//    //WHEN
-//    try {
-//      expectedImageData = imageFileIO.load("images/test/test.ppm");
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    expectedlog.append("Dest Image Name : koala" + "\nImage Data : {");
-//    double[][][] data = expectedImageData.getData();
-//    int width = data[0][0].length;
-//    int height = data[0].length;
-//    for (int k = 0; k < 3; k++) {
-//      expectedlog.append("{");
-//      for (int i = 0; i < height; i++) {
-//        expectedlog.append("{");
-//        for (int j = 0; j < width; j++) {
-//          expectedlog.append(data[k][i][j] + " ");
-//        }
-//        expectedlog.append("}");
-//      }
-//      expectedlog.append("}");
-//    }
-//    expectedlog.append("}\nMax Pixel Size : 250");
-//    //THEN
-//    assertEquals(expectedlog.toString(), modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "load Operation performed successfully\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPMWithQuotes() {
-//    //GIVEN
-//    Reader in = new StringReader("load \"images/test/test.ppm\" koala\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    ImageFileIO imageFileIO = new RgbImageFileIO();
-//    StringBuilder expectedlog = new StringBuilder();
-//    ImageData expectedImageData = new ImageData(new double[0][0][0], 255);
-//    //WHEN
-//    try {
-//      expectedImageData = imageFileIO.load("images/test/test.ppm");
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    expectedlog.append("Dest Image Name : koala" + "\nImage Data : {");
-//    double[][][] data = expectedImageData.getData();
-//    int width = data[0][0].length;
-//    int height = data[0].length;
-//    for (int k = 0; k < 3; k++) {
-//      expectedlog.append("{");
-//      for (int i = 0; i < height; i++) {
-//        expectedlog.append("{");
-//        for (int j = 0; j < width; j++) {
-//          expectedlog.append(data[k][i][j] + " ");
-//        }
-//        expectedlog.append("}");
-//      }
-//      expectedlog.append("}");
-//    }
-//    expectedlog.append("}\nMax Pixel Size : 250");
-//    //THEN
-//    assertEquals(expectedlog.toString(), modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "load Operation performed successfully\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPMWithQuotesForInvalidCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("load \"images/test/test.ppm koala\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPMForInvalidCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("load \"images/test/test.ppm\" \nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPMWhenFileNotPresent() {
-//    //GIVEN
-//    Reader in = new StringReader("load images/random.ppm koala\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "File Not Found\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testloadPPMInvalidImageName() {
-//    //GIVEN
-//    Reader in = new StringReader("load images/test/test.ppm \" \"\nexit");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n" + "Program Terminated\n", out.toString());
-//  }
-//
-//  @Test
-//  public void testSave() {
-//    //GIVEN
-//    Reader in = new StringReader("save images/temp/image.png image");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "save Operation performed successfully\n", out.toString());
-//    deleteFiles("images/temp");
-//  }
-//
-//  @Test
-//  public void testSaveWithQuotes() {
-//    //GIVEN
-//    Reader in = new StringReader("save \"images/temp/image.png\" image");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Name : image", modelLog.toString());
-//    assertEquals("Image Processing program started\n" +
-//            "save Operation performed successfully\n", out.toString());
-//    deleteFiles("images/temp");
-//  }
-//
-//  @Test
-//  public void testSaveWithQuotesInvalid() {
-//    //GIVEN
-//    Reader in = new StringReader("save \"images/temp/image.png image");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n", out.toString());
-//    deleteFiles("images/temp");
-//  }
-//
-//  @Test
-//  public void testSavePPMForInvalidCommand() {
-//    //GIVEN
-//    Reader in = new StringReader("save images/test/test.ppm");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n", out.toString());
-//    deleteFiles("images/temp");
-//  }
-//
-//  @Test
-//  public void testSavePPMInvalidImageName() {
-//    //GIVEN
-//    Reader in = new StringReader("save images/test/test.ppm \" \"");
-//    ImageController rgbController = new RgbController(rgbImageProcess, textView, in);
-//    //WHEN
-//    try {
-//      rgbController.run();
-//    } catch (IOException ignored) {
-//    }
-//
-//    //THEN
-//    assertEquals("Image Processing program started\n" +
-//            "Invalid Command\n", out.toString());
-//    deleteFiles("images/temp");
-//  }
-//
-//  private void deleteFiles(String folderPath) {
-//    try {
-//      Path directory = Paths.get(folderPath);
-//      if (Files.exists(directory) && Files.isDirectory(directory)) {
-//        Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE,
-//            new SimpleFileVisitor<Path>() {
-//              @Override
-//              public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-//                      throws IOException {
-//                Files.delete(file);
-//                return FileVisitResult.CONTINUE;
-//              }
-//            });
-//      }
-//    } catch (IOException e) {
-//      // delete fail but test pass
-//    }
-//  }
-//
-//}
+package controller;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.io.StringReader;
+
+import model.FactoryRgbImageModel;
+import model.ImageData;
+import model.RgbImageModel;
+import view.ImageProcessorView;
+import view.TextView;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
+/**
+ * Test class for RgbController class.
+ */
+public class RgbControllerTest {
+  class MockFactory implements FactoryRgbImageModel {
+    @Override
+    public RgbImageModel createImageModel() {
+      return new MockRgbImage(modelLog);
+    }
+  }
+
+  static class MockRgbImage implements RgbImageModel {
+    private final StringBuilder log;
+
+    public MockRgbImage(StringBuilder log) {
+      this.log = log;
+    }
+
+    public MockRgbImage() {
+      log = new StringBuilder();
+    }
+
+    @Override
+    public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
+      log.append("Component : ").append(componentEnum.getComponentString());
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel horizontalFlip() {
+      log.append("Horizontal Flip : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel verticalFlip() {
+      log.append("Vertical Flip : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel brighten(int increment) throws IllegalArgumentException {
+      log.append("increment : ").append(increment);
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel blur() {
+      log.append("Blur : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel sepia() {
+      log.append("Sepia : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel sharpen() {
+      log.append("Sharpen : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public ImageData getImageData() {
+      log.append("imagedata called");
+      return new ImageData(new int[3][5][5], 255);
+    }
+
+    @Override
+    public void loadImageData(ImageData imageData) {
+
+    }
+
+    @Override
+    public RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException {
+      log.append("compressionRatio : ").append(compressionRatio);
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel createHistogram(ImageGraphics graphics) {
+      log.append("Histogram : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel correctColor() {
+      log.append("Color Correct : Called");
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
+      log.append("b : ").append(b).append(" m : ").append(m).append(" w : ").append(w);
+      return new MockRgbImage();
+    }
+
+    @Override
+    public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
+      log.append("\n").append("crop start : ").append(start).append(" end : ").append(end).append("\n");
+      return new MockRgbImage(log);
+    }
+
+    @Override
+    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start) throws IllegalArgumentException {
+      log.append("\n").append("overlap start : ").append(start).append("\n");
+      return new MockRgbImage();
+    }
+  }
+
+  StringBuffer out;
+  StringBuilder modelLog;
+  ImageProcessorView textView;
+  FactoryRgbImageModel factory;
+  CommandMapper commandMapper;
+  String load;
+  String defaultStart;
+  String defaultEnd;
+
+  @Before
+  public void setUp() {
+    //GIVEN
+    out = new StringBuffer();
+    modelLog = new StringBuilder();
+    textView = new TextView(out);
+    factory = new MockFactory();
+    commandMapper = new CommandMapperAdv();
+    load = "load images/test/test.png image\n";
+    defaultStart = load + "%s image destImage\n";
+    defaultEnd = "Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "%s Operation performed successfully\n";
+
+  }
+
+  private void runCommand(String command) {
+    Readable reader = new StringReader(command);
+    ImageController controller = new RgbController(factory, textView, reader, commandMapper);
+    try {
+      controller.run();
+    } catch (IOException e) {
+      fail("Should not have thrown error");
+    }
+  }
+
+  @Test
+  public void testRedComponentCommand() {
+    //GIVEN
+    String command = "red-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testGreenComponentCommand() {
+    //GIVEN
+    String command = "green-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testBlueComponentCommand() {
+    //GIVEN
+    String command = "blue-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testValueComponentCommand() {
+    //GIVEN
+    String command = "value-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testLumaComponentCommand() {
+    //GIVEN
+    String command = "luma-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testLumaComponentCommandSplit() {
+    //GIVEN
+    String command = "luma-component";
+    defaultStart = load + "%s image destImage split 25";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "Component : " + command + "\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testIntensityComponentCommand() {
+    //GIVEN
+    String command = "intensity-component";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Component : " + command, modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testVerticalFlipCommand() {
+    //GIVEN
+    String command = "vertical-flip";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Vertical Flip : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testHorizontalFlipCommand() {
+    //GIVEN
+    String command = "horizontal-flip";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Horizontal Flip : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testBlurCommand() {
+    //GIVEN
+    String command = "blur";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Blur : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testBlurSplitCommand() {
+    //GIVEN
+    String command = "blur";
+    defaultStart = load + "%s image destImage split 25";
+
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "Blur : Called\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testSharpenCommand() {
+    //GIVEN
+    String command = "sharpen";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Sharpen : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testSharpenSplitCommand() {
+    //GIVEN
+    String command = "sharpen";
+    defaultStart = load + "%s image destImage split 25";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "Sharpen : Called\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testSepiaCommand() {
+    //GIVEN
+    String command = "sepia";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Sepia : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testSepiaSplitCommand() {
+    //GIVEN
+    String command = "sepia";
+    defaultStart = load + "%s image destImage split 25";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "Sepia : Called\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testHistogramCommand() {
+    //GIVEN
+    String command = "histogram";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Histogram : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testColorCorrectCommand() {
+    //GIVEN
+    String command = "color-correct";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("Color Correct : Called", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testColorCorrectCommandSplit() {
+    //GIVEN
+    String command = "color-correct";
+    defaultStart = load + "%s image destImage split 25";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "Color Correct : Called\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, command), out.toString());
+  }
+
+  @Test
+  public void testDefaultFor3Args() {
+    //GIVEN
+    runCommand("command arg1 arg2");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testBrightenCommand() {
+    //GIVEN
+    String command = "brighten 50";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("increment : 50", modelLog.toString());
+    assertEquals(String.format(defaultEnd, "brighten"), out.toString());
+  }
+
+  @Test
+  public void testCompressCommand() {
+    //GIVEN
+    String command = "compress 20";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("compressionRatio : 20.0", modelLog.toString());
+    assertEquals(String.format(defaultEnd, "compress"), out.toString());
+  }
+
+  @Test
+  public void testDefaultFor4Arg() {
+    //GIVEN
+    runCommand("command arg1 arg2 arg3");
+
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testAdjustLevelsCommand() {
+    //GIVEN
+    String command = "levels-adjust 25 55 241";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("b : 25 m : 55 w : 241", modelLog.toString());
+    assertEquals(String.format(defaultEnd, "levels-adjust"), out.toString());
+  }
+
+  @Test
+  public void testAdjustLevelsCommandSplit() {
+    //GIVEN
+    String command = "levels-adjust 25 55 241";
+    defaultStart = load + "%s image destImage split 25";
+    // WHEN
+    runCommand(String.format(defaultStart, command));
+
+    //THEN
+    assertEquals("\n" +
+            "crop start : 0.0 end : 25.0\n" +
+            "b : 25 m : 55 w : 241\n" +
+            "overlap start : 0.0\n", modelLog.toString());
+    assertEquals(String.format(defaultEnd, "levels-adjust"), out.toString());
+  }
+
+  @Test
+  public void testRgbSplitCommand() {
+    //GIVEN
+    String command = load + "rgb-split image img1 img2 img3";
+
+    //WHEN
+    runCommand(command);
+
+    //THEN
+    assertEquals("Component : red-component" +
+            "Component : green-component" +
+            "Component : blue-component", modelLog.toString());
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "rgb-split Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testRgbCombineCommand() {
+    //GIVEN
+    String command = load + "rgb-combine dest image image image";
+
+    //WHEN
+    runCommand(command);
+
+    //THEN
+    assertEquals("imagedata called" +
+            "imagedata called" +
+            "imagedata called", modelLog.toString());
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "rgb-combine Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testDefaultFor5Args() {
+    //GIVEN
+    runCommand("command arg1 arg2 arg3 arg4");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testRandomOperation() {
+    //GIVEN
+    runCommand("random");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testOperationWithHashWithNoComment() {
+    //GIVEN
+    runCommand("random    #this is a cmd");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testOperationWithHashForValidCommand() {
+    //GIVEN
+    runCommand("load images/test/test.ppm test    #this is a cmd");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testOperationWithHash() {
+    //GIVEN
+    runCommand("#this is a cmd");
+    //THEN
+    assertEquals("Image Processing program started\n", out.toString());
+  }
+
+  @Test
+  public void testBlankOperation() {
+    //GIVEN
+    runCommand("   ");
+    //THEN
+    assertEquals("Image Processing program started\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPM() {
+    //GIVEN
+    runCommand("load images/test/test.ppm koala");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPMWithQuotes() {
+    //GIVEN
+    runCommand("load \"images/test/test.ppm\" koala\n");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPMWithQuotesForInvalidCommand() {
+    //GIVEN
+    runCommand("load \"images/test/test.ppm koala\n");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPMForInvalidCommand() {
+    //GIVEN
+    runCommand("load \"images/test/test.ppm\" \n");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPMWhenFileNotPresent() {
+    //GIVEN
+    runCommand("load images/random.ppm koala\n");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "File Not Found\n", out.toString());
+  }
+
+  @Test
+  public void testloadPPMInvalidImageName() {
+    //GIVEN
+    runCommand("load images/test/test.ppm \" \"\n");
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testSave() {
+    String command = "load images/test/test.ppm image\n"
+            + "save images/temp/image.png image";
+    //GIVEN
+    runCommand(command);
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "save Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testSaveWithQuotes() {
+    String command = "load images/test/test.ppm image\n"
+            + "save \"images/temp/image.png\" image";
+    //GIVEN
+    runCommand(command);
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "save Operation performed successfully\n", out.toString());
+  }
+
+  @Test
+  public void testSaveWithQuotesInvalid() {
+    String command = "load images/test/test.ppm image\n"
+            + "save \"images/temp/image.png image";
+    //GIVEN
+    runCommand(command);
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "load Operation performed successfully\n" +
+            "save Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testSavePPMForInvalidCommand() {
+    String command = "save images/test/test.ppm";
+    //GIVEN
+    runCommand(command);
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "save Invalid Command\n", out.toString());
+  }
+
+  @Test
+  public void testSavePPMForInvalidCommandWithoutLoad() {
+    String command = "save images/test/test.ppm image";
+    //GIVEN
+    runCommand(command);
+    //THEN
+    assertEquals("Image Processing program started\n" +
+            "Image does not exist: image\n", out.toString());
+  }
+}

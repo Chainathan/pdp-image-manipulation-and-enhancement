@@ -2,7 +2,6 @@ package controller;
 
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -93,8 +92,7 @@ public class RgbImageFileIO implements ImageFileIO {
       if (image != null
               && image.getColorModel().getColorSpace().getType() == ColorSpace.TYPE_RGB) {
         return convertBuffImgToImgData(image);
-      }
-      else {
+      } else {
         throw new IOException("Invalid Image");
       }
     } catch (IOException e) {
@@ -104,10 +102,11 @@ public class RgbImageFileIO implements ImageFileIO {
 
   /**
    * Method to convert Buffered Image to Image Data.
+   *
    * @param image Buffered Image to be converted.
    * @return an Image Data with the data and the max pixel value.
    */
-  static ImageData convertBuffImgToImgData(BufferedImage image){
+  static ImageData convertBuffImgToImgData(BufferedImage image) {
     int width = image.getWidth();
     int height = image.getHeight();
     int[][][] imageData = new int[3][height][width];
@@ -184,7 +183,7 @@ public class RgbImageFileIO implements ImageFileIO {
 
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        int rgb =  pixelValues[0][y][x] << 16 | pixelValues[1][y][x] << 8 | pixelValues[2][y][x];
+        int rgb = pixelValues[0][y][x] << 16 | pixelValues[1][y][x] << 8 | pixelValues[2][y][x];
         image.setRGB(x, y, rgb);
       }
     }

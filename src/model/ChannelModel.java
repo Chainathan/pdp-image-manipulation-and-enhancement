@@ -85,8 +85,8 @@ interface ChannelModel {
   int getMaxFreqPixel();
 
   /**
-   * Adjust the levels of the channel based on the provided parameters. The adjustment is restricted to
-   * horizontal movements of the three points (black, mid and white).
+   * Adjust the levels of the channel based on the provided parameters. The adjustment
+   * is restricted to horizontal movements of the three points (black, mid and white).
    *
    * @param b The black pixel value.
    * @param m The mid pixel value.
@@ -101,7 +101,8 @@ interface ChannelModel {
    * @param start The starting x-position for cropping.
    * @param end   The ending x-position for cropping.
    * @return A new ChannelModel with the cropped region.
-   * @throws IllegalArgumentException If start/end is negative or if start/end is greater than channel width.
+   * @throws IllegalArgumentException If start/end is negative or if start/end is
+   *                                  greater than channel width.
    */
   ChannelModel cropVertical(int start, int end) throws IllegalArgumentException;
 
@@ -112,7 +113,7 @@ interface ChannelModel {
    * @param start        The starting x-coordinate for overlapping.
    * @return A new ChannelModel with the overlapped values.
    * @throws IllegalArgumentException If otherChannel is null or if start value is negative or
-   *     greater than the channel width.
+   *                                  greater than the channel width.
    */
   ChannelModel overlapOnBase(ChannelModel otherChannel, int start)
           throws IllegalArgumentException;

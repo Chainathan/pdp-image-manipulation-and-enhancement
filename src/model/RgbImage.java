@@ -28,6 +28,7 @@ class RgbImage implements RgbImageModel {
     blue = new Channel();
     maxPixelValue = 255;
   }
+
   /**
    * Constructs an RgbImage with the specified red, green,
    * and blue channels, and a maximum pixel value.
@@ -37,7 +38,7 @@ class RgbImage implements RgbImageModel {
    * @param blue          The blue channel of the image.
    * @param maxPixelValue The maximum pixel value for the image.
    * @throws IllegalArgumentException If the provided channels have
-   *               mismatched dimensions or if maxPixelValue is negative.
+   *                                  mismatched dimensions or if maxPixelValue is negative.
    */
   RgbImage(ChannelModel red, ChannelModel green, ChannelModel blue, int maxPixelValue)
           throws IllegalArgumentException {
@@ -52,13 +53,14 @@ class RgbImage implements RgbImageModel {
     this.maxPixelValue = maxPixelValue;
   }
 
-  public RgbImageModel createInstance(ChannelModel...channelModels)
-          throws IllegalArgumentException{
-    if (channelModels.length!=3){
+  public RgbImageModel createInstance(ChannelModel... channelModels)
+          throws IllegalArgumentException {
+    if (channelModels.length != 3) {
       throw new IllegalArgumentException("Invalid channels to create rgb image model");
     }
-    return new RgbImage(channelModels[0],channelModels[1],channelModels[2],maxPixelValue);
+    return new RgbImage(channelModels[0], channelModels[1], channelModels[2], maxPixelValue);
   }
+
   @Override
   public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
           throws IllegalArgumentException {
@@ -94,7 +96,8 @@ class RgbImage implements RgbImageModel {
     }
   }
 
-  private RgbImageModel applyFunctionToChannels(TriFunction<RgbImage, Integer, Integer, Integer> fun) {
+  private RgbImageModel applyFunctionToChannels(
+          TriFunction<RgbImage, Integer, Integer, Integer> fun) {
 
     int[][] values = new int[red.getHeight()][red.getWidth()];
 
@@ -238,32 +241,42 @@ class RgbImage implements RgbImageModel {
 
   @Override
   public RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException {
-    if(compressionRatio < 0 || compressionRatio > 100){
+    if (compressionRatio < 0 || compressionRatio > 100) {
       throw new IllegalArgumentException("Invalid percentage value for compression ratio");
     }
     double[][] redTransformed = applyHaarTransform(applyPadding(red.getChannelValues()));
     double[][] greenTransformed = applyHaarTransform(applyPadding(green.getChannelValues()));
     double[][] blueTransformed = applyHaarTransform(applyPadding(blue.getChannelValues()));
-    double threshold = getThreshold(compressionRatio, redTransformed, greenTransformed, blueTransformed);
+    double threshold = getThreshold(compressionRatio, redTransformed,
+            greenTransformed, blueTransformed);
     applyThreshold(redTransformed, threshold);
     applyThreshold(greenTransformed, threshold);
     applyThreshold(blueTransformed, threshold);
-    double[][] redInverse = applyUnpad(applyHaarInverse(redTransformed),red.getHeight(), red.getWidth());
-    double[][] greenInverse = applyUnpad(applyHaarInverse(greenTransformed),green.getHeight(), green.getWidth());
-    double[][] blueInverse = applyUnpad(applyHaarInverse(blueTransformed),blue.getHeight(), blue.getWidth());
-    ChannelModel compressedRed = red.createInstance(Arrays.stream(redInverse)
-            .map(row -> Arrays.stream(row)
-                    .mapToInt(value -> (int)Math.round(value)).toArray())
-            .toArray(int[][]::new));
-    ChannelModel compressedGreen = green.createInstance((Arrays.stream(greenInverse)
-            .map(row -> Arrays.stream(row)
-                    .mapToInt(value -> (int)Math.round(value)).toArray())
-            .toArray(int[][]::new)));
-    ChannelModel compressedBlue = blue.createInstance((Arrays.stream(blueInverse)
-            .map(row -> Arrays.stream(row)
-                    .mapToInt(value -> (int)Math.round(value)).toArray())
-            .toArray(int[][]::new)));
+    double[][] redInverse = applyUnpad(applyHaarInverse(redTransformed),
+            red.getHeight(), red.getWidth());
+    double[][] greenInverse = applyUnpad(applyHaarInverse(greenTransformed),
+            green.getHeight(), green.getWidth());
+    double[][] blueInverse = applyUnpad(applyHaarInverse(blueTransformed),
+            blue.getHeight(), blue.getWidth());
+    ChannelModel compressedRed = transformAndCreateChannel(red, redInverse);
+    ChannelModel compressedGreen = transformAndCreateChannel(green, greenInverse);
+    ChannelModel compressedBlue = transformAndCreateChannel(blue, blueInverse);
+
     return createInstance(compressedRed, compressedGreen, compressedBlue);
+  }
+
+  private ChannelModel transformAndCreateChannel(ChannelModel c, double[][] array) {
+    return c.createInstance(Arrays.stream(array)
+            .map(row -> Arrays.stream(row)
+                    .mapToInt(this::roundAndClipPixelValue).toArray())
+            .toArray(int[][]::new));
+  }
+
+  private int roundAndClipPixelValue(double value) {
+    int i = (int) Math.round(value);
+    i = Math.max(0, i);
+    i = Math.min(255, i);
+    return i;
   }
 
   private double getThreshold(double compressionRatio, double[][] redTransformed,
@@ -271,15 +284,15 @@ class RgbImage implements RgbImageModel {
     double[] flatRed = getFlatArray(redTransformed);
     double[] flatGreen = getFlatArray(greenTransformed);
     double[] flatBlue = getFlatArray(blueTransformed);
-    double[] channelList = getFlatArray(flatRed,flatGreen,flatBlue);
+    double[] channelList = getFlatArray(flatRed, flatGreen, flatBlue);
     double[] absChannelList = Arrays.stream(channelList)
             .map(Math::abs)
             .toArray();
     double[] uniqueChannelList = getUniqueValues(absChannelList);
-    int compressValue = (int)Math.round((compressionRatio
-            *uniqueChannelList.length)/100);
+    int compressValue = (int) Math.round((compressionRatio
+            * uniqueChannelList.length) / 100);
     Arrays.sort(uniqueChannelList);
-    double nthSmallest = uniqueChannelList[compressValue-1];
+    double nthSmallest = uniqueChannelList[compressValue - 1];
     return nthSmallest;
   }
 
@@ -341,7 +354,6 @@ class RgbImage implements RgbImageModel {
     while (c > 1) {
       // Transform Rows
       for (int i = 0; i < c; i++) {
-        //X[i] = transform(X[i]);
         double[] row = new double[c];
         for (int j = 0; j < c; j++) {
           row[j] = channel[i][j];
@@ -364,22 +376,22 @@ class RgbImage implements RgbImageModel {
         }
       }
 
-      c=c/2;
+      c = c / 2;
     }
 
     return channel;
   }
 
 
-  private double[] transform(double[] s){
-    double[] avg = new double[s.length/2];
-    double[] diff = new double[s.length/2];
+  private double[] transform(double[] s) {
+    double[] avg = new double[s.length / 2];
+    double[] diff = new double[s.length / 2];
 
-    for (int i=0; i<s.length;i=i+2){
+    for (int i = 0; i < s.length; i = i + 2) {
       double a = s[i];
-      double b = s[i+1];
-      avg[i/2] = (a+b) / Math.sqrt(2);
-      diff[i/2] = (a-b) / Math.sqrt(2);
+      double b = s[i + 1];
+      avg[i / 2] = (a + b) / Math.sqrt(2);
+      diff[i / 2] = (a - b) / Math.sqrt(2);
     }
 
     return DoubleStream.concat(Arrays.stream(avg), Arrays.stream(diff)).toArray();
@@ -387,7 +399,6 @@ class RgbImage implements RgbImageModel {
 
   private double[][] applyHaarInverse(double[][] channel) {
     int c = 2;
-    //int test = 2;
     while (c <= channel.length) {
 
       // Transform Columns
@@ -404,7 +415,6 @@ class RgbImage implements RgbImageModel {
 
       // Transform Rows
       for (int i = 0; i < c; i++) {
-        //X[i] = transform(X[i]);
         double[] row = new double[c];
         for (int j = 0; j < c; j++) {
           row[j] = channel[i][j];
@@ -415,49 +425,49 @@ class RgbImage implements RgbImageModel {
         }
       }
 
-      c=c*2;
-      //test-=1;
+      c = c * 2;
     }
     return channel;
   }
 
-  private double[] inverse(double[] s){
-    double[] avg = new double[s.length/2];
-    double[] diff = new double[s.length/2];
+  private double[] inverse(double[] s) {
+    double[] avg = new double[s.length / 2];
+    double[] diff = new double[s.length / 2];
 
-    for (int i=0; i<s.length/2;i++){
+    for (int i = 0; i < s.length / 2; i++) {
       double a = s[i];
-      double b = s[i+s.length/2];
-      avg[i] = (a+b) / Math.sqrt(2);
-      diff[i] = (a-b) / Math.sqrt(2);
+      double b = s[i + s.length / 2];
+      avg[i] = (a + b) / Math.sqrt(2);
+      diff[i] = (a - b) / Math.sqrt(2);
     }
 
     double[] res = new double[s.length];
-    for (int i = 0; i < s.length/2; i++) {
-      res[i*2] = avg[i];
-      res[i*2+1] = diff[i];
+    for (int i = 0; i < s.length / 2; i++) {
+      res[i * 2] = avg[i];
+      res[i * 2 + 1] = diff[i];
     }
     return res;
   }
 
-  private double[][] applyUnpad(double[][] paddedChannel,int originalHeight, int originalWidth) throws IllegalArgumentException{
-    if(originalHeight < 0 || originalWidth < 0){
+  private double[][] applyUnpad(double[][] paddedChannel, int originalHeight, int originalWidth)
+          throws IllegalArgumentException {
+    if (originalHeight < 0 || originalWidth < 0) {
       throw new IllegalArgumentException("Height or width cannot be negative");
     }
     double[][] image = new double[originalHeight][originalWidth];
-    for(int i=0;i<originalHeight;i++){
-      for(int j=0;j<originalWidth;j++){
+    for (int i = 0; i < originalHeight; i++) {
+      for (int j = 0; j < originalWidth; j++) {
         image[i][j] = paddedChannel[i][j];
       }
     }
     return image;
   }
 
-  private void applyThreshold(double[][] transform,double threshold){
-    for(int i=0;i< transform.length;i++){
-      for(int j=0;j<transform[0].length;j++){
-        if(Math.abs(transform[i][j]) <= threshold){
-          transform[i][j]=0;
+  private void applyThreshold(double[][] transform, double threshold) {
+    for (int i = 0; i < transform.length; i++) {
+      for (int j = 0; j < transform[0].length; j++) {
+        if (Math.abs(transform[i][j]) <= threshold) {
+          transform[i][j] = 0;
         }
       }
     }
@@ -471,46 +481,46 @@ class RgbImage implements RgbImageModel {
     int greenMax = green.getMaxFreqPixel();
     int blueMax = blue.getMaxFreqPixel();
 
-    int avgMaxFrqPixel = Math.round((float) (redMax+greenMax+blueMax)/3);
+    int avgMaxFrqPixel = Math.round((float) (redMax + greenMax + blueMax) / 3);
     return this.createInstance(
-            red.addBuffer(avgMaxFrqPixel-redMax,maxPixelValue),
-            green.addBuffer(avgMaxFrqPixel-greenMax,maxPixelValue),
-            blue.addBuffer(avgMaxFrqPixel-blueMax,maxPixelValue));
+            red.addBuffer(avgMaxFrqPixel - redMax, maxPixelValue),
+            green.addBuffer(avgMaxFrqPixel - greenMax, maxPixelValue),
+            blue.addBuffer(avgMaxFrqPixel - blueMax, maxPixelValue));
   }
 
   @Override
   public RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
-    if(b<0 || m < 0 || w<0
-            || b > m || m > w || w> 255){
+    if (b < 0 || m < 0 || w < 0
+            || b > m || m > w || w > 255) {
       throw new IllegalArgumentException("Invalid arguments for adjust level");
     }
     return this.createInstance(
-            red.adjustLevels(b,m,w),
-            green.adjustLevels(b,m,w),
-            blue.adjustLevels(b,m,w));
+            red.adjustLevels(b, m, w),
+            green.adjustLevels(b, m, w),
+            blue.adjustLevels(b, m, w));
   }
 
   @Override
   public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
-    if (start < 0 || start > 100 || end < 0 || end > 100 ) {
+    if (start < 0 || start > 100 || end < 0 || end > 100) {
       throw new IllegalArgumentException("Invalid start/end percentage for trimming");
     }
-    int startWidth = (int) Math.round(red.getWidth()*start / 100);
-    int endWidth = (int) Math.round(red.getWidth()*end / 100);
+    int startWidth = (int) Math.round(red.getWidth() * start / 100);
+    int endWidth = (int) Math.round(red.getWidth() * end / 100);
     return this.createInstance(
-            red.cropVertical(startWidth,endWidth),
-            green.cropVertical(startWidth,endWidth),
-            blue.cropVertical(startWidth,endWidth)
+            red.cropVertical(startWidth, endWidth),
+            green.cropVertical(startWidth, endWidth),
+            blue.cropVertical(startWidth, endWidth)
     );
   }
 
   @Override
   public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
           throws IllegalArgumentException {
-    if (start < 0 || start > 100 || otherImage==null) {
+    if (start < 0 || start > 100 || otherImage == null) {
       throw new IllegalArgumentException("Invalid start percentage for Overlap");
     }
-    int startWidth = (int) Math.round(red.getWidth()*start / 100);
+    int startWidth = (int) Math.round(red.getWidth() * start / 100);
 
     int[][][] imageData = otherImage.getImageData().getData();
     ChannelModel otherRed = new Channel(imageData[0]);
@@ -549,11 +559,11 @@ class RgbImage implements RgbImageModel {
     for (int component = 0; component < numComponents; component++) {
       graphics.setColor(colorList[component]);
       for (int i = 0; i < binCount - 1; i++) {
-        int x1 = (int)(((double)i*histogramWidth/binCount));
-        int x2 = (int)(((double)(i + 1)* histogramWidth/binCount));
+        int x1 = (int) (((double) i * histogramWidth / binCount));
+        int x2 = (int) (((double) (i + 1) * histogramWidth / binCount));
         int y1 = (int) (((double) freqData[component][i] / maxCount) * histogramHeight);
-        int y2 = (int) (((double) freqData[component][i+1] / maxCount) * histogramHeight);
-        graphics.drawLine(x1, binCount-y1-1, x2, binCount-y2-1);
+        int y2 = (int) (((double) freqData[component][i + 1] / maxCount) * histogramHeight);
+        graphics.drawLine(x1 + 1, binCount - y1 - 1, x2 + 1, binCount - y2 - 1);
       }
     }
     int[][][] data = graphics.getImageData().getData();
@@ -563,6 +573,7 @@ class RgbImage implements RgbImageModel {
 
     return this.createInstance(newRed, newGreen, newBlue);
   }
+
   private static int getMaxValue(int[] array) {
     int max = array[0];
     for (int value : array) {

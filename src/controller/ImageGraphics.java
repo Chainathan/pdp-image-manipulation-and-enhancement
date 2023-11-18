@@ -3,7 +3,6 @@ package controller;
 import model.ColorEnum;
 import model.ImageData;
 
-// for working with 2d place graphics operations in a single channel
 /**
  * The ImageGraphics interface defines methods for drawing on an image and retrieving image data.
  * Implementations of this interface should provide functionality for drawing lines, setting colors,

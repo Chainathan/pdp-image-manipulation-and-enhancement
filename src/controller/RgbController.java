@@ -15,10 +15,11 @@ import view.ImageProcessorView;
 
 /**
  * The RgbController class implements the ImageController
- * interface for controlling RGB image processing. The controller maintains the list of rgb images on which
- * the manipulation will be performed. It also maintains the list of commands that the program offers.
+ * interface for controlling RGB image processing. The controller maintains the
+ * list of rgb images on which the manipulation will be performed. It also maintains the
+ * list of commands that the program offers.
  */
-public class RgbController implements ImageController{
+public class RgbController implements ImageController {
   private final FactoryRgbImageModel factory;
   private final ImageFileIO rgbImageFileIO;
   private final ImageProcessorView textView;
@@ -29,10 +30,10 @@ public class RgbController implements ImageController{
   /**
    * Constructs an AdvRgbController with the specified components.
    *
-   * @param factory        The factory responsible for creating instances of RgbImageModel.
-   * @param textView       The view responsible for displaying text output.
-   * @param in             The input stream to read user commands.
-   * @param commandMapper  The mapper responsible for generating commands based on the factory.
+   * @param factory       The factory responsible for creating instances of RgbImageModel.
+   * @param textView      The view responsible for displaying text output.
+   * @param in            The input stream to read user commands.
+   * @param commandMapper The mapper responsible for generating commands based on the factory.
    */
   public RgbController(FactoryRgbImageModel factory, ImageProcessorView textView,
                        Readable in, CommandMapper commandMapper) {
@@ -43,8 +44,9 @@ public class RgbController implements ImageController{
     this.knownCommands = commandMapper.generateCommands(factory);
     imageModelMap = new HashMap<>();
   }
+
   @Override
-  public void run() throws IOException{
+  public void run() throws IOException {
     textView.display("Image Processing program started");
     Scanner scanner = new Scanner(in);
     processScanner(scanner);
@@ -65,7 +67,6 @@ public class RgbController implements ImageController{
         }
       } catch (Exception e) {
         textView.display(e.getMessage());
-        e.printStackTrace();
       }
     }
   }
@@ -87,7 +88,6 @@ public class RgbController implements ImageController{
       case "exit":
         result = "exit";
         break;
-        //System.exit(0);
       case "load":
       case "save":
       case "run":
@@ -98,19 +98,21 @@ public class RgbController implements ImageController{
     }
     return result;
   }
+
   private String executeFunction(String command, String[] arguments)
-          throws IllegalArgumentException{
+          throws IllegalArgumentException {
     Function<String[], RgbImageCommand> cmd = knownCommands.get(command);
     if (cmd == null) {
-      throw new IllegalArgumentException("Invalid Command");
+      return "Invalid Command";
     }
     RgbImageCommand commandObject = cmd.apply(arguments);
     commandObject.execute(imageModelMap, arguments);
     return command + " Operation performed successfully";
   }
+
   private String executeIOOperation(String command, String[] arguments)
           throws IOException, FileFormatNotSupportedException {
-    String result = command + "Invalid Command";
+    String result = command + " Invalid Command";
     String filePath = arguments[1];
     int filePathEndIndex = 1;
     if (arguments[1].startsWith("\"")) {
@@ -137,14 +139,14 @@ public class RgbController implements ImageController{
         ImageData imageData = rgbImageFileIO.load(filePath);
         RgbImageModel image = factory.createImageModel();
         image.loadImageData(imageData);
-        imageModelMap.put(imageName,image);
+        imageModelMap.put(imageName, image);
         break;
       case "save":
         if (filePathEndIndex != arguments.length - 2) {
           return result;
         }
         String destImageName = arguments[arguments.length - 1];
-        checkImageExists(imageModelMap,destImageName);
+        checkImageExists(imageModelMap, destImageName);
         ImageData destImageData = imageModelMap.get(destImageName).getImageData();
         rgbImageFileIO.save(filePath, destImageData);
         break;
@@ -158,6 +160,7 @@ public class RgbController implements ImageController{
     }
     return command + " Operation performed successfully";
   }
+
   private String runScript(String filePath)
           throws IOException, IllegalArgumentException, FileFormatNotSupportedException {
     int startingIndex = filePath.lastIndexOf(".");
@@ -175,14 +178,15 @@ public class RgbController implements ImageController{
    * Checks whether an image with the specified name exists in the given map.
    * If the image does not exist, an IllegalArgumentException is thrown.
    *
-   * @param map        The map containing image names as keys and corresponding RgbImageModel objects as values.
-   * @param imageName  The name of the image to check for existence.
+   * @param map The map containing image names as keys and corresponding RgbImageModel
+   *                  objects as values.
+   * @param imageName The name of the image to check for existence.
    * @throws IllegalArgumentException If the specified image does not exist in the map.
    */
   public static void checkImageExists(Map<String, RgbImageModel> map, String imageName)
           throws IllegalArgumentException {
-    if (!map.containsKey(imageName)){
-      throw new IllegalArgumentException("Image does not exist: "+imageName);
+    if (!map.containsKey(imageName)) {
+      throw new IllegalArgumentException("Image does not exist: " + imageName);
     }
   }
 }

@@ -68,12 +68,27 @@ histogram leo leo-histogram
 save res/leo-histogram.png leo-histogram
 
 #Compress
-compress 50 leo leo-compress
-save res/leo-compress.png leo-compress
+compress 50 leo leo-compress-50
+save res/leo-compress-50.png leo-compress-50
+histogram leo-compress-50 leo-histogram
+save res/leo-histogram-c50.png leo-histogram
+
+compress 20 leo leo-compress-20
+save res/leo-compress-20.png leo-compress-20
+histogram leo-compress-20 leo-histogram
+save res/leo-histogram-c20.png leo-histogram
+
+compress 90 leo leo-compress-90
+save res/leo-compress-90.png leo-compress-90
+histogram leo-compress-90 leo-histogram
+save res/leo-histogram-c90.png leo-histogram
 
 #ColorCorrect
 color-correct leo leo-color-correct
 save res/leo-color-correct.png leo-color-correct
+histogram leo-color-correct leo-histogram
+save res/leo-histogram-cc.png leo-histogram
+
 color-correct leo leo-color-correct-sp split 35
 save res/leo-color-correct-sp.png leo-color-correct-sp
 
@@ -81,5 +96,13 @@ save res/leo-color-correct-sp.png leo-color-correct-sp
 #Levels Adjust
 levels-adjust 20 100 255 leo leo-levels-adjust
 save res/leo-levels-adjust.png leo-levels-adjust
+histogram leo-levels-adjust leo-histogram
+save res/leo-histogram-la.png leo-histogram
+
 levels-adjust 20 100 255 leo leo-levels-adjust-sp split 35
 save res/leo-levels-adjust-sp.png leo-levels-adjust-sp
+
+levels-adjust 35 120 200 leo-darker leo-darker-la
+save res/leo-darker-la.png leo-sepia-la
+histogram leo-darker-la leo-histogram
+save res/leo-histogram-darker-la.png leo-histogram

@@ -22,10 +22,10 @@ public class ImageData {
    * @param maxValue The maximum pixel value, often used to represent the maximum
    *                 intensity value in the image.
    * @throws IllegalArgumentException If the provided data is null, if maxValue is negative,
-   *                 or if the channel heights are not the same.
+   *                                  or if the channel heights are not the same.
    */
   public ImageData(int[][][] data, int maxValue) throws IllegalArgumentException {
-    if (data == null) {
+    if (data == null || data.length == 0) {
       throw new IllegalArgumentException("Raw image data cannot be null");
     }
     if (maxValue < 0) {
@@ -47,14 +47,14 @@ public class ImageData {
    * Get the pixel data of the image.
    *
    * @return A three-dimensional array representing the pixel data of the image.
-   *         The dimensions are [channels][height][width], where channels typically
-   *         represent color components like red, green, and blue.
+   *        The dimensions are [channels][height][width], where channels typically
+   *        represent color components like red, green, and blue.
    */
   public int[][][] getData() {
     return clone(data);
   }
 
-  private int[][][] clone(int[][][] data){
+  private int[][][] clone(int[][][] data) {
     int[][][] copy = new int[data.length][data[0].length][data[0][0].length];
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data[0].length; j++) {
@@ -68,7 +68,7 @@ public class ImageData {
    * Get the maximum pixel value in the image.
    *
    * @return The maximum pixel value, which is often used to represent the
-   *        maximum intensity value in the image.
+   *         maximum intensity value in the image.
    */
   public int getMaxValue() {
     return maxValue;
@@ -84,7 +84,7 @@ public class ImageData {
     }
     ImageData imageData = (ImageData) o;
     return getMaxValue() == imageData.getMaxValue()
-            && Arrays.deepEquals(getData(),imageData.getData());
+            && Arrays.deepEquals(getData(), imageData.getData());
   }
 
   @Override
@@ -92,32 +92,5 @@ public class ImageData {
     int result = Objects.hash(getMaxValue());
     result = 31 * result + Arrays.deepHashCode(getData());
     return result;
-  }
-  // remove
-  public void printArray(){
-    System.out.print("{");
-    for (int i = 0; i < data.length; i++) {
-      if (i > 0) {
-        System.out.print(",\n ");
-      }
-
-      System.out.print("{");
-      for (int j = 0; j < data[i].length; j++) {
-        if (j > 0) {
-          System.out.print(",\n ");
-        }
-
-        System.out.print("{");
-        for (int k = 0; k < data[i][j].length; k++) {
-          if (k > 0) {
-            System.out.print(", ");
-          }
-          System.out.print(data[i][j][k]);
-        }
-        System.out.print("}");
-      }
-      System.out.print("}");
-    }
-    System.out.print("};\n");
   }
 }

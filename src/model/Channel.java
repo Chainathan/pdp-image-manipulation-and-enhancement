@@ -9,9 +9,10 @@ class Channel implements ChannelModel {
   final int[][] channelValues;
 
   @Override
-  public ChannelModel createInstance(int[][] channelValues){
+  public ChannelModel createInstance(int[][] channelValues) {
     return new Channel(channelValues);
   }
+
   /**
    * Constructs an empty Channel with zero height and width.
    */
@@ -170,14 +171,14 @@ class Channel implements ChannelModel {
     return channelValues[y][x];
   }
 
-  private int[] getFrequencyOfPixels(){
+  private int[] getFrequencyOfPixels() {
     int[] pixelFreq = new int[256];
     int height = getHeight();
     int width = getWidth();
 
-    for(int i=0;i<height;i++) {
+    for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        int x = getValue(i,j);
+        int x = getValue(i, j);
         pixelFreq[x]++;
       }
     }
@@ -195,7 +196,7 @@ class Channel implements ChannelModel {
     int maxPixel = 10;
     int maxFreq = pixelFreq[maxPixel];
 
-    for (int i = maxPixel; i < pixelFreq.length-10; i++) {
+    for (int i = maxPixel; i < pixelFreq.length - 10; i++) {
       if (pixelFreq[i] > maxFreq) {
         maxFreq = pixelFreq[i];
         maxPixel = i;
@@ -205,26 +206,26 @@ class Channel implements ChannelModel {
   }
 
   @Override
-  public ChannelModel adjustLevels(int b, int m, int w){
+  public ChannelModel adjustLevels(int b, int m, int w) {
     int height = getHeight();
     int width = getWidth();
-    double b2 = Math.pow(b,2);
-    double m2 = Math.pow(m,2);
-    double w2 = Math.pow(w,2);
-    double A = (b2*(m-w))-(b*(m2-w2))+(w*m2 - m*w2);
-    double Aa = (127)*b + (128*w - 255 * m);
-    double Ab = (-127)*b2 + (255*m2 - 128*w2);
-    double Ac = b2 *(255 * m - 128*w) - (b * (255 * m2 - 128 * w2));
-    double Qa = Aa/A ;
-    double Qb = Ab/A;
-    double Qc = Ac/A;
+    double b2 = Math.pow(b, 2);
+    double m2 = Math.pow(m, 2);
+    double w2 = Math.pow(w, 2);
+    double a = (b2 * (m - w)) - (b * (m2 - w2)) + (w * m2 - m * w2);
+    double aa = (127) * b + (128 * w - 255 * m);
+    double bb = (-127) * b2 + (255 * m2 - 128 * w2);
+    double cc = b2 * (255 * m - 128 * w) - (b * (255 * m2 - 128 * w2));
+    double qa = aa / a;
+    double qb = bb / a;
+    double qc = cc / a;
     int[][] leveled = new int[height][width];
-    for(int i=0;i<height;i++){
-      for(int j=0;j<width;j++){
-        double x = getValue(i,j);
-        double y = Qa * Math.pow(x,2) + Qb * x + Qc;
-        y = Math.max(y,0);
-        y = Math.min(y,255);
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        double x = getValue(i, j);
+        double y = qa * Math.pow(x, 2) + qb * x + qc;
+        y = Math.max(y, 0);
+        y = Math.min(y, 255);
         leveled[i][j] = (int) Math.round(y);
       }
     }
@@ -235,13 +236,13 @@ class Channel implements ChannelModel {
   public ChannelModel cropVertical(int start, int end) throws IllegalArgumentException {
     int height = getHeight();
     int width = getWidth();
-    if(start > end || start < 0 || end > width){
+    if (start > end || start < 0 || end > width) {
       throw new IllegalArgumentException("Invalid arguments for vtrim channel");
     }
-    int[][] cropped = new int[height][end-start];
-    for(int i=0;i<height;i++){
-      for(int j=start;j<end;j++){
-        cropped[i][j-start] = getValue(i,j);
+    int[][] cropped = new int[height][end - start];
+    for (int i = 0; i < height; i++) {
+      for (int j = start; j < end; j++) {
+        cropped[i][j - start] = getValue(i, j);
       }
     }
     return this.createInstance(cropped);
@@ -249,19 +250,19 @@ class Channel implements ChannelModel {
 
   @Override
   public ChannelModel overlapOnBase(ChannelModel otherChannel, int start)
-          throws IllegalArgumentException{
+          throws IllegalArgumentException {
     int height = getHeight();
     int width = getWidth();
-    if(start < 0 || start > width || otherChannel==null){
+    if (start < 0 || start > width || otherChannel == null) {
       throw new IllegalArgumentException("Invalid arguments for Overlap Channel");
     }
-    int minWidth = Math.min(width, start+otherChannel.getWidth());
+    int minWidth = Math.min(width, start + otherChannel.getWidth());
     int minHeight = Math.min(height, otherChannel.getHeight());
 
     int[][] overlappedChannel = getChannelValues();
-    for(int i=0;i<minHeight;i++){
-      for(int j=start;j<minWidth;j++){
-        overlappedChannel[i][j] = otherChannel.getValue(i,j-start);
+    for (int i = 0; i < minHeight; i++) {
+      for (int j = start; j < minWidth; j++) {
+        overlappedChannel[i][j] = otherChannel.getValue(i, j - start);
       }
     }
     return this.createInstance(overlappedChannel);

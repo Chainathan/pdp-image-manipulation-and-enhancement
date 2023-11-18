@@ -14,7 +14,6 @@ import static org.junit.Assert.fail;
  * Test class for RGB Image FIle IO class tests.
  */
 public class RgbImageFileIOTest {
-
   @Test
   public void testLoadForInvalidFileFormat() {
     //GIVEN
@@ -25,7 +24,6 @@ public class RgbImageFileIOTest {
       imageFileIO.load("file");
       fail("Above line should throw an exception");
     } catch (FileFormatNotSupportedException e) {
-      //Exception catched.
       assertEquals("Unsupported File format", e.getMessage());
     } catch (IOException e) {
       fail("This exception should not be thrown");
@@ -275,7 +273,7 @@ public class RgbImageFileIOTest {
 
     //WHEN
     try {
-      imageFileIO.save("file", new ImageData(new int[0][0][0], 255));
+      imageFileIO.save("file", new ImageData(new int[3][10][10], 255));
       fail("Above line should throw an exception");
     } catch (FileFormatNotSupportedException e) {
       //Exception catched.

@@ -60,9 +60,12 @@ public enum ComponentEnum {
    * Retrieves the descriptive string associated with the ComponentEnum value.
    *
    * @return The descriptive string corresponding to the ComponentEnum value.
-   *
    */
-  public String getComponentString(){
+  public static ComponentEnum fromString(String componentString) {
+    return stringToEnum.get(componentString);
+  }
+
+  public String getComponentString() {
     return componentString;
   }
 }
