@@ -123,7 +123,7 @@ public class RgbControllerIntegrationTest {
                     {104, 65, 57, 56, 64},
                     {100, 65, 66, 66, 64},
                     {102, 64, 70, 69, 65}}
-            };
+    };
     imageData = new ImageData(exp, 255);
     assertTrue(testHelper("luma-component %s %s split 20", imageData));
   }
@@ -152,9 +152,9 @@ public class RgbControllerIntegrationTest {
   public void testSepiaSplit() {
     int[][][] exp = {
             {{140, 153, 160, 154, 154},
-                {144, 158, 150, 153, 155},
-                {140, 153, 156, 153, 155},
-                {142, 155, 161, 160, 154}},
+                    {144, 158, 150, 153, 155},
+                    {140, 153, 156, 153, 155},
+                    {142, 155, 161, 160, 154}},
             {{124, 92, 95, 91, 91},
                     {128, 94, 86, 90, 91},
                     {124, 91, 92, 86, 91},
@@ -170,10 +170,11 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testSharpenSplit() {
-    int[][][] exp = {{{171, 153, 160, 154, 154},
-            {211, 158, 150, 153, 155},
-            {209, 153, 156, 153, 155},
-            {172, 155, 161, 160, 154}},
+    int[][][] exp = {
+            {{171, 153, 160, 154, 154},
+                    {211, 158, 150, 153, 155},
+                    {209, 153, 156, 153, 155},
+                    {172, 155, 161, 160, 154}},
             {{102, 92, 95, 91, 91},
                     {127, 94, 86, 90, 91},
                     {124, 91, 92, 86, 91},
@@ -189,10 +190,11 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testColorCorrectSplit() {
-    int[][][] exp = {{{101, 153, 160, 154, 154},
-            {104, 158, 150, 153, 155},
-            {101, 153, 156, 153, 155},
-            {103, 155, 161, 160, 154}},
+    int[][][] exp = {
+            {{101, 153, 160, 154, 154},
+                    {104, 158, 150, 153, 155},
+                    {101, 153, 156, 153, 155},
+                    {103, 155, 161, 160, 154}},
             {{102, 92, 95, 91, 91},
                     {105, 94, 86, 90, 91},
                     {101, 91, 92, 86, 91},
@@ -208,10 +210,11 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testLevelAdjustSplit() {
-    int[][][] exp = {{{187, 189, 160, 154, 154},
-            {190, 194, 150, 153, 155},
-            {187, 189, 156, 153, 155},
-            {189, 191, 161, 160, 154}},
+    int[][][] exp = {
+            {{187, 189, 160, 154, 154},
+                    {190, 194, 150, 153, 155},
+                    {187, 189, 156, 153, 155},
+                    {189, 191, 161, 160, 154}},
             {{114, 117, 95, 91, 91},
                     {118, 120, 86, 90, 91},
                     {113, 116, 92, 86, 91},
@@ -290,10 +293,11 @@ public class RgbControllerIntegrationTest {
 
   @Test
   public void testSharpen() {
-    int[][][] exp = {{{172, 234, 182, 233, 174},
-            {230, 255, 249, 255, 231},
-            {229, 255, 255, 255, 233},
-            {171, 232, 183, 240, 175}},
+    int[][][] exp = {
+            {{172, 234, 182, 233, 174},
+                    {230, 255, 249, 255, 231},
+                    {229, 255, 255, 255, 233},
+                    {171, 232, 183, 240, 175}},
             {{104, 142, 110, 139, 104},
                     {140, 198, 146, 192, 135},
                     {137, 196, 153, 192, 138},
@@ -301,7 +305,8 @@ public class RgbControllerIntegrationTest {
             {{67, 94, 71, 87, 65},
                     {94, 136, 97, 125, 92},
                     {96, 140, 109, 140, 98},
-                    {73, 100, 83, 107, 76}}};
+                    {73, 100, 83, 107, 76}}
+    };
     String command = "sharpen";
     imageData = new ImageData(exp, 255);
     assertTrue(testHelper(command + " %s %s", imageData));
@@ -708,40 +713,40 @@ public class RgbControllerIntegrationTest {
     String command = "run \"images/test/script folder/scriptTest.txt\"";
     runCommand(command);
     String[] imageNames = {
-            "koalaTest.jpg",
-            "koalaTest.png",
-            "koalaTest.ppm",
-            "koalaTestBlue.png",
-            "koalaTestBlur.png",
-            "koalaTestBright.png",
-            "koalaTestBrightDark.png",
-            "koalaTestCombine.png",
-            "koalaTestDark.png",
-            "koalaTestGreen.png",
-            "koalaTestIntensity.png",
-            "koalaTestLuma.png",
-            "koalaTestRed.png",
-            "koalaTestSepia.png",
-            "koalaTestSharpen.png",
-            "koalaTestSplitBlue.png",
-            "koalaTestSplitGreen.png",
-            "koalaTestSplitRed.png",
-            "koalaTestSplitRedBr.png",
-            "koalaTestTint.png",
-            "koalaTestValue.png",
-            "koalaTestVertical.png",
-            "koalaTestVerticalHorizontal.png",
-            "koala-blur-sp.png",
-            "koala-cc-histogram.png",
-            "koala-color-correct.png",
-            "koala-color-correct-sp.png",
-            "koala-compress.png",
-            "koala-histogram.png",
-            "koala-la-histogram.png",
-            "koala-levels-adjust.png",
-            "koala-levels-adjust-sp.png",
-            "koala-sepia-sp.png",
-            "koala-sharpen-sp.png"
+        "koalaTest.jpg",
+        "koalaTest.png",
+        "koalaTest.ppm",
+        "koalaTestBlue.png",
+        "koalaTestBlur.png",
+        "koalaTestBright.png",
+        "koalaTestBrightDark.png",
+        "koalaTestCombine.png",
+        "koalaTestDark.png",
+        "koalaTestGreen.png",
+        "koalaTestIntensity.png",
+        "koalaTestLuma.png",
+        "koalaTestRed.png",
+        "koalaTestSepia.png",
+        "koalaTestSharpen.png",
+        "koalaTestSplitBlue.png",
+        "koalaTestSplitGreen.png",
+        "koalaTestSplitRed.png",
+        "koalaTestSplitRedBr.png",
+        "koalaTestTint.png",
+        "koalaTestValue.png",
+        "koalaTestVertical.png",
+        "koalaTestVerticalHorizontal.png",
+        "koala-blur-sp.png",
+        "koala-cc-histogram.png",
+        "koala-color-correct.png",
+        "koala-color-correct-sp.png",
+        "koala-compress.png",
+        "koala-histogram.png",
+        "koala-la-histogram.png",
+        "koala-levels-adjust.png",
+        "koala-levels-adjust-sp.png",
+        "koala-sepia-sp.png",
+        "koala-sharpen-sp.png"
     };
     String src = "images/scriptRef/";
     String res = "images/temp/";
@@ -765,14 +770,14 @@ public class RgbControllerIntegrationTest {
       Path directory = Paths.get(folderPath);
       if (Files.exists(directory) && Files.isDirectory(directory)) {
         Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE,
-                new SimpleFileVisitor<Path>() {
-                  @Override
-                  public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                          throws IOException {
-                    Files.delete(file);
-                    return FileVisitResult.CONTINUE;
-                  }
-                });
+            new SimpleFileVisitor<Path>() {
+              @Override
+              public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                      throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+              }
+            });
       }
     } catch (IOException e) {
       // delete fail but test pass

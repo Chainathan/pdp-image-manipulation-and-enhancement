@@ -43,8 +43,9 @@ public class RgbImageTest {
       for (int j = 0; j < width; j++) {
         if (expectedImage[0][i][j] != actual[0][i][j]
                 || expectedImage[1][i][j] != actual[1][i][j]
-                || expectedImage[2][i][j] != actual[2][i][j])
+                || expectedImage[2][i][j] != actual[2][i][j]){
           return false;
+        }
       }
     }
     return true;
@@ -53,9 +54,10 @@ public class RgbImageTest {
   @Test
   public void testBrightenWithPositiveIncrement() {
     //GIVEN
-    int[][][] expectedImage = {{{51, 52, 53},
-            {54, 55, 56},
-            {57, 58, 59}},
+    int[][][] expectedImage = {
+            {{51, 52, 53},
+                    {54, 55, 56},
+                    {57, 58, 59}},
             {{54, 55, 56},
                     {51, 52, 53},
                     {57, 58, 59}},
@@ -72,9 +74,10 @@ public class RgbImageTest {
   @Test
   public void testBrightenWithNegativeIncrement() {
     //GIVEN
-    int[][][] expectedImage = {{{0, 0, 1},
-            {2, 3, 4},
-            {5, 6, 7}},
+    int[][][] expectedImage = {
+            {{0, 0, 1},
+                    {2, 3, 4},
+                    {5, 6, 7}},
             {{2, 3, 4},
                     {0, 0, 1},
                     {5, 6, 7}},
@@ -90,9 +93,10 @@ public class RgbImageTest {
 
   @Test
   public void testHorizontalFlip() {
-    int[][][] expectedImage = {{{3, 2, 1},
-            {6, 5, 4},
-            {9, 8, 7}},
+    int[][][] expectedImage = {
+            {{3, 2, 1},
+                    {6, 5, 4},
+                    {9, 8, 7}},
             {{6, 5, 4},
                     {3, 2, 1},
                     {9, 8, 7}},
@@ -108,9 +112,10 @@ public class RgbImageTest {
   @Test
   public void testVerticalFlip() {
     //WHEN
-    int[][][] expectedImage = {{{7, 8, 9},
-            {4, 5, 6},
-            {1, 2, 3}},
+    int[][][] expectedImage = {
+            {{7, 8, 9},
+                    {4, 5, 6},
+                    {1, 2, 3}},
             {{7, 8, 9},
                     {1, 2, 3},
                     {4, 5, 6}},
@@ -126,9 +131,10 @@ public class RgbImageTest {
   @Test
   public void testBlur() {
     //WHEN
-    int[][][] expectedImage = {{{1, 2, 2},
-            {4, 5, 5},
-            {4, 5, 4}},
+    int[][][] expectedImage = {
+            {{1, 2, 2},
+                    {4, 5, 5},
+                    {4, 5, 4}},
             {{2, 3, 3},
                     {3, 4, 4},
                     {3, 4, 3}},
@@ -144,9 +150,10 @@ public class RgbImageTest {
   @Test
   public void testSharpen() {
     //WHEN
-    int[][][] expectedImage = {{{0, 4, 4},
-            {8, 16, 12},
-            {9, 16, 13}},
+    int[][][] expectedImage = {
+            {{0, 4, 4},
+                    {8, 16, 12},
+                    {9, 16, 13}},
             {{2, 7, 6},
                     {6, 13, 10},
                     {7, 12, 10}},
@@ -163,9 +170,10 @@ public class RgbImageTest {
   public void testSepia() {
     //GIVEN
 
-    int[][][] expectedImage = {{{4, 5, 6},
-            {4, 5, 6},
-            {9, 10, 12}},
+    int[][][] expectedImage = {
+            {{4, 5, 6},
+                    {4, 5, 6},
+                    {9, 10, 12}},
             {{3, 4, 6},
                     {3, 4, 6},
                     {8, 9, 10}},
@@ -196,9 +204,10 @@ public class RgbImageTest {
   @Test
   public void visualizeComponentForGreen() {
     //GIVEN
-    int[][][] expectedImage = {{{0, 0, 0},
-            {0, 0, 0},
-            {0, 0, 0}},
+    int[][][] expectedImage = {
+            {{0, 0, 0},
+                    {0, 0, 0},
+                    {0, 0, 0}},
             {{4, 5, 6},
                     {1, 2, 3},
                     {7, 8, 9}},
@@ -215,9 +224,10 @@ public class RgbImageTest {
   @Test
   public void visualizeComponentForBlue() {
     //GIVEN
-    int[][][] expectedImage = {{{0, 0, 0},
-            {0, 0, 0},
-            {0, 0, 0}},
+    int[][][] expectedImage = {
+            {{0, 0, 0},
+                    {0, 0, 0},
+                    {0, 0, 0}},
             {{0, 0, 0},
                     {0, 0, 0},
                     {0, 0, 0}},
@@ -443,18 +453,9 @@ public class RgbImageTest {
   @Test
   public void testCreateHistogram() {
     //GIVEN
-    int[][] red = {{255, 228, 46},
-            {255, 255, 255},
-            {198, 255, 255},
-            {255, 255, 255}};
-    int[][] green = {{255, 228, 46},
-            {100, 255, 200},
-            {198, 200, 50},
-            {255, 10, 25}};
-    int[][] blue = {{60, 0, 70},
-            {0, 0, 80},
-            {0, 100, 0},
-            {0, 110, 255}};
+    int[][] red = {{255, 228, 46}, {255, 255, 255}, {198, 255, 255}, {255, 255, 255}};
+    int[][] green = {{255, 228, 46}, {100, 255, 200}, {198, 200, 50}, {255, 10, 25}};
+    int[][] blue = {{60, 0, 70}, {0, 0, 80}, {0, 100, 0}, {0, 110, 255}};
 
     ChannelModel channel1 = new Channel(red);
     ChannelModel channel2 = new Channel(green);
@@ -463,11 +464,12 @@ public class RgbImageTest {
             channel1, channel2, channel3,
             255
     );
-    int[][][] expectedImage = {{{255, 192, 192, 192, 192},
-            {192, 192, 192, 192, 192},
-            {192, 192, 192, 192, 192},
-            {192, 192, 192, 192, 192},
-            {192, 192, 192, 192, 192}},
+    int[][][] expectedImage = {
+            {{255, 192, 192, 192, 192},
+                    {192, 192, 192, 192, 192},
+                    {192, 192, 192, 192, 192},
+                    {192, 192, 192, 192, 192},
+                    {192, 192, 192, 192, 192}},
             {{255, 192, 192, 192, 192},
                     {192, 192, 192, 192, 192},
                     {192, 192, 192, 192, 192},
@@ -511,9 +513,9 @@ public class RgbImageTest {
             {10, 11, 10}
     };
     int[][][] expectedImage = {
-            expectedChannel,
-            expectedChannel,
-            expectedChannel
+        expectedChannel,
+        expectedChannel,
+        expectedChannel
     };
     //WHEN
     RgbImageModel overlappedImage = rgbImage.overlapOnBase(otherImage, 50);
@@ -608,9 +610,9 @@ public class RgbImageTest {
             {11}
     };
     int[][][] expectedImage = {
-            expectedChannel,
-            expectedChannel,
-            expectedChannel
+        expectedChannel,
+        expectedChannel,
+        expectedChannel
     };
     //WHEN
     RgbImageModel croppedImage = rgbImage.cropVertical(20, 50);
@@ -709,10 +711,11 @@ public class RgbImageTest {
             channel, channel, channel,
             255
     );
-    int[][][] expectedImage = {{{255, 228, 46},
-            {255, 255, 255},
-            {198, 255, 255},
-            {255, 255, 255}},
+    int[][][] expectedImage = {
+            {{255, 228, 46},
+                    {255, 255, 255},
+                    {198, 255, 255},
+                    {255, 255, 255}},
             {{255, 228, 46},
                     {255, 255, 255},
                     {198, 255, 255},

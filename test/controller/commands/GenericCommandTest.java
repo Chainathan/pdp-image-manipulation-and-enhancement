@@ -16,6 +16,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
+/**
+ * Test class for GenericCommand class.
+ */
 public class GenericCommandTest {
 
   StringBuilder log;
@@ -35,7 +38,8 @@ public class GenericCommandTest {
     }
 
     @Override
-    public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
+    public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
+            throws IllegalArgumentException {
       return null;
     }
 
@@ -76,7 +80,7 @@ public class GenericCommandTest {
 
     @Override
     public void loadImageData(ImageData imageData) {
-
+    //mock
     }
 
     @Override
@@ -101,12 +105,14 @@ public class GenericCommandTest {
 
     @Override
     public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
-      log.append(imageRef).append(" method crop ").append(start).append(" ").append(end).append("\n");
+      log.append(imageRef).append(" method crop ").append(start)
+              .append(" ").append(end).append("\n");
       return new MockRgbImage(log, "croppedImg");
     }
 
     @Override
-    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start) throws IllegalArgumentException {
+    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
+            throws IllegalArgumentException {
       log.append(imageRef).append(" method overlap ").append(start).append("\n");
       return new MockRgbImage(log, "overlappedImg");
     }

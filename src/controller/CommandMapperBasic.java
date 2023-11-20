@@ -49,14 +49,14 @@ public class CommandMapperBasic implements CommandMapper {
     );
     for (ComponentEnum value : ComponentEnum.values()) {
       knownCommands.put(value.getComponentString(),
-        args -> new GenericCommand(3,
-                rgb -> rgb.visualizeComponent(value),
-                      false)
+          args -> new GenericCommand(3,
+            rgb -> rgb.visualizeComponent(value),
+                  false)
       );
     }
     knownCommands.put("brighten",
         args -> new GenericCommand(4,
-                rgb -> rgb.brighten(Integer.parseInt(args[1])),
+            rgb -> rgb.brighten(Integer.parseInt(args[1])),
                     true)
     );
     knownCommands.put("rgb-split",

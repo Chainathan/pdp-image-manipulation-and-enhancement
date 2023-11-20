@@ -21,24 +21,24 @@ public class CommandMapperAdv extends CommandMapperBasic {
     );
     knownCommands.put("histogram",
         args -> new GenericCommand(3,
-                rgb -> rgb.createHistogram(new ImageGraphicsImpl(256, 256, 20)),
+            rgb -> rgb.createHistogram(new ImageGraphicsImpl(256, 256, 20)),
                     false)
     );
     knownCommands.put("compress",
         args -> new GenericCommand(4,
-                rgb -> rgb.applyCompression(Double.parseDouble(args[1])),
+            rgb -> rgb.applyCompression(Double.parseDouble(args[1])),
                     false)
     );
     knownCommands.put("levels-adjust",
         args -> new GenericCommand(6,
-                rgb -> rgb.adjustLevels(Integer.parseInt(args[1]),
+            rgb -> rgb.adjustLevels(Integer.parseInt(args[1]),
                             Integer.parseInt(args[2]),
                             Integer.parseInt(args[3])),
                     true)
     );
     knownCommands.put("luma-component",
         args -> new GenericCommand(3,
-                rgb -> rgb.visualizeComponent(ComponentEnum.LUMA),
+            rgb -> rgb.visualizeComponent(ComponentEnum.LUMA),
                     true)
     );
     return knownCommands;

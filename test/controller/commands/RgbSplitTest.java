@@ -15,6 +15,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * Test class for RgbSplit class.
+ */
 public class RgbSplitTest {
   StringBuilder log;
 
@@ -35,7 +38,8 @@ public class RgbSplitTest {
     }
 
     @Override
-    public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
+    public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
+            throws IllegalArgumentException {
       log.append(componentEnum.toString()).append(" ");
       return new MockRgbImage();
     }
@@ -77,7 +81,7 @@ public class RgbSplitTest {
 
     @Override
     public void loadImageData(ImageData imageData) {
-
+    //mock
     }
 
     @Override
@@ -106,7 +110,8 @@ public class RgbSplitTest {
     }
 
     @Override
-    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start) throws IllegalArgumentException {
+    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
+            throws IllegalArgumentException {
       return null;
     }
   }

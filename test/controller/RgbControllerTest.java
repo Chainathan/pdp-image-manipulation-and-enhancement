@@ -38,7 +38,8 @@ public class RgbControllerTest {
     }
 
     @Override
-    public RgbImageModel visualizeComponent(ComponentEnum componentEnum) throws IllegalArgumentException {
+    public RgbImageModel visualizeComponent(ComponentEnum componentEnum)
+            throws IllegalArgumentException {
       log.append("Component : ").append(componentEnum.getComponentString());
       return new MockRgbImage();
     }
@@ -87,11 +88,12 @@ public class RgbControllerTest {
 
     @Override
     public void loadImageData(ImageData imageData) {
-
+    //mock
     }
 
     @Override
-    public RgbImageModel applyCompression(double compressionRatio) throws IllegalArgumentException {
+    public RgbImageModel applyCompression(double compressionRatio)
+            throws IllegalArgumentException {
       log.append("compressionRatio : ").append(compressionRatio);
       return new MockRgbImage();
     }
@@ -116,12 +118,14 @@ public class RgbControllerTest {
 
     @Override
     public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
-      log.append("\n").append("crop start : ").append(start).append(" end : ").append(end).append("\n");
+      log.append("\n").append("crop start : ")
+              .append(start).append(" end : ").append(end).append("\n");
       return new MockRgbImage(log);
     }
 
     @Override
-    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start) throws IllegalArgumentException {
+    public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start)
+            throws IllegalArgumentException {
       log.append("\n").append("overlap start : ").append(start).append("\n");
       return new MockRgbImage();
     }
