@@ -1,9 +1,12 @@
 import controller.CommandMapper;
 import controller.CommandMapperAdv;
+import controller.GuiController;
 import controller.RgbController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
+import view.GuiView;
 import view.ImageProcessorView;
+import view.JFrameView;
 import view.TextView;
 
 import java.io.IOException;
@@ -24,6 +27,19 @@ public class ImageProcessor {
    * @param args Command-line arguments (not used in this example).
    */
   public static void main(String[] args) {
+    runGUI();
+  }
+  private static void runGUI(){
+    FactoryRgbImageModel factory = new FactoryRgbImage();
+    GuiView view = new JFrameView("Image Processor");
+    GuiController controller = new GuiController(factory, view);
+    try {
+      controller.run();
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+  private static void runText(String[] args){
     Readable in = new InputStreamReader(System.in);
     Appendable out = System.out;
     FactoryRgbImageModel factory = new FactoryRgbImage();

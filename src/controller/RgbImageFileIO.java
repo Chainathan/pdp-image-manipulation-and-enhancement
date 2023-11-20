@@ -175,10 +175,14 @@ public class RgbImageFileIO implements ImageFileIO {
 
   private void saveGeneralFormat(String imageFormat, String destinationPath, ImageData imageData)
           throws IOException {
+    BufferedImage image = convertImgDataToBuffImg(imageData);
+    File outputFile = new File(destinationPath);
+    ImageIO.write(image, imageFormat, outputFile);
+  }
+  public static BufferedImage convertImgDataToBuffImg(ImageData imageData) {
     int[][][] pixelValues = imageData.getData();
     int width = pixelValues[0][0].length;
     int height = pixelValues[0].length;
-
     BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
     for (int y = 0; y < height; y++) {
@@ -187,7 +191,6 @@ public class RgbImageFileIO implements ImageFileIO {
         image.setRGB(x, y, rgb);
       }
     }
-    File outputFile = new File(destinationPath);
-    ImageIO.write(image, imageFormat, outputFile);
+    return image;
   }
 }
