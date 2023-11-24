@@ -1,10 +1,10 @@
-package controller;
+package view;
 
-public enum CommandEnum {
+public enum FeatureEnum {
   BLUR("blur"),
   SHARPEN("sharpen"),
   SEPIA("sepia"),
-  GREYSCALE("luma-component"),
+  GREYSCALE("grayscale"),
   COLOR_CORRECT("color-correct"),
   LEVELS_ADJUST("levels-adjust"),
   FLIP_H("horizontal-flip"),
@@ -14,11 +14,11 @@ public enum CommandEnum {
   GREEN("green-component"),
   BLUE("blue-component");
 
-  private final String command;
-  CommandEnum(String command) {
-    this.command = command;
+  private final String operation;
+  FeatureEnum(String operation) {
+    this.operation = operation;
   }
-  public String getCommand(){
-    return command;
+  public String getOperation(){
+    return operation;
   }
 }

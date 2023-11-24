@@ -1,13 +1,7 @@
-import controller.CommandMapper;
-import controller.CommandMapperAdv;
-import controller.GuiController;
-import controller.RgbController;
+import controller.*;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
-import view.GuiView;
-import view.ImageProcessorView;
-import view.JFrameView;
-import view.TextView;
+import view.*;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,8 +25,8 @@ public class ImageProcessor {
   }
   private static void runGUI(){
     FactoryRgbImageModel factory = new FactoryRgbImage();
-    GuiView view = new JFrameView("Image Processor");
-    GuiController controller = new GuiController(factory, view);
+    GuiView view = new JFrameViewSplit("Image Processor");
+    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
     try {
       controller.run();
     } catch (IOException e) {

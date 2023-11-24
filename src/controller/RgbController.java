@@ -28,7 +28,7 @@ public class RgbController implements ImageController {
   private final Map<String, Function<String[], RgbImageCommand>> knownCommands;
 
   /**
-   * Constructs an AdvRgbController with the specified components.
+   * Constructs an RgbController with the specified components.
    *
    * @param factory       The factory responsible for creating instances of RgbImageModel.
    * @param textView      The view responsible for displaying text output.
@@ -98,6 +98,7 @@ public class RgbController implements ImageController {
     }
     return result;
   }
+
 
   private String executeFunction(String command, String[] arguments)
           throws IllegalArgumentException {
@@ -189,4 +190,5 @@ public class RgbController implements ImageController {
       throw new IllegalArgumentException("Image does not exist: " + imageName);
     }
   }
+
 }

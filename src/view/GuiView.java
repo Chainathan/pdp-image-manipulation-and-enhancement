@@ -4,6 +4,9 @@ import controller.Features;
 import model.ImageData;
 
 public interface GuiView {
+
+  void togglePreview(boolean isEnabled);
+  void toggleFeatures();
   void showWindow();
   void showDiscardConfirmation();
   void showLoadMenu();
@@ -15,6 +18,6 @@ public interface GuiView {
   void showLvlAdjMenu();
   void toggleSplit(boolean suportSplit);
   void displayError(String message);
-  void setSplitLabel(String message);
-  void setSplitInput(String message);
+//  void setSplitLabel(String message);
+//  void setSplitInput(String message);
 }

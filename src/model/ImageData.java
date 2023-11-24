@@ -55,6 +55,9 @@ public class ImageData {
   }
 
   private int[][][] clone(int[][][] data) {
+    if(data[0].length==0){
+      return new int[3][0][0]; //check
+    }
     int[][][] copy = new int[data.length][data[0].length][data[0][0].length];
     for (int i = 0; i < data.length; i++) {
       for (int j = 0; j < data[0].length; j++) {
