@@ -21,37 +21,44 @@ public class ImageProcessor {
    * @param args Command-line arguments (not used in this example).
    */
   public static void main(String[] args) {
-    runGUI();
+    runIP(args);
   }
-  private static void runGUI(){
-    FactoryRgbImageModel factory = new FactoryRgbImage();
-    GuiView view = new JFrameViewSplit("Image Processor");
-    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
-    try {
-      controller.run();
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
-    }
-  }
-  private static void runText(String[] args){
-    Readable in = new InputStreamReader(System.in);
+//  private static void runGUI(){
+//    FactoryRgbImageModel factory = new FactoryRgbImage();
+//    GuiView view = new JFrameViewSplit("Image Processor");
+//    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
+//    try {
+//      controller.run();
+//    } catch (IOException e) {
+//      System.out.println(e.getMessage());
+//    }
+//  }
+  private static void runIP(String[] args){
+    Readable in;
     Appendable out = System.out;
     FactoryRgbImageModel factory = new FactoryRgbImage();
     ImageProcessorView textView = new TextView(out);
     CommandMapper commandMapper = new CommandMapperAdv();
+    ImageController controller;
     try {
       if (args.length == 2 && args[0].equals("-file")) {
         in = new StringReader("run \"" + args[1] + "\"");
-      } else if (args.length != 0) {
-        textView.display("Invalid arguments");
-        System.exit(-1);
-      } else {
+        controller = new RgbController(factory, textView, in, commandMapper);
+        controller.run();
+      }else if(args.length == 1 && args[0].equals("-text")){
         in = new InputStreamReader(System.in);
+        controller = new RgbController(factory, textView, in, commandMapper);
+        controller.run();
       }
-
-      RgbController controller = new RgbController(factory, textView, in, commandMapper);
-      controller.run();
-
+      else if(args.length==0){
+        GuiView view = new JFrameViewSplit("Image Processor");
+        controller = new GuiControllerSplit(factory, view);
+        controller.run();
+      }
+      else{
+        System.out.println("Invalid arguments");
+        System.exit(-1);
+      }
     } catch (IOException e) {
       System.out.println(e.getMessage());
     }

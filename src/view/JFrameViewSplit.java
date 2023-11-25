@@ -241,14 +241,17 @@ public class JFrameViewSplit extends JFrame implements GuiView{
         });
     }
 
-    @Override
-    public void showCompressMenu() {
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 0, 100, 0);
-        slider.setMajorTickSpacing(100);
+    private JSlider getSlider(int min, int max, int start){
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, start);
+        slider.setMajorTickSpacing(max);
 //        slider.setMinorTickSpacing(1);
         slider.setPaintTicks(true);
 //        slider.setPaintLabels(true);
-
+        return  slider;
+    }
+    @Override
+    public void showCompressMenu() {
+        JSlider slider = getSlider(0,100,0);
         JPanel sliderPanel = new JPanel(new BorderLayout());
         JLabel valueLabel = new JLabel("Selected Percentage: 0");
         slider.addChangeListener(e -> valueLabel.setText("Selected Percentage: " + slider.getValue()));
@@ -263,44 +266,38 @@ public class JFrameViewSplit extends JFrame implements GuiView{
         if (result == JOptionPane.OK_OPTION) {
             int selectedValue = slider.getValue();
             features.compress(selectedValue);
-//            JOptionPane.showMessageDialog(parentFrame, "Selected Percentage: " + selectedValue);
         }
-    }
-
-    private static JTextField getjTextFieldWithNumberInput() {
-        JTextField textField = new JTextField(10);
-        // Set a custom input verifier to enforce numeric input
-        textField.setInputVerifier(new InputVerifier() {
-            @Override
-            public boolean verify(JComponent input) {
-                JTextField textField = (JTextField) input;
-                String text = textField.getText();
-
-                try {
-                    // Try to parse the input as a double
-                    Double.parseDouble(text);
-                    return true; // Input is a valid number
-                } catch (NumberFormatException e) {
-                    return false; // Input is not a valid number
-                }
-            }
-        });
-        return textField;
     }
 
     @Override
     public void showLvlAdjMenu() {
-        JTextField textFieldB = getjTextFieldWithNumberInput();
-        JTextField textFieldM = getjTextFieldWithNumberInput();
-        JTextField textFieldW = getjTextFieldWithNumberInput();
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Enter valid black, mid, white values (0 < b < m < w < 256) :"));
-        panel.add(textFieldB);
-        panel.add(textFieldM);
-        panel.add(textFieldW);
-        int result = JOptionPane.showConfirmDialog(null, panel, "Levels adjust Input", JOptionPane.OK_CANCEL_OPTION);
+        JSlider sliderB = getSlider(0,255,0);
+        JSlider sliderM = getSlider(0,255,0);
+        JSlider sliderW = getSlider(0,255,0);
+        JLabel labelB = new JLabel("black: 0");
+        JLabel labelM = new JLabel("mid: 0");
+        JLabel labelW = new JLabel("white: 0");
+        sliderB.addChangeListener(e -> labelB.setText("black: " + sliderB.getValue()));
+        sliderM.addChangeListener(e -> labelM.setText("mid: " + sliderM.getValue()));
+        sliderW.addChangeListener(e -> labelW.setText("white: " + sliderW.getValue()));
+        JPanel panelB = new JPanel();
+        panelB.add(labelB);
+        panelB.add(sliderB);
+        JPanel panelM = new JPanel();
+        panelM.add(labelM);
+        panelM.add(sliderM);
+        JPanel panelW = new JPanel();
+        panelW.add(labelW);
+        panelW.add(sliderW);
+        JPanel LvlAdjPanel = new JPanel(new GridLayout(0, 1));
+        LvlAdjPanel.add(new JLabel("Enter valid black, mid, white values (0 < b < m < w < 256) :"));
+        LvlAdjPanel.add(panelB);
+        LvlAdjPanel.add(panelM);
+        LvlAdjPanel.add(panelW);
+        int result = JOptionPane.showConfirmDialog(
+                null, LvlAdjPanel, "Levels adjust Input", JOptionPane.OK_CANCEL_OPTION);
         if (result == JOptionPane.OK_OPTION) {
-            features.levelsAdjust(textFieldB.getText(),textFieldM.getText(),textFieldW.getText());
+            features.levelsAdjust(sliderB.getValue(),sliderM.getValue(),sliderW.getValue());
         }
     }
 
@@ -330,8 +327,13 @@ public class JFrameViewSplit extends JFrame implements GuiView{
 
     @Override
     public void displayImage(ImageData imageData) {
-        BufferedImage image = RgbImageFileIO.convertImgDataToBuffImg(imageData);
-        imageLabel.setIcon(new ImageIcon(image));
+        if(imageData.getData()[0].length==0){
+            displayError("No Image Present");
+        }
+        else{
+            BufferedImage image = RgbImageFileIO.convertImgDataToBuffImg(imageData);
+            imageLabel.setIcon(new ImageIcon(image));
+        }
     }
 
     @Override

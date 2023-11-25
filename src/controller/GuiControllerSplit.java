@@ -16,8 +16,8 @@ public class GuiControllerSplit implements Features, ImageController{
     private final ImageFileIO rgbImageFileIO;
     private RgbImageModel currImage;
     private RgbImageModel actImage;
-    private double splitP;
-    private boolean supportSplit;
+//    private double splitP;
+//    private boolean supportSplit;
     private boolean imageSaved;
 
     private Function<RgbImageModel,RgbImageModel> currentOperation;
@@ -49,10 +49,16 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void apply() {
         if(currentOperation!=null){
-            actImage = currentOperation.apply(actImage);
-            currImage = actImage;
-            refreshImage();
-            view.togglePreview(false);
+            try {
+                actImage = currentOperation.apply(actImage);
+                currImage = actImage;
+                refreshImage();
+                view.togglePreview(false);
+                imageSaved = false;
+            }
+            catch (IllegalArgumentException e){
+                view.displayError(e.getMessage());
+            }
         }
         else{
             view.displayError("Invalid Operation");
@@ -71,13 +77,13 @@ public class GuiControllerSplit implements Features, ImageController{
         if (!imageSaved) {
             view.showDiscardConfirmation();
         }
-        System.exit(0);
+        //System.exit(0);
     }
 
     @Override
     public void loadImage(String filePath) {
         try {
-            if(actImage.getImageData().getData()[0].length!=0){
+            if(actImage.getImageData().getData()[0].length!=0 && !imageSaved){
                 view.showDiscardConfirmation();
             }
             ImageData imageData = rgbImageFileIO.load(filePath);
@@ -155,6 +161,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void red() {
         currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.RED);
+        setUpForOperation();
         view.togglePreview(true);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.RED), false);
     }
@@ -162,6 +169,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void green() {
         currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.GREEN);
+        setUpForOperation();
         view.togglePreview(true);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), false);
     }
@@ -169,6 +177,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void blue() {
         currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.BLUE);
+        setUpForOperation();
         view.togglePreview(true);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), false);
     }
@@ -195,6 +204,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void colorCorrect() {
         currentOperation = RgbImageModel::correctColor;
+        setUpForOperation();
         view.togglePreview(true);
 //        executeOperation(RgbImageModel::correctColor, supportSplit);
     }
@@ -211,14 +221,15 @@ public class GuiControllerSplit implements Features, ImageController{
 //  }
     @Override
     public void compress(double compressRatio) {
-        try {
+//        try {
             //double cr = Double.parseDouble(compressRatio);
             currentOperation = rgb->rgb.applyCompression(compressRatio);
+            setUpForOperation();
             view.togglePreview(true);
 //            executeOperation(rgb->rgb.applyCompression(cr), supportSplit);
-        } catch (NumberFormatException ne){
-            view.displayError("Invalid input");
-        }
+//        } catch (NumberFormatException ne){
+//            view.displayError("Invalid input");
+//        }
     }
     @Override
     public void handleLevelsAdjust() {
@@ -231,17 +242,11 @@ public class GuiControllerSplit implements Features, ImageController{
 //    refreshImage();
 //  }
     @Override
-    public void levelsAdjust(String b, String m, String w) {
-        try {
-            int ib = Integer.parseInt(b);
-            int im = Integer.parseInt(m);
-            int iw = Integer.parseInt(w);
-            currentOperation = rgb->rgb.adjustLevels(ib,im,iw);
+    public void levelsAdjust(int b, int m, int w) {
+            //Should we check b<m<w
+            currentOperation = rgb->rgb.adjustLevels(b,m,w);
+            setUpForOperation();
             view.togglePreview(true);
-//            executeOperation(rgb->rgb.adjustLevels(ib,im,iw), supportSplit);
-        } catch (NumberFormatException ne){
-            view.displayError("Invalid input");
-        }
     }
 
     @Override
