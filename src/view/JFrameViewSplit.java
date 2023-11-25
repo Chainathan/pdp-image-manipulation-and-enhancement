@@ -177,11 +177,6 @@ public class JFrameViewSplit extends JFrame implements GuiView{
     }
 
     @Override
-    public void toggleFeatures(){
-        setPanelEnabled(featuresPanel, true);
-    }
-
-    @Override
     public void showWindow(){
         setVisible(true);
     }

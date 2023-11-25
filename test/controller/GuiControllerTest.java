@@ -1,6 +1,5 @@
 package controller;
 
-import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
 import model.ImageData;
 import model.RgbImageModel;
@@ -14,6 +13,9 @@ import static org.junit.Assert.*;
 
 public class GuiControllerTest {
 
+    //preview
+    //save
+    //Load
     static class JFrameViewMock implements GuiView{
 
         private StringBuilder viewLog;
@@ -28,10 +30,6 @@ public class GuiControllerTest {
             viewLog.append("Preview toggled : "+isEnabled+"\n");
         }
 
-        @Override
-        public void toggleFeatures() {
-
-        }
 
         @Override
         public void showWindow() {
@@ -718,5 +716,40 @@ public class GuiControllerTest {
         assertEquals(expViewLog.toString(), viewLog.toString());
     }
 
+    @Test
+    public void testHandleLoadButton(){
+        //WHEN
+        controller.handleLoadButton();
+
+        //THEN
+        assertEquals("Show load menu",viewLog.toString());
+    }
+
+    @Test
+    public void testHandleSaveButton(){
+        //WHEN
+        controller.handleSaveButton();
+
+        //THEN
+        assertEquals("Show save menu",viewLog.toString());
+    }
+
+    @Test
+    public void testHandleLevelsAdjust(){
+        //WHEN
+        controller.handleLevelsAdjust();
+
+        //THEN
+        assertEquals("Show level adjust menu",viewLog.toString());
+    }
+
+    @Test
+    public void testHandleCompress(){
+        //WHEN
+        controller.handleCompress();
+
+        //THEN
+        assertEquals("Show compress menu",viewLog.toString());
+    }
 
 }

@@ -6,7 +6,6 @@ import model.ImageData;
 public interface GuiView {
 
   void togglePreview(boolean isEnabled);
-  void toggleFeatures();
   void showWindow();
   void showDiscardConfirmation();
   void showLoadMenu();
