@@ -65,12 +65,11 @@ public class GuiControllerSplit implements Features, ImageController{
         }
     }
 
-//    @Override
-//    public void cancel() {
-//        currImage = actImage;
-//        refreshImage();
-//        togglePanels();
-//    }
+    @Override
+    public void cancel() {
+        currImage = actImage;
+        refreshImage();
+    }
 
     @Override
     public void exitProgram() {
@@ -83,7 +82,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void loadImage(String filePath) {
         try {
-            if(actImage.getImageData().getData()[0].length!=0 && !imageSaved){
+            if(isImagePresent() && !imageSaved){
                 view.showDiscardConfirmation();
             }
             ImageData imageData = rgbImageFileIO.load(filePath);
@@ -103,7 +102,12 @@ public class GuiControllerSplit implements Features, ImageController{
 
     @Override
     public void handleSaveButton() {
-        view.showSaveMenu();
+        if(isImagePresent()){
+            view.showSaveMenu();
+        }
+        else{
+            view.displayError("No Image to Save");
+        }
     }
 
     @Override
@@ -117,84 +121,79 @@ public class GuiControllerSplit implements Features, ImageController{
         }
     }
 
+    private boolean isImagePresent(){
+        return actImage.getImageData().getData()[0].length!=0;
+    }
     private void refreshImage(){
         view.displayImage(currImage.getImageData());
-        RgbImageModel imageHist = actImage.createHistogram(
-                new ImageGraphicsImpl(256,256,20));
-        view.displayHistogram(imageHist.getImageData());
+        if(isImagePresent()){
+            RgbImageModel imageHist = actImage.createHistogram(
+                    new ImageGraphicsImpl(256,256,20));
+            view.displayHistogram(imageHist.getImageData());
+        }
     }
 
-    private void setUpForOperation(){
+    private void setUpForOperation(Function<RgbImageModel,RgbImageModel> operation, boolean isPreviewEnabled){
+        currentOperation = operation;
         currImage = actImage;
         refreshImage();
+        if(isImagePresent()){
+            view.togglePreview(isPreviewEnabled);
+        }
+    }
+
+    @Override
+    public void noOperation(){
+        currentOperation=null;
+        view.togglePreview(false);
     }
 
     @Override
     public void blur() {
-        currentOperation = RgbImageModel::blur;
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(RgbImageModel::blur, true);
     }
 
     @Override
     public void sharpen() {
-        currentOperation = RgbImageModel::sharpen;
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(RgbImageModel::sharpen, true);
     }
 
     @Override
     public void sepia() {
-        currentOperation = RgbImageModel::sepia;
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(RgbImageModel::sepia, true);
     }
 
     @Override
     public void greyscale() {
-        currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.LUMA);
-        setUpForOperation();
-        view.togglePreview(true);
-//        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.LUMA), supportSplit);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.LUMA), true);
     }
 
     @Override
     public void red() {
-        currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.RED);
-        setUpForOperation();
-        view.togglePreview(true);
-//        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.RED), false);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.RED), true);
     }
 
     @Override
     public void green() {
-        currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.GREEN);
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), true);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), false);
     }
 
     @Override
     public void blue() {
-        currentOperation = rgb->rgb.visualizeComponent(ComponentEnum.BLUE);
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), true);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), false);
     }
 
     @Override
     public void horizontal() {
-        currentOperation = RgbImageModel::horizontalFlip;
-        setUpForOperation();
-        view.togglePreview(false);
+        setUpForOperation(RgbImageModel::horizontalFlip, false);
 //        executeOperation(RgbImageModel::horizontalFlip, false);
     }
 
     @Override
     public void vertical() {
-        currentOperation = RgbImageModel::verticalFlip;
-        setUpForOperation();
-        view.togglePreview(false);
+        setUpForOperation(RgbImageModel::verticalFlip, false);
 //        actImage = currentOperation.apply(actImage);
 //        currImage = actImage;
 //        refreshImage();
@@ -203,9 +202,7 @@ public class GuiControllerSplit implements Features, ImageController{
 
     @Override
     public void colorCorrect() {
-        currentOperation = RgbImageModel::correctColor;
-        setUpForOperation();
-        view.togglePreview(true);
+        setUpForOperation(RgbImageModel::correctColor, true);
 //        executeOperation(RgbImageModel::correctColor, supportSplit);
     }
 
@@ -223,9 +220,7 @@ public class GuiControllerSplit implements Features, ImageController{
     public void compress(double compressRatio) {
 //        try {
             //double cr = Double.parseDouble(compressRatio);
-            currentOperation = rgb->rgb.applyCompression(compressRatio);
-            setUpForOperation();
-            view.togglePreview(true);
+            setUpForOperation(rgb->rgb.applyCompression(compressRatio), true);
 //            executeOperation(rgb->rgb.applyCompression(cr), supportSplit);
 //        } catch (NumberFormatException ne){
 //            view.displayError("Invalid input");
@@ -244,15 +239,13 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void levelsAdjust(int b, int m, int w) {
             //Should we check b<m<w
-            currentOperation = rgb->rgb.adjustLevels(b,m,w);
-            setUpForOperation();
-            view.togglePreview(true);
+            setUpForOperation(rgb->rgb.adjustLevels(b,m,w), true);
     }
 
     @Override
-    public void preview(String splitP){
+    public void preview(int splitP){
         currImage = currentOperation.apply(actImage);
-        RgbImageModel left = currImage.cropVertical(0, Double.parseDouble(splitP));
+        RgbImageModel left = currImage.cropVertical(0, splitP);
         currImage = actImage.overlapOnBase(left, 0);
         refreshImage();
     }

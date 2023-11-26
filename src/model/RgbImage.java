@@ -491,7 +491,7 @@ class RgbImage implements RgbImageModel {
   @Override
   public RgbImageModel adjustLevels(int b, int m, int w) throws IllegalArgumentException {
     if (b < 0 || m < 0 || w < 0
-            || b > m || m > w || w > 255) {
+            || b >= m || m >= w || w > 255) {
       throw new IllegalArgumentException("Invalid arguments for adjust level");
     }
     return this.createInstance(

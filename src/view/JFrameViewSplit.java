@@ -23,7 +23,8 @@ public class JFrameViewSplit extends JFrame implements GuiView{
     private JLabel imageLabelHist;
     private JButton fileOpenButton;
     private JButton fileSaveButton;
-    private JTextField splitTextField;
+//    private JTextField splitTextField;
+    private JSlider splitSlider;
     private JButton previewButton;
     private JLabel splitLabel;
 
@@ -145,16 +146,15 @@ public class JFrameViewSplit extends JFrame implements GuiView{
         previewPanel = new JPanel();
         previewPanel.setBorder(BorderFactory.createTitledBorder("Split View"));
         previewPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        splitTextField = new JTextField(15);
+        splitSlider = getSlider(0,100,0);
         previewButton = new JButton("Preview");
-        splitLabel = new JLabel("Split % : ");
-
+        splitLabel = new JLabel("Split 0% : ");
+        splitSlider.addChangeListener(e -> splitLabel.setText("Split "+splitSlider.getValue()+"% : "));
         previewPanel.add(splitLabel);
-        previewPanel.add(splitTextField);
+        previewPanel.add(splitSlider);
         previewPanel.add(previewButton);
-//        previewPanel.setBackground(Color.darkGray);
-//        cancelButton = new JButton("Cancel");
-//        previewPanel.add(cancelButton);
+        cancelButton = new JButton("Cancel");
+        previewPanel.add(cancelButton);
         setPanelEnabled(previewPanel, false);
     }
 
@@ -172,7 +172,7 @@ public class JFrameViewSplit extends JFrame implements GuiView{
 
     @Override
     public void togglePreview(boolean isEnabled){
-        splitTextField.setText("");
+        splitSlider.setValue(0);
         setPanelEnabled(previewPanel, isEnabled);
     }
 
@@ -220,14 +220,17 @@ public class JFrameViewSplit extends JFrame implements GuiView{
                     break;
                 case "vertical-flip" : features.vertical();
                     break;//throw new IllegalStateException("Unexpected value: " + dropdown.getSelectedItem());
+                default:
+                    features.noOperation();
             }
         });
 
         fileOpenButton.addActionListener(evt -> features.handleLoadButton());
         fileSaveButton.addActionListener(evt -> features.handleSaveButton());
 
-        previewButton.addActionListener(evt -> features.preview(splitTextField.getText()));
+        previewButton.addActionListener(evt -> features.preview(splitSlider.getValue()));
         applyButton.addActionListener(evt -> features.apply());
+        cancelButton.addActionListener(evt -> features.cancel());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -267,14 +270,33 @@ public class JFrameViewSplit extends JFrame implements GuiView{
     @Override
     public void showLvlAdjMenu() {
         JSlider sliderB = getSlider(0,255,0);
-        JSlider sliderM = getSlider(0,255,0);
-        JSlider sliderW = getSlider(0,255,0);
+        JSlider sliderM = getSlider(0,255,128);
+        JSlider sliderW = getSlider(0,255,255);
         JLabel labelB = new JLabel("black: 0");
-        JLabel labelM = new JLabel("mid: 0");
-        JLabel labelW = new JLabel("white: 0");
-        sliderB.addChangeListener(e -> labelB.setText("black: " + sliderB.getValue()));
-        sliderM.addChangeListener(e -> labelM.setText("mid: " + sliderM.getValue()));
-        sliderW.addChangeListener(e -> labelW.setText("white: " + sliderW.getValue()));
+        JLabel labelM = new JLabel("mid: 128");
+        JLabel labelW = new JLabel("white: 255");
+        sliderB.addChangeListener(e ->
+        {
+            labelB.setText("black: " + sliderB.getValue());
+            if (sliderB.getValue() >= sliderM.getValue()) {
+                sliderM.setValue(sliderB.getValue() + 1);
+            }
+        });
+        sliderM.addChangeListener(e ->
+        {
+            labelM.setText("mid: " + sliderM.getValue());
+            if (sliderM.getValue() <= sliderB.getValue() || sliderM.getValue() >= sliderW.getValue()) {
+                sliderM.setValue(sliderB.getValue() + 1);
+            }
+        });
+        sliderW.addChangeListener(e ->
+        {
+            labelW.setText("white: " + sliderW.getValue());
+            if (sliderW.getValue() <= sliderM.getValue()) {
+                sliderW.setValue(sliderM.getValue() + 1);
+            }
+        });
+
         JPanel panelB = new JPanel();
         panelB.add(labelB);
         panelB.add(sliderB);
@@ -337,11 +359,11 @@ public class JFrameViewSplit extends JFrame implements GuiView{
         imageLabelHist.setIcon(new ImageIcon(image));
     }
 
-    @Override
-    public void toggleSplit(boolean supportSplit){
-        previewButton.setEnabled(supportSplit);
-        splitTextField.setEnabled(supportSplit);
-    }
+//    @Override
+//    public void toggleSplit(boolean supportSplit){
+//        previewButton.setEnabled(supportSplit);
+//        splitTextField.setEnabled(supportSplit);
+//    }
 
     @Override
     public void displayError(String message){

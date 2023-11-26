@@ -15,7 +15,7 @@ public interface GuiView {
   void addFeatures(Features features);
   void showCompressMenu();
   void showLvlAdjMenu();
-  void toggleSplit(boolean suportSplit);
+//  void toggleSplit(boolean suportSplit);
   void displayError(String message);
 //  void setSplitLabel(String message);
 //  void setSplitInput(String message);

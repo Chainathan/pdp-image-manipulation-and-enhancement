@@ -3,8 +3,9 @@ package controller;
 public interface Features {
   //Add brighten
   void apply();
-//  void cancel();
-  void preview(String splitP);
+  void cancel();
+  void noOperation();
+  void preview(int splitP);
   void exitProgram();
   void loadImage(String filePath);
   void handleLoadButton();

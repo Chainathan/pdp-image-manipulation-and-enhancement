@@ -13,9 +13,6 @@ import static org.junit.Assert.*;
 
 public class GuiControllerTest {
 
-    //preview
-    //save
-    //Load
     static class JFrameViewMock implements GuiView{
 
         private StringBuilder viewLog;
@@ -106,10 +103,6 @@ public class GuiControllerTest {
             viewLog.append("Show level adjust menu");
         }
 
-        @Override
-        public void toggleSplit(boolean suportSplit) {
-
-        }
 
         @Override
         public void displayError(String message) {
@@ -227,13 +220,28 @@ public class GuiControllerTest {
 
         @Override
         public RgbImageModel cropVertical(double start, double end) throws IllegalArgumentException {
-            modelLog.append("Crop Vertical operation called");
+            modelLog.append("Crop Vertical operation called start: "+start+" end: "+end);
             return new RgbImageMock(new StringBuilder("Crop Vertical completed."));
         }
 
         @Override
         public RgbImageModel overlapOnBase(RgbImageModel otherImage, double start) throws IllegalArgumentException {
-            modelLog.append("Overlap operation called");
+            modelLog.append("Overlap operation called start : "+start);
+            modelLog.append("Max Value : ").append(otherImage.getImageData().getMaxValue());
+            int[][][] data = otherImage.getImageData().getData();
+            modelLog.append("{");
+            for(int i=0;i< data.length;i++){
+                modelLog.append("{");
+                for(int j=0;j<data[0].length;j++){
+                    modelLog.append("{ ");
+                    for(int k=0;k<data[0][0].length;k++){
+                        modelLog.append(data[i][j][k]).append(" ");
+                    }
+                    modelLog.append("} ");
+                }
+                modelLog.append("} ");
+            }
+            modelLog.append("}\n");
             return new RgbImageMock(new StringBuilder("Overlap completed."));
         }
     }
@@ -303,7 +311,9 @@ public class GuiControllerTest {
     
     private void generateExpModelLogs(){
         expModelLog.append("GetImageData called\n");
+        expModelLog.append("GetImageData called\n");
         expModelLog.append("Create Histogram called\n");
+        expModelLog.append("GetImageData called\n");
     }
     @Test
     public void testBlur(){
@@ -618,6 +628,7 @@ public class GuiControllerTest {
         controller.apply();
 
         //THEN
+        assertEquals("",modelLog.toString());
         assertEquals("Invalid Operation",viewLog.toString());
     }
 
@@ -630,6 +641,7 @@ public class GuiControllerTest {
             fail("Exception not expected");
         }
         //THEN
+        assertEquals("",modelLog.toString());
         assertEquals("Show window",viewLog.toString());
     }
 
@@ -707,6 +719,7 @@ public class GuiControllerTest {
         }
         expModelLog.append("}\n");
         expModelLog.append("GetImageData called\n");
+        expModelLog.append("GetImageData called\n");
         expModelLog.append("Create Histogram called\n");
         //WHEN
         controller.loadImage("images/test/test.ppm");
@@ -717,11 +730,74 @@ public class GuiControllerTest {
     }
 
     @Test
+    public void testLoadImageIfImageIsNotSavedAfterOperation(){
+        //GIVEN
+        controller.blur();
+        controller.apply();
+        expViewLog = getLogForApplyOperation(true);
+        expModelLog.append("Blur operation called");
+        expViewLog.append("Show discard confirmation");
+        expViewLog.append("Image to display : \n");
+        getexpViewLog();
+        expViewLog.append("Histogram of Image : \n");
+        getexpViewLog();
+
+        //WHEN
+        controller.loadImage("images/test/test.ppm");
+
+        //THEN
+        assertEquals(expModelLog.toString(), modelLog.toString());
+        assertEquals(expViewLog.toString(),viewLog.toString());
+    }
+
+    @Test
+    public void testLoadImageForUnsupportedFileFormat(){
+        //WHEN
+        controller.loadImage("images/test/testInvalidFormat.txt");
+
+        //THEN
+        assertEquals("GetImageData called\n", modelLog.toString());
+        assertEquals("Unsupported File format",viewLog.toString());
+    }
+
+    //Invalid Image or File not found?
+    @Test
+    public void testLoadImageForImageNotPresent(){
+        //WHEN
+        controller.loadImage("images/test/sample.png");
+
+        //THEN
+        assertEquals("GetImageData called\n", modelLog.toString());
+        assertEquals("Invalid Image.",viewLog.toString());
+    }
+
+    @Test
+    public void testSaveImage(){
+        //WHEN
+        controller.saveImage("images/temp/dummy.png");
+
+        //THEN
+        assertEquals("GetImageData called\n",modelLog.toString());
+        assertEquals("",viewLog.toString());
+    }
+
+    @Test
+    public void testSaveImageForUnsupportedFileFormat(){
+        //WHEN
+        controller.saveImage("images/temp/dummy.txt");
+
+        //THEN
+        assertEquals("GetImageData called\n",modelLog.toString());
+        assertEquals("Unsupported File format",viewLog.toString());
+    }
+
+    @Test
     public void testHandleLoadButton(){
         //WHEN
         controller.handleLoadButton();
 
         //THEN
+        assertEquals("",modelLog.toString());
         assertEquals("Show load menu",viewLog.toString());
     }
 
@@ -731,6 +807,7 @@ public class GuiControllerTest {
         controller.handleSaveButton();
 
         //THEN
+        assertEquals("GetImageData called\n",modelLog.toString());
         assertEquals("Show save menu",viewLog.toString());
     }
 
@@ -740,6 +817,7 @@ public class GuiControllerTest {
         controller.handleLevelsAdjust();
 
         //THEN
+        assertEquals("",modelLog.toString());
         assertEquals("Show level adjust menu",viewLog.toString());
     }
 
@@ -749,7 +827,77 @@ public class GuiControllerTest {
         controller.handleCompress();
 
         //THEN
+        assertEquals("",modelLog.toString());
         assertEquals("Show compress menu",viewLog.toString());
     }
 
+    @Test
+    public void testPreview(){
+        //GIVEN
+        controller.blur();
+        expModelLog.append("Blur operation called")
+                .append("Overlap operation called start : 0.0");
+        expModelLog.append("Max Value : 255");
+        int[][][] data = {
+                {{1,2,3}, {2,3,4}, {3,4,5}},
+                {{2,3,4}, {4,5,6}, {1,2,4}},
+                {{1,2,3}, {3,4,5}, {1,2,4}}
+        };
+        expModelLog.append("{");
+        for(int i=0;i< data.length;i++){
+            expModelLog.append("{");
+            for(int j=0;j<data[0].length;j++){
+                expModelLog.append("{ ");
+                for(int k=0;k<data[0][0].length;k++){
+                    expModelLog.append(data[i][j][k]).append(" ");
+                }
+                expModelLog.append("} ");
+            }
+            expModelLog.append("} ");
+        }
+        expModelLog.append("}\n");
+        expModelLog.append("GetImageData called\n");
+        expModelLog.append("Create Histogram called\n");
+        expViewLog.append("true\n");
+        expViewLog.append("Image to display : \n");
+        getexpViewLog();
+        expViewLog.append("Histogram of Image : \n");
+        getexpViewLog();
+
+        //WHEN
+        controller.preview(50);
+
+        //THEN
+        assertEquals(expModelLog.toString(),modelLog.toString());
+        assertEquals(expViewLog.toString(),viewLog.toString());
+
+    }
+
+    @Test
+    public void testnoOperation(){
+        //WHEN
+        controller.noOperation();
+
+        //THEN
+        assertEquals("",modelLog.toString());
+        assertEquals("Preview toggled : false\n",viewLog.toString());
+    }
+
+    @Test
+    public void testCancel(){
+        //WHEN
+        controller.cancel();
+        expModelLog = new StringBuilder();
+        expModelLog.append("GetImageData called\n")
+                .append("GetImageData called\n")
+                .append("Create Histogram called\n");
+        expViewLog = new StringBuilder();
+        expViewLog.append("Image to display : \n");
+        getexpViewLog();
+        expViewLog.append("Histogram of Image : \n");
+        getexpViewLog();
+        //THEN
+        assertEquals(expModelLog.toString(),modelLog.toString());
+        assertEquals(expViewLog.toString(),viewLog.toString());
+    }
 }
