@@ -29,7 +29,6 @@ public class GuiControllerTest {
       this.viewLog = log;
     }
 
-
     @Override
     public void togglePreview(boolean isEnabled) {
       viewLog.append("Preview toggled : " + isEnabled + "\n");
@@ -37,12 +36,12 @@ public class GuiControllerTest {
 
     @Override
     public void resetDropdown() {
-        viewLog.append("reset dropdown called");
+      viewLog.append("reset dropdown called");
     }
 
     @Override
     public void resetPreviewSlider() {
-        viewLog.append("reset preview slider");
+      viewLog.append("reset preview slider");
     }
 
     @Override
@@ -308,10 +307,6 @@ public class GuiControllerTest {
   }
 
   private void generateExpViewLogs() {
-//    expViewLog.append("Image to display : \n");
-//    getexpViewLog();
-//    expViewLog.append("Histogram of Image : \n");
-//    getexpViewLog();
     expViewLog.append("Preview toggled : ");
   }
 
@@ -460,6 +455,41 @@ public class GuiControllerTest {
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
 
+  @Test
+  public void testOperationIfImageIsNotPresent() {
+    //GIVEN
+    factory = new FactoryRgbImage();
+    controller = new GuiControllerSplit(factory, view);
+    expViewLog = new StringBuilder();
+    expViewLog.append("No Image Present").append("reset dropdown called");
+    //WHEN
+    controller.blur();
+    //THEN
+    assertEquals(expViewLog.toString(), viewLog.toString());
+  }
+
+  @Test
+  public void testOperationAfterSplitOperation() {
+    //GIVEN
+    controller.blur();
+    controller.preview(50);
+    expViewLog.append("true\n");//.append(expViewLog).append("false\n");
+    expViewLog.append("Image to display : \n");
+    getexpViewLog();
+    expViewLog.append("Histogram of Image : \n");
+    getexpViewLog();
+    expViewLog.append("Image to display : \n");
+    getexpViewLog();
+    expViewLog.append("Histogram of Image : \n");
+    getexpViewLog();
+    expViewLog.append("Preview toggled : true\n");
+
+    //WHEN
+    controller.blur();
+    //THEN
+    assertEquals(expModelLog.toString(), modelLog.toString());
+    assertEquals(expViewLog.toString(), viewLog.toString());
+  }
   private void getLogForApplyOperation(boolean isPreview) {
     expViewLog.append(isPreview).append("\n");//.append(expViewLog).append("false\n");
     expViewLog.append("Image to display : \n");
@@ -674,40 +704,6 @@ public class GuiControllerTest {
     assertEquals("Show window", viewLog.toString());
   }
 
-  //Check
-//  @Test
-//  public void exitProgramBeforeSave() {
-//    //GIVEN
-//    controller.blur();
-//    controller.apply();
-//
-//    //WHEN
-//    controller.exitProgram();
-//
-//    //THEN
-//    expModelLog.append("Blur operation called");
-//    StringBuilder exp = getLogForApplyOperation(true).append("Show discard confirmation");
-//    assertEquals(expModelLog.toString(), modelLog.toString());
-//    assertEquals(exp.toString(), viewLog.toString());
-//  }
-//
-//  //Check.
-//  @Test
-//  public void exitProgramAfterSave() {
-//    //GIVEN
-//    controller.blur();
-//    controller.apply();
-//    controller.saveImage("images/temp/dummy.png");
-//
-//    //WHEN
-//    controller.exitProgram();
-//
-//    //THEN
-//    expModelLog.append("Blur operation called");
-//    assertEquals(expModelLog.toString(), modelLog.toString());
-//    assertEquals(getLogForApplyOperation(true).toString(), viewLog.toString());
-//  }
-
   //Load
   @Test
   public void testLoadImage() {
@@ -723,22 +719,22 @@ public class GuiControllerTest {
     expModelLog.append("Image Data :");
     int[][][] data = {
             {
-              {151, 153, 160, 154, 154}, 
-                    {154, 158, 150, 153, 155}, 
-                    {151, 153, 156, 153, 155}, 
-                    {153, 155, 161, 160, 154}
+                {151, 153, 160, 154, 154},
+                {154, 158, 150, 153, 155},
+                {151, 153, 156, 153, 155},
+                {153, 155, 161, 160, 154}
             },
             {
-              {90, 92, 95, 91, 91}, 
-                    {93, 94, 86, 90, 91}, 
-                    {89, 91, 92, 86, 91}, 
-                    {91, 91, 97, 96, 93}
+                {90, 92, 95, 91, 91},
+                {93, 94, 86, 90, 91},
+                {89, 91, 92, 86, 91},
+                {91, 91, 97, 96, 93}
             }, 
             {
-              {58, 62, 66, 59, 59}, 
-                    {63, 65, 57, 56, 64}, 
-                    {63, 65, 66, 66, 64}, 
-                    {65, 64, 70, 69, 65}
+                {58, 62, 66, 59, 59},
+                {63, 65, 57, 56, 64},
+                {63, 65, 66, 66, 64},
+                {65, 64, 70, 69, 65}
             }
     };
     expModelLog.append("{");
@@ -869,13 +865,42 @@ public class GuiControllerTest {
   }
 
   @Test
+  public void testHandleLevelsAdjustIfImageNotPresent() {
+    //GIVEN
+    factory = new FactoryRgbImage();
+    controller = new GuiControllerSplit(factory, view);
+    expViewLog = new StringBuilder();
+    expViewLog.append("No Image Present").append("reset dropdown called");
+
+    //WHEN
+    controller.handleLevelsAdjust();
+
+    //THEN
+    assertEquals(expViewLog.toString(), viewLog.toString());
+  }
+
+  @Test
   public void testHandleCompress() {
     //WHEN
     controller.handleCompress();
 
     //THEN
-    assertEquals("", modelLog.toString());
+    assertEquals("GetImageData called\n", modelLog.toString());
     assertEquals("Show compress menu", viewLog.toString());
+  }
+
+  @Test
+  public void testHandleCompressWhenImageIsNotPresent() {
+    //GIVEN
+    factory = new FactoryRgbImage();
+    controller = new GuiControllerSplit(factory, view);
+    expViewLog = new StringBuilder();
+    expViewLog.append("No Image Present").append("reset dropdown called");
+    //WHEN
+    controller.handleCompress();
+
+    //THEN
+    assertEquals(expViewLog.toString(), viewLog.toString());
   }
 
   @Test
@@ -919,6 +944,19 @@ public class GuiControllerTest {
     assertEquals(expViewLog.toString(), viewLog.toString());
 
   }
+
+  @Test
+  public void testPreviewForIllegalArgumentException() {
+    //GIVEN
+    controller.levelsAdjust(10,5,20);
+    expViewLog.append("true\n").append("Invalid arguments for adjust level");
+    //WHEN
+    controller.preview(50);
+
+    //THEN
+    assertEquals(expViewLog.toString(), viewLog.toString());
+  }
+
 
   @Test
   public void testnoOperation() {

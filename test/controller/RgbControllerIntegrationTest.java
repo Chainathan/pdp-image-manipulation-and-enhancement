@@ -778,7 +778,7 @@ public class RgbControllerIntegrationTest {
                   Files.delete(file);
                   return FileVisitResult.CONTINUE;
                 }
-        });
+            });
       }
     } catch (IOException e) {
       // delete fail but test pass

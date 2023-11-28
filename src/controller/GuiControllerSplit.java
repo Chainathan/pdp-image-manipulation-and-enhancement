@@ -35,8 +35,10 @@ public class GuiControllerSplit implements Features, ImageController {
    * The imageSaved flag is set to true, indicating that there are no unsaved changes to
    * the image upon initialization.
    *
-   * @param factory The FactoryRgbImageModel used to create the initial RgbImageModel for the controller.
-   * @param v       The GuiView associated with this controller, providing the user interface components.
+   * @param factory The FactoryRgbImageModel used to create the initial RgbImageModel
+   *                for the controller.
+   * @param v       The GuiView associated with this controller, providing the user
+   *                interface components.
    */
   public GuiControllerSplit(FactoryRgbImageModel factory, GuiView v) {
     view = v;
@@ -51,6 +53,7 @@ public class GuiControllerSplit implements Features, ImageController {
   public void run() throws IOException {
     view.showWindow();
   }
+
   @Override
   public void apply() {
     if (currentOperation != null) {
@@ -142,7 +145,8 @@ public class GuiControllerSplit implements Features, ImageController {
     }
   }
 
-  private void setUpForOperation(Function<RgbImageModel, RgbImageModel> operation, boolean isPreviewEnabled) {
+  private void setUpForOperation(Function<RgbImageModel, RgbImageModel> operation,
+                                 boolean isPreviewEnabled) {
     if (isImagePresent()) {
       currentOperation = operation;
       if (currImage != actImage) {
@@ -152,7 +156,7 @@ public class GuiControllerSplit implements Features, ImageController {
       tempImage = null;
       view.togglePreview(isPreviewEnabled);
     } else {
-      view.displayError("No image present");
+      view.displayError("No Image Present");
       view.resetDropdown();
     }
   }
@@ -219,7 +223,7 @@ public class GuiControllerSplit implements Features, ImageController {
     if (isImagePresent()) {
       view.showCompressMenu();
     } else {
-      view.displayError("No image Present");
+      view.displayError("No Image Present");
       view.resetDropdown();
     }
   }
@@ -234,7 +238,7 @@ public class GuiControllerSplit implements Features, ImageController {
     if (isImagePresent()) {
       view.showLvlAdjMenu();
     } else {
-      view.displayError("No image Present");
+      view.displayError("No Image Present");
       view.resetDropdown();
     }
   }
