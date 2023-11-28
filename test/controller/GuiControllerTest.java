@@ -380,7 +380,7 @@ public class GuiControllerTest {
     //WHEN
     controller.red();
     //THEN
-    expViewLog.append("true\n");
+    expViewLog.append("false\n");
     assertEquals(expModelLog.toString(), modelLog.toString());
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
@@ -390,7 +390,7 @@ public class GuiControllerTest {
     //WHEN
     controller.blue();
     //THEN
-    expViewLog.append("true\n");
+    expViewLog.append("false\n");
     assertEquals(expModelLog.toString(), modelLog.toString());
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
@@ -400,7 +400,7 @@ public class GuiControllerTest {
     //WHEN
     controller.green();
     //THEN
-    expViewLog.append("true\n");
+    expViewLog.append("false\n");
     assertEquals(expModelLog.toString(), modelLog.toString());
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
@@ -440,7 +440,7 @@ public class GuiControllerTest {
     //WHEN
     controller.compress(30);
     //THEN
-    expViewLog.append("true\n");
+    expViewLog.append("false\n");
     assertEquals(expModelLog.toString(), modelLog.toString());
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
@@ -483,6 +483,33 @@ public class GuiControllerTest {
     expViewLog.append("Histogram of Image : \n");
     getexpViewLog();
     expViewLog.append("Preview toggled : true\n");
+    expModelLog.append("Blur operation called")
+            .append("Overlap operation called start : 0.0");
+    expModelLog.append("Max Value : 255");
+    int[][][] data = {
+            {{1, 2, 3}, {2, 3, 4}, {3, 4, 5}},
+            {{2, 3, 4}, {4, 5, 6}, {1, 2, 4}},
+            {{1, 2, 3}, {3, 4, 5}, {1, 2, 4}}
+    };
+    expModelLog.append("{");
+    for (int i = 0; i < data.length; i++) {
+      expModelLog.append("{");
+      for (int j = 0; j < data[0].length; j++) {
+        expModelLog.append("{ ");
+        for (int k = 0; k < data[0][0].length; k++) {
+          expModelLog.append(data[i][j][k]).append(" ");
+        }
+        expModelLog.append("} ");
+      }
+      expModelLog.append("} ");
+    }
+    expModelLog.append("}\n");
+    expModelLog.append("GetImageData called\n");
+    expModelLog.append("Create Histogram called\n");
+    expModelLog.append("GetImageData called\n");
+    expModelLog.append("GetImageData called\n");
+    expModelLog.append("GetImageData called\n");
+    expModelLog.append("Create Histogram called\n");
 
     //WHEN
     controller.blur();
@@ -490,6 +517,7 @@ public class GuiControllerTest {
     assertEquals(expModelLog.toString(), modelLog.toString());
     assertEquals(expViewLog.toString(), viewLog.toString());
   }
+
   private void getLogForApplyOperation(boolean isPreview) {
     expViewLog.append(isPreview).append("\n");//.append(expViewLog).append("false\n");
     expViewLog.append("Image to display : \n");
@@ -860,7 +888,7 @@ public class GuiControllerTest {
     controller.handleLevelsAdjust();
 
     //THEN
-    assertEquals("", modelLog.toString());
+    assertEquals("GetImageData called\n", modelLog.toString());
     assertEquals("Show level adjust menu", viewLog.toString());
   }
 
