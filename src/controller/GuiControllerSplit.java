@@ -74,7 +74,7 @@ public class GuiControllerSplit implements Features, ImageController {
         }
         currImage = actImage;
         refreshImage();
-        view.togglePreview(false);
+//        view.togglePreview(false);
         imageSaved = false;
       } catch (IllegalArgumentException e) {
         view.displayError(e.getMessage());
@@ -243,6 +243,7 @@ public class GuiControllerSplit implements Features, ImageController {
       view.showCompressMenu();
     } else {
       view.displayError("No image Present");
+      view.resetDropdown();
     }
   }
 
@@ -268,6 +269,7 @@ public class GuiControllerSplit implements Features, ImageController {
       view.showLvlAdjMenu();
     } else {
       view.displayError("No image Present");
+      view.resetDropdown();
     }
   }
 

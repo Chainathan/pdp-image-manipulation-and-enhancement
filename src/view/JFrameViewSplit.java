@@ -387,11 +387,13 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   @Override
   public void showCompressMenu() {
     compressionPanel.setVisible(true);
+    features.compress(compressionSlider.getValue());
   }
 
   @Override
   public void showLvlAdjMenu() {
     lvlAdjPanel.setVisible(true);
+    features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue(), lvlAdjSliderW.getValue());
   }
 
   @Override
