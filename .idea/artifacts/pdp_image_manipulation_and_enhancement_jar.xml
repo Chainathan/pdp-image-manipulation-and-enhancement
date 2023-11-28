@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="pdp-image-manipulation-and-enhancement:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/pdp_image_manipulation_and_enhancement_jar</output-path>
+    <root id="archive" name="pdp-image-manipulation-and-enhancement.jar">
+      <element id="module-output" name="pdp-image-manipulation-and-enhancement" />
+    </root>
+  </artifact>
+</component>

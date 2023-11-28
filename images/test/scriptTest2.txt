@@ -1,0 +1,53 @@
+#combine them back, but by using the brightened red we get a red tint
+rgb-combine koala-red-tint koala-red-bright koala-green koala-blue
+save images/temp/koalaTestTint.png koala-red-tint
+
+sepia koala koala-sepia
+save images/temp/koalaTestSepia.png koala-sepia
+blur koala koala-blur
+save images/temp/koalaTestBlur.png koala-blur
+sharpen koala koala-sharpen
+save images/temp/koalaTestSharpen.png koala-sharpen
+
+save "images/test blank/koalaTestTint.ppm" koala-red-tint
+load "images/test blank/koalaTestTint.ppm" koala
+save "images/temp/koalaTestOverwriteBlankNameSpace.png" koala
+
+#Split
+luma-component koala koala-luma-split split 35
+save images/temp/koalaTestLumaSplit.png koala-luma-split
+
+sepia koala koala-sepia-sp split 35
+save images/temp/koala-sepia-sp.png koala-sepia-sp
+
+blur koala koala-blur-sp split 35
+save images/temp/koala-blur-sp.png koala-blur-sp
+
+sharpen koala koala-sharpen-sp split 35
+save images/temp/koala-sharpen-sp.png koala-sharpen-sp
+
+#Histogram
+histogram koala koala-histogram
+save images/temp/koala-histogram.png koala-histogram
+
+#Compress
+compress 50 koala koala-compress
+save images/temp/koala-compress.png koala-compress
+
+#ColorCorrect
+color-correct koala koala-color-correct
+save images/temp/koala-color-correct.png koala-color-correct
+color-correct koala koala-color-correct-sp split 35
+save images/temp/koala-color-correct-sp.png koala-color-correct-sp
+
+histogram koala-color-correct koala-histogram
+save images/temp/koala-cc-histogram.png koala-histogram
+
+#Levels Adjust
+levels-adjust 20 100 255 koala koala-levels-adjust
+save images/temp/koala-levels-adjust.png koala-levels-adjust
+levels-adjust 20 100 255 koala koala-levels-adjust-sp split 35
+save images/temp/koala-levels-adjust-sp.png koala-levels-adjust-sp
+
+histogram koala-levels-adjust koala-histogram
+save images/temp/koala-la-histogram.png koala-histogram

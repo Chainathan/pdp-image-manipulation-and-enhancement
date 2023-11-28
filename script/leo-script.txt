@@ -1,0 +1,108 @@
+# run script for Leo
+load res/leo.png leo
+save res/leo-saved.png leo
+
+#Brighten
+brighten 50 leo leo-brighter
+save res/leo-brighter.png leo-brighter
+
+brighten -50 leo leo-darker
+save res/leo-darker.png leo-darker
+
+#Flip
+vertical-flip leo leo-vertical
+save res/leo-vertical.png leo-vertical
+
+horizontal-flip leo leo-horizontal
+save res/leo-horizontal.png leo-horizontal
+
+#Component visualization
+value-component leo leo-value
+save res/leo-value.png leo-value
+
+intensity-component leo leo-intensity
+save res/leo-intensity.png leo-intensity
+
+luma-component leo leo-luma
+save res/leo-luma.png leo-luma
+luma-component leo leo-luma-split split 35
+save res/leo-luma-split.png leo-luma-split
+
+red-component leo leo-red
+save res/leo-red.png leo-red
+green-component leo leo-green
+save res/leo-green.png leo-green
+blue-component leo leo-blue
+save res/leo-blue.png leo-blue
+
+#Split
+rgb-split leo leo-red-split leo-green-split leo-blue-split
+save res/leo-red-split.png leo-red-split
+save res/leo-green-split.png leo-green-split
+save res/leo-blue-split.png leo-blue-split
+
+#Combine
+rgb-combine leo-combine leo-red-split leo-green-split leo-blue-split
+save res/leo-combine.png leo-combine
+
+#Sepia
+sepia leo leo-sepia
+save res/leo-sepia.png leo-sepia
+sepia leo leo-sepia-sp split 35
+save res/leo-sepia-sp.png leo-sepia-sp
+
+#Blur
+blur leo leo-blur
+save res/leo-blur.png leo-blur
+blur leo leo-blur-sp split 35
+save res/leo-blur-sp.png leo-blur-sp
+
+#Sharpen
+sharpen leo leo-sharpen
+save res/leo-sharpen.png leo-sharpen
+sharpen leo leo-sharpen-sp split 35
+save res/leo-sharpen-sp.png leo-sharpen-sp
+
+#Histogram
+histogram leo leo-histogram
+save res/leo-histogram.png leo-histogram
+
+#Compress
+compress 50 leo leo-compress-50
+save res/leo-compress-50.png leo-compress-50
+histogram leo-compress-50 leo-histogram
+save res/leo-histogram-c50.png leo-histogram
+
+compress 20 leo leo-compress-20
+save res/leo-compress-20.png leo-compress-20
+histogram leo-compress-20 leo-histogram
+save res/leo-histogram-c20.png leo-histogram
+
+compress 90 leo leo-compress-90
+save res/leo-compress-90.png leo-compress-90
+histogram leo-compress-90 leo-histogram
+save res/leo-histogram-c90.png leo-histogram
+
+#ColorCorrect
+color-correct leo leo-color-correct
+save res/leo-color-correct.png leo-color-correct
+histogram leo-color-correct leo-histogram
+save res/leo-histogram-cc.png leo-histogram
+
+color-correct leo leo-color-correct-sp split 35
+save res/leo-color-correct-sp.png leo-color-correct-sp
+
+
+#Levels Adjust
+levels-adjust 20 100 255 leo leo-levels-adjust
+save res/leo-levels-adjust.png leo-levels-adjust
+histogram leo-levels-adjust leo-histogram
+save res/leo-histogram-la.png leo-histogram
+
+levels-adjust 20 100 255 leo leo-levels-adjust-sp split 35
+save res/leo-levels-adjust-sp.png leo-levels-adjust-sp
+
+levels-adjust 35 120 200 leo-darker leo-darker-la
+save res/leo-darker-la.png leo-sepia-la
+histogram leo-darker-la leo-histogram
+save res/leo-histogram-darker-la.png leo-histogram
