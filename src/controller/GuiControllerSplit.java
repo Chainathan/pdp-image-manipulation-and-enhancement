@@ -161,6 +161,7 @@ public class GuiControllerSplit implements Features, ImageController{
         currentOperation = operation;
 //        currImage = actImage;
         if(currImage!=actImage){
+            currImage = actImage;
             refreshImage();
         }
         tempImage = null;

@@ -194,7 +194,6 @@ public class JFrameViewSplit extends JFrame implements GuiView{
 
     private void addCompressionPanel(){
         compressionPanel = new JPanel();
-        compressionPanel.setVisible(true);
         compressionSlider = getSlider(0,100,0);
         compressionPanel = new JPanel();
         compressionPanel.setBorder(BorderFactory.createTitledBorder("Compression Percentage"));
