@@ -43,7 +43,7 @@ public class RgbImageTest {
       for (int j = 0; j < width; j++) {
         if (expectedImage[0][i][j] != actual[0][i][j]
                 || expectedImage[1][i][j] != actual[1][i][j]
-                || expectedImage[2][i][j] != actual[2][i][j]){
+                || expectedImage[2][i][j] != actual[2][i][j]) {
           return false;
         }
       }
@@ -513,9 +513,9 @@ public class RgbImageTest {
             {10, 11, 10}
     };
     int[][][] expectedImage = {
-        expectedChannel,
-        expectedChannel,
-        expectedChannel
+            expectedChannel,
+            expectedChannel,
+            expectedChannel
     };
     //WHEN
     RgbImageModel overlappedImage = rgbImage.overlapOnBase(otherImage, 50);
@@ -610,9 +610,9 @@ public class RgbImageTest {
             {11}
     };
     int[][][] expectedImage = {
-        expectedChannel,
-        expectedChannel,
-        expectedChannel
+            expectedChannel,
+            expectedChannel,
+            expectedChannel
     };
     //WHEN
     RgbImageModel croppedImage = rgbImage.cropVertical(20, 50);

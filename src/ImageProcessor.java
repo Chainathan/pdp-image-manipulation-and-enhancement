@@ -32,17 +32,15 @@ public class ImageProcessor {
         in = new StringReader("run \"" + args[1] + "\"");
         controller = new RgbController(factory, textView, in, commandMapper);
         controller.run();
-      }else if(args.length == 1 && args[0].equals("-text")){
+      } else if (args.length == 1 && args[0].equals("-text")) {
         in = new InputStreamReader(System.in);
         controller = new RgbController(factory, textView, in, commandMapper);
         controller.run();
-      }
-      else if(args.length==0){
+      } else if (args.length == 0) {
         GuiView view = new JFrameViewSplit("Image Processor");
         controller = new GuiControllerSplit(factory, view);
         controller.run();
-      }
-      else{
+      } else {
         System.out.println("Invalid arguments");
         System.exit(-1);
       }

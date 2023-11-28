@@ -32,7 +32,7 @@ public class RgbCombine implements RgbImageCommand {
    * @param imageList The map of image names to corresponding RGB image models.
    * @param arguments The arguments for the command.
    * @throws IllegalArgumentException If the execution encounters invalid number of arguments
-   *                                 for combine command.
+   *                                  for combine command.
    */
   @Override
   public void execute(Map<String, RgbImageModel> imageList, String[] arguments)

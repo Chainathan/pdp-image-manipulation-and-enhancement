@@ -17,7 +17,7 @@ public interface CommandMapper {
    *
    * @param factory The FactoryRgbImageModel used to create instances of RgbImageModel.
    * @return A map where command strings are mapped to functions that produce
-   *      RgbImageCommand instances.
+   * RgbImageCommand instances.
    */
   Map<String, Function<String[], RgbImageCommand>> generateCommands(FactoryRgbImageModel factory);
 }

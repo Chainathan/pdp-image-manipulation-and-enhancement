@@ -84,11 +84,11 @@ class RgbImage implements RgbImageModel {
         return getLumaComponent();
       case INTENSITY:
         TriFunction<RgbImage, Integer, Integer, Integer> funIntensity = (img, i, j)
-            -> (red.getValue(i, j) + green.getValue(i, j) + blue.getValue(i, j)) / 3;
+                -> (red.getValue(i, j) + green.getValue(i, j) + blue.getValue(i, j)) / 3;
         return applyFunctionToChannels(funIntensity);
       case VALUE:
         TriFunction<RgbImage, Integer, Integer, Integer> funValue = (img, i, j)
-            -> Math.max(Math.max(img.red.getValue(i, j), green.getValue(i, j)),
+                -> Math.max(Math.max(img.red.getValue(i, j), green.getValue(i, j)),
                 blue.getValue(i, j));
         return applyFunctionToChannels(funValue);
       default:

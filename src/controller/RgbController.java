@@ -179,7 +179,7 @@ public class RgbController implements ImageController {
    * Checks whether an image with the specified name exists in the given map.
    * If the image does not exist, an IllegalArgumentException is thrown.
    *
-   * @param map The map containing image names as keys and corresponding RgbImageModel
+   * @param map       The map containing image names as keys and corresponding RgbImageModel
    *                  objects as values.
    * @param imageName The name of the image to check for existence.
    * @throws IllegalArgumentException If the specified image does not exist in the map.

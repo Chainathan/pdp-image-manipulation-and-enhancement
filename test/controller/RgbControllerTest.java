@@ -88,7 +88,7 @@ public class RgbControllerTest {
 
     @Override
     public void loadImageData(ImageData imageData) {
-    //mock
+      //mock
     }
 
     @Override
