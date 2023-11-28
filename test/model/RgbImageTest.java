@@ -512,11 +512,7 @@ public class RgbImageTest {
             {7, 8, 7},
             {10, 11, 10}
     };
-    int[][][] expectedImage = {
-            expectedChannel,
-            expectedChannel,
-            expectedChannel
-    };
+    int[][][] expectedImage = {expectedChannel, expectedChannel, expectedChannel};
     //WHEN
     RgbImageModel overlappedImage = rgbImage.overlapOnBase(otherImage, 50);
 
@@ -609,11 +605,7 @@ public class RgbImageTest {
             {8},
             {11}
     };
-    int[][][] expectedImage = {
-            expectedChannel,
-            expectedChannel,
-            expectedChannel
-    };
+    int[][][] expectedImage = {expectedChannel, expectedChannel, expectedChannel};
     //WHEN
     RgbImageModel croppedImage = rgbImage.cropVertical(20, 50);
 

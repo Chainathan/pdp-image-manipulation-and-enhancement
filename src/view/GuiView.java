@@ -4,8 +4,10 @@ import controller.Features;
 import model.ImageData;
 
 /**
- * The GuiView interface represents the graphical user interface (GUI) for image processing applications.
- * Implementing classes are expected to provide methods for interacting with and displaying the GUI components.
+ * The GuiView interface represents the graphical user interface (GUI) for
+ * image processing applications.
+ * Implementing classes are expected to provide methods for interacting with
+ * and displaying the GUI components.
  */
 public interface GuiView {
   /**
@@ -65,10 +67,12 @@ public interface GuiView {
   void displayHistogram(ImageData imageData);
 
   /**
-   * Adds the specified Features object to the GUI, enabling interaction with image processing features and allowing
-   * view to use the functions provided by the Features as callback functions in its action listeners.
+   * Adds the specified Features object to the GUI, enabling interaction with
+   * image processing features and allowing view to use the functions provided
+   * by the Features as callback functions in its action listeners.
    *
-   * @param features The Features object representing image processing features to be added to the GUI.
+   * @param features The Features object representing image processing features
+   *                 to be added to the GUI.
    */
   void addFeatures(Features features);
 

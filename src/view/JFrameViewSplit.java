@@ -1,13 +1,30 @@
 package view;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Component;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Objects;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JFrame;
+import javax.swing.JComboBox;
+import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JOptionPane;
+import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import controller.Features;
@@ -16,28 +33,22 @@ import model.ImageData;
 
 /**
  * JFrameViewSplit is a class that extends JFrame and implements the GuiView interface.
- * It represents a graphical user interface for image processing applications, providing a window with various
- * components for image display, feature selection, and user interaction.
- * <p>
- * The class includes methods for displaying images, histograms, and error messages, as well as handling user interactions
- * such as loading, saving, and applying image processing features. It also provides methods for toggling preview mode,
+ * It represents a graphical user interface for image processing applications,
+ * providing a window with various components for image display, feature selection,
+ * and user interaction.
+ * The class includes methods for displaying images, histograms, and error messages, as
+ * well as handling user interactions such as loading, saving, and applying image
+ * processing features. It also provides methods for toggling preview mode,
  * resetting dropdowns, and showing different menus for compression and levels adjustment.
- * <p>
- * The GUI components include buttons, sliders, labels, and panels arranged to provide a user-friendly interface
- * for interacting with image processing features.
+ * The GUI components include buttons, sliders, labels, and panels arranged to provide a
+ * user-friendly interface for interacting with image processing features.
  */
 public class JFrameViewSplit extends JFrame implements GuiView {
 
   private Features features;
-  private JPanel mainPanel;
-  private JScrollPane mainScrollPane;
-  private JLabel imageLabel;
-  private JLabel imageLabelHist;
   private JButton fileOpenButton;
   private JButton fileSaveButton;
-  //    private JTextField splitTextField;
   private JSlider splitSlider;
-  //private JButton previewButton;
   private JLabel splitLabel;
 
   private JButton applyButton;
@@ -48,8 +59,10 @@ public class JFrameViewSplit extends JFrame implements GuiView {
 
   private JComboBox<String> dropdown;
   private JLabel loadLabel;
-
   private String defaultDropdownOption;
+
+  private JLabel imageLabel;
+  private JLabel imageLabelHist;
 
   private JPanel compressionPanel;
   private JSlider compressionSlider;
@@ -59,10 +72,13 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   private JSlider lvlAdjSliderM;
   private JSlider lvlAdjSliderW;
 
+
   /**
-   * This constructor initializes the JFrameViewSplit with the provided caption and sets up the main components
-   * for the graphical user interface (GUI). The GUI includes a main panel with scroll bars, an image panel,
-   * a toolbar panel with buttons and sliders, a histogram panel, a features panel, and a preview panel.
+   * This constructor initializes the JFrameViewSplit with the provided caption
+   * and sets up the main components for the graphical user interface (GUI).
+   * The GUI includes a main panel with scroll bars, an image panel,
+   * a toolbar panel with buttons and sliders, a histogram panel, a features
+   * panel, and a preview panel.
    *
    * @param caption The caption/title to be set for the JFrameViewSplit window.
    */
@@ -70,13 +86,11 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     super();
     setTitle(caption);
     setSize(1300, 900);
-    // this.setMinimumSize(new Dimension(300,300));
     defaultDropdownOption = "Select an operation";
-    mainPanel = new JPanel();
-    //for elements to be arranged vertically within this panel
+    JPanel mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
     //scroll bars around this main panel
-    mainScrollPane = new JScrollPane(mainPanel);
+    JScrollPane mainScrollPane = new JScrollPane(mainPanel);
     add(mainScrollPane);
 
     // Main image
@@ -86,7 +100,6 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     JScrollPane imageScrollPane = new JScrollPane(imagePanel);
     mainPanel.add(imageScrollPane);
     imageScrollPane.setPreferredSize(new Dimension(800, 800));
-//        imageScrollPane.setBackground(Color.darkGray);
     // tool bar
     JPanel toolBarPanel = new JPanel();
     toolBarPanel.setBorder(BorderFactory.createTitledBorder("Tool bar"));
@@ -102,7 +115,6 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     toolBarPanel.add(histogramPanel);
     imageLabelHist = new JLabel();
     histogramPanel.add(imageLabelHist);
-//        histogramPanel.setBackground(Color.darkGray);
 
     //feature Panel
     addFeaturePanel();
@@ -119,6 +131,8 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     //PreView Panel
     addPreviewPanel();
     toolBarPanel.add(previewPanel);
+
+    pack();
   }
 
   private void addFeaturePanel() {
@@ -126,14 +140,12 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     featuresPanel = new JPanel();
     featuresPanel.setBorder(BorderFactory.createTitledBorder("Features"));
     featuresPanel.setLayout(new BoxLayout(featuresPanel, BoxLayout.PAGE_AXIS));
-//        featuresPanel.setLayout(new BorderLayout());
 
     JPanel loadPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     fileOpenButton = new JButton("Load Image");
     JPanel loadlabelPanel = new JPanel(new FlowLayout());
     loadLabel = new JLabel("upload an image");
     loadlabelPanel.add(loadLabel);
-//        loadlabelPanel.setBackground(Color.lightGray);
     loadPanel.add(fileOpenButton);
     loadPanel.add(loadlabelPanel);
     featuresPanel.add(loadPanel);
@@ -149,7 +161,6 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     buttonPanel.add(applyButton);
     buttonPanel.add(Box.createHorizontalStrut(10));
     buttonPanel.add(fileSaveButton);
-//        buttonPanel.setBackground(Color.darkGray);
     featuresPanel.add(buttonPanel);
   }
 
@@ -169,12 +180,11 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     previewPanel.setBorder(BorderFactory.createTitledBorder("Split View"));
     previewPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
     splitSlider = getSlider(0, 100, 0);
-    //previewButton = new JButton("Preview");
     splitLabel = new JLabel("Split 0% : ");
-    splitSlider.addChangeListener(e -> splitLabel.setText("Split " + splitSlider.getValue() + "% : "));
+    splitSlider.addChangeListener(e -> splitLabel.setText("Split "
+            + splitSlider.getValue() + "% : "));
     previewPanel.add(splitLabel);
     previewPanel.add(splitSlider);
-    //previewPanel.add(previewButton);
     cancelButton = new JButton("Cancel");
     previewPanel.add(cancelButton);
     setPanelEnabled(previewPanel, false);
@@ -198,20 +208,11 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     compressionPanel = new JPanel();
     compressionPanel.setBorder(BorderFactory.createTitledBorder("Compression Percentage"));
     JLabel valueLabel = new JLabel("compress 0% : ");
-    compressionSlider.addChangeListener(e -> valueLabel.setText("compress " + compressionSlider.getValue() + "% :"));
+    compressionSlider.addChangeListener(e -> valueLabel.setText("compress "
+            + compressionSlider.getValue() + "% :"));
     compressionPanel.add(valueLabel, BorderLayout.SOUTH);
     compressionPanel.add(compressionSlider, BorderLayout.CENTER);
     compressionPanel.setVisible(false);
-//        int result = JOptionPane.showConfirmDialog(
-//                null,
-//                compressionPanel,
-//                "Compression Percentage",
-//                JOptionPane.OK_CANCEL_OPTION
-//        );
-//        if (result == JOptionPane.OK_OPTION) {
-//            int selectedValue = compressionSlider.getValue();
-//            features.compress(selectedValue);
-//        }
   }
 
   private void addLvlAdjPanel() {
@@ -223,25 +224,23 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     JLabel labelB = new JLabel("black: 0");
     JLabel labelM = new JLabel("mid: 128");
     JLabel labelW = new JLabel("white: 255");
-    lvlAdjSliderB.addChangeListener(e ->
-    {
+    lvlAdjSliderB.addChangeListener(e -> {
       labelB.setText("black: " + lvlAdjSliderB.getValue());
       if (lvlAdjSliderB.getValue() >= lvlAdjSliderM.getValue()) {
         lvlAdjSliderM.setValue(lvlAdjSliderB.getValue() + 1);
       }
     });
-    lvlAdjSliderM.addChangeListener(e ->
-    {
+    lvlAdjSliderM.addChangeListener(e -> {
       labelM.setText("mid: " + lvlAdjSliderM.getValue());
-      if (lvlAdjSliderM.getValue() <= lvlAdjSliderB.getValue() || lvlAdjSliderM.getValue() >= lvlAdjSliderW.getValue()) {
+      if (lvlAdjSliderM.getValue() <= lvlAdjSliderB.getValue()
+              || lvlAdjSliderM.getValue() >= lvlAdjSliderW.getValue()) {
         lvlAdjSliderM.setValue(lvlAdjSliderB.getValue() + 1);
       }
       if (lvlAdjSliderM.getValue() >= lvlAdjSliderW.getValue()) {
         lvlAdjSliderW.setValue(lvlAdjSliderM.getValue() + 1);
       }
     });
-    lvlAdjSliderW.addChangeListener(e ->
-    {
+    lvlAdjSliderW.addChangeListener(e -> {
       labelW.setText("white: " + lvlAdjSliderW.getValue());
       if (lvlAdjSliderW.getValue() <= lvlAdjSliderM.getValue()) {
         lvlAdjSliderW.setValue(lvlAdjSliderM.getValue() + 1);
@@ -262,11 +261,6 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     lvlAdjPanel.add(panelM);
     lvlAdjPanel.add(panelW);
     lvlAdjPanel.setVisible(false);
-//        int result = JOptionPane.showConfirmDialog(
-//                null, LvlAdjPanel, "Levels adjust Input", JOptionPane.OK_CANCEL_OPTION);
-//        if (result == JOptionPane.OK_OPTION) {
-//            features.levelsAdjust(sliderB.getValue(),sliderM.getValue(),sliderW.getValue());
-//        }
   }
 
   @Override
@@ -362,19 +356,21 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     });
 
     compressionSlider.addChangeListener(evt -> features.compress(compressionSlider.getValue()));
-    lvlAdjSliderB.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue()
-            , lvlAdjSliderW.getValue()));
-    lvlAdjSliderM.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue()
-            , lvlAdjSliderW.getValue()));
-    lvlAdjSliderW.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue()
-            , lvlAdjSliderW.getValue()));
+
+    lvlAdjSliderB.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(),
+            lvlAdjSliderM.getValue(), lvlAdjSliderW.getValue()));
+    lvlAdjSliderM.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(),
+            lvlAdjSliderM.getValue(), lvlAdjSliderW.getValue()));
+    lvlAdjSliderW.addChangeListener(evt -> features.levelsAdjust(lvlAdjSliderB.getValue(),
+            lvlAdjSliderM.getValue(), lvlAdjSliderW.getValue()));
+
     fileOpenButton.addActionListener(evt -> features.handleLoadButton());
     fileSaveButton.addActionListener(evt -> features.handleSaveButton());
 
-    //previewButton.addActionListener(evt -> features.preview(splitSlider.getValue()));
     applyButton.addActionListener(evt -> features.apply());
     cancelButton.addActionListener(evt -> features.cancel());
     splitSlider.addChangeListener(evt -> features.preview(splitSlider.getValue()));
+
     addWindowListener(new WindowAdapter() {
       @Override
       public void windowClosing(WindowEvent e) {
@@ -386,9 +382,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   private JSlider getSlider(int min, int max, int start) {
     JSlider slider = new JSlider(JSlider.HORIZONTAL, min, max, start);
     slider.setMajorTickSpacing(max);
-//        slider.setMinorTickSpacing(1);
     slider.setPaintTicks(true);
-//        slider.setPaintLabels(true);
     return slider;
   }
 
@@ -402,7 +396,8 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   @Override
   public void showLvlAdjMenu() {
     lvlAdjPanel.setVisible(true);
-    features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue(), lvlAdjSliderW.getValue());
+    features.levelsAdjust(lvlAdjSliderB.getValue(), lvlAdjSliderM.getValue(),
+            lvlAdjSliderW.getValue());
   }
 
   @Override
@@ -444,12 +439,6 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     BufferedImage image = RgbImageFileIO.convertImgDataToBuffImg(imageData);
     imageLabelHist.setIcon(new ImageIcon(image));
   }
-
-//    @Override
-//    public void toggleSplit(boolean supportSplit){
-//        previewButton.setEnabled(supportSplit);
-//        splitTextField.setEnabled(supportSplit);
-//    }
 
   @Override
   public void displayError(String message) {

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Struct;
 import java.util.function.Function;
 
 import exceptions.FileFormatNotSupportedException;
@@ -23,18 +22,18 @@ public class GuiControllerSplit implements Features, ImageController {
   private RgbImageModel currImage;
   private RgbImageModel actImage;
   private RgbImageModel tempImage;
-  //    private double splitP;
-//    private boolean supportSplit;
   private boolean imageSaved;
 
   private Function<RgbImageModel, RgbImageModel> currentOperation;
 
   /**
-   * This constructor initializes the GuiControllerSplit with the provided FactoryRgbImageModel and GuiView.
+   * This constructor initializes the GuiControllerSplit with the provided FactoryRgbImageModel
+   * and GuiView.
    * It sets up the necessary components for the GUI, including the view and its action listener.
-   * The constructor also initializes the RgbImageFileIO, the current image model (currImage) created by the factory,
-   * and sets the actImage to be the same as currImage initially. The imageSaved flag is set to true,
-   * indicating that there are no unsaved changes to the image upon initialization.
+   * The constructor also initializes the RgbImageFileIO, the current image model (currImage)
+   * created by the factory, and sets the actImage to be the same as currImage initially.
+   * The imageSaved flag is set to true, indicating that there are no unsaved changes to
+   * the image upon initialization.
    *
    * @param factory The FactoryRgbImageModel used to create the initial RgbImageModel for the controller.
    * @param v       The GuiView associated with this controller, providing the user interface components.
@@ -46,23 +45,12 @@ public class GuiControllerSplit implements Features, ImageController {
     this.currImage = factory.createImageModel();
     actImage = currImage;
     imageSaved = true;
-    //loadImage("res/leo.png");
   }
 
   @Override
   public void run() throws IOException {
     view.showWindow();
   }
-//  public void setView(GuiView v) {
-//    view = v;
-//    //provide view with all the callbacks
-//    view.addFeatures(this);
-//  }
-
-  //    private void togglePanels(){
-//        view.togglePreview(true);
-//        view.toggleFeatures();
-//    }
   @Override
   public void apply() {
     if (currentOperation != null) {
@@ -74,7 +62,6 @@ public class GuiControllerSplit implements Features, ImageController {
         }
         currImage = actImage;
         refreshImage();
-//        view.togglePreview(false);
         view.resetInputSliders();
         imageSaved = false;
       } catch (IllegalArgumentException e) {
@@ -97,7 +84,7 @@ public class GuiControllerSplit implements Features, ImageController {
     if (!imageSaved) {
       view.showDiscardConfirmation();
     }
-    System.exit(0);  //check
+    System.exit(0);  // check
   }
 
   @Override
@@ -158,15 +145,12 @@ public class GuiControllerSplit implements Features, ImageController {
   private void setUpForOperation(Function<RgbImageModel, RgbImageModel> operation, boolean isPreviewEnabled) {
     if (isImagePresent()) {
       currentOperation = operation;
-//        currImage = actImage;
       if (currImage != actImage) {
         currImage = actImage;
         refreshImage();
       }
       tempImage = null;
-      if (isImagePresent()) {
-        view.togglePreview(isPreviewEnabled);
-      }
+      view.togglePreview(isPreviewEnabled);
     } else {
       view.displayError("No image present");
       view.resetDropdown();
@@ -208,34 +192,26 @@ public class GuiControllerSplit implements Features, ImageController {
   @Override
   public void green() {
     setUpForOperation(rgb -> rgb.visualizeComponent(ComponentEnum.GREEN), false);
-//        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), false);
   }
 
   @Override
   public void blue() {
     setUpForOperation(rgb -> rgb.visualizeComponent(ComponentEnum.BLUE), false);
-//        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), false);
   }
 
   @Override
   public void horizontal() {
     setUpForOperation(RgbImageModel::horizontalFlip, false);
-//        executeOperation(RgbImageModel::horizontalFlip, false);
   }
 
   @Override
   public void vertical() {
     setUpForOperation(RgbImageModel::verticalFlip, false);
-//        actImage = currentOperation.apply(actImage);
-//        currImage = actImage;
-//        refreshImage();
-//        executeOperation(RgbImageModel::verticalFlip, false);
   }
 
   @Override
   public void colorCorrect() {
     setUpForOperation(RgbImageModel::correctColor, true);
-//        executeOperation(RgbImageModel::correctColor, supportSplit);
   }
 
   @Override
@@ -248,20 +224,9 @@ public class GuiControllerSplit implements Features, ImageController {
     }
   }
 
-  //  @Override
-//  public void compress(double compressRatio) {
-//    image = image.applyCompression(compressRatio);
-//    refreshImage();
-//  }
   @Override
   public void compress(double compressRatio) {
-//        try {
-    //double cr = Double.parseDouble(compressRatio);
     setUpForOperation(rgb -> rgb.applyCompression(compressRatio), false);
-//            executeOperation(rgb->rgb.applyCompression(cr), supportSplit);
-//        } catch (NumberFormatException ne){
-//            view.displayError("Invalid input");
-//        }
   }
 
   @Override
@@ -274,14 +239,8 @@ public class GuiControllerSplit implements Features, ImageController {
     }
   }
 
-  //  @Override
-//  public void levelsAdjust(int b, int m, int w) {
-//    image = image.adjustLevels(b,m,w);
-//    refreshImage();
-//  }
   @Override
   public void levelsAdjust(int b, int m, int w) {
-    //Should we check b<m<w
     setUpForOperation(rgb -> rgb.adjustLevels(b, m, w), true);
   }
 

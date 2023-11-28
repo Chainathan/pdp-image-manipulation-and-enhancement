@@ -1,7 +1,14 @@
-import controller.*;
+import controller.RgbController;
+import controller.GuiControllerSplit;
+import controller.CommandMapper;
+import controller.CommandMapperAdv;
+import controller.ImageController;
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
-import view.*;
+import view.GuiView;
+import view.ImageProcessorView;
+import view.JFrameViewSplit;
+import view.TextView;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -48,15 +55,5 @@ public class ImageProcessor {
       System.out.println(e.getMessage());
     }
   }
-//  private static void runGUI(){
-//    FactoryRgbImageModel factory = new FactoryRgbImage();
-//    GuiView view = new JFrameViewSplit("Image Processor");
-//    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
-//    try {
-//      controller.run();
-//    } catch (IOException e) {
-//      System.out.println(e.getMessage());
-//    }
-//  }
 }
 

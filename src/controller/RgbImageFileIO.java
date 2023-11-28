@@ -180,6 +180,12 @@ public class RgbImageFileIO implements ImageFileIO {
     ImageIO.write(image, imageFormat, outputFile);
   }
 
+  /**
+   * Method that converts the raw image data from ImageData object to a Buffered image object.
+   *
+   * @param imageData ImageData object to be converted.
+   * @return BufferedImage object with the data read from ImageData.
+   */
   public static BufferedImage convertImgDataToBuffImg(ImageData imageData) {
     int[][][] pixelValues = imageData.getData();
     int width = pixelValues[0][0].length;

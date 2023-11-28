@@ -1,10 +1,12 @@
 package controller;
 
 /**
- * The Features interface represents a set of callback functions for image processing and user interaction features
- * that can be implemented by classes providing image processing functionality in a graphical user interface.
- * Classes implementing this interface are expected to handle various image operations and user interactions.
- * The operations provided by this interface can be majorly used as callback functions for the action listeners.
+ * The Features interface represents a set of callback functions for image processing
+ * and user interaction features that can be implemented by classes providing image
+ * processing functionality in a graphical user interface. Classes implementing this
+ * interface are expected to handle various image operations and user interactions.
+ * The operations provided by this interface can be majorly used as callback
+ * functions for the action listeners.
  */
 public interface Features {
   /**
