@@ -244,6 +244,9 @@ class RgbImage implements RgbImageModel {
     if (compressionRatio < 0 || compressionRatio > 100) {
       throw new IllegalArgumentException("Invalid percentage value for compression ratio");
     }
+    if (compressionRatio == 0) {
+      return createInstance(red, green, blue);
+    }
     double[][] redTransformed = applyHaarTransform(applyPadding(red.getChannelValues()));
     double[][] greenTransformed = applyHaarTransform(applyPadding(green.getChannelValues()));
     double[][] blueTransformed = applyHaarTransform(applyPadding(blue.getChannelValues()));

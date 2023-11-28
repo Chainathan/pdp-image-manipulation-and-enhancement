@@ -2,11 +2,11 @@ Histogram change for preview -
 preview - try catch - done
 level-adjust - white listener - done
 load - reset select operation - done
-level-adjust - make visible the dailog box all time.
+level-adjust - make visible the dialog box all time. - done
 compress - no split - done
 Do apply operation only once - done
 Feature Enum - done
-Disable dropdown menu - until image is loaded
+Disable dropdown menu - until image is loaded - done
 
 Save operation - when no image is present. - done
 Blur - when clicked pop-up is there if no image is present and preview button should not enable. - done

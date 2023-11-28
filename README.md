@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Java application is designed for image processing tasks. It allows users to load, manipulate, and visualize images with various components such as red, green, blue, value, intensity, and luma. The application supports different file formats (e.g., ASCII PPM, JPG, PNG) and provides a text-based view for displaying the operation results. Below are the key features of the application:
+This Java application is designed for image processing tasks. It allows users to load, manipulate, and visualize images with various components such as red, green, blue, value, intensity, and luma. The application supports different file formats (e.g., ASCII PPM, JPG, PNG) and provides a text-based view, and GUI-based application for displaying the operation results.
 
 # Changes
 
@@ -55,6 +55,8 @@ The `ImageProcessor` class has been modified to accommodate the changes mentione
 ### Controller
 
 - **ImageController:** An interface for controlling image processing operations.
+- **GUIController:** GuiController is a class that implements both the Features and ImageController interfaces to provide functionality for handling image operations and user interactions in a graphical user interface. This class manages the GUI components and serves as a controller for image processing operations.
+- **Features:** The Features interface represents a set of callback functions for image processing and user interaction features that can be implemented by classes providing image processing functionality in a graphical user interface. Classes implementing this interface are expected to handle various image operations and user interactions. The operations provided by this interface can be majorly used as callback functions for the action listeners.
 - **RgbController:** An implementation of `ImageController` for RGB image processing. It parses input from the command line and script files, delegates operations to `RgbImageCommand` objects, which, in turn, use `RgbImageModel` to perform the respective operations.
 - **CommandMapper:** The `CommandMapper` interface defines methods for generating a map of commands associated with their corresponding implementations.
 - **CommandMapperBasic:** The `CommandMapperBasic` class implements the `CommandMapper` interface, providing a basic set of commands for RGB image processing operations.
@@ -88,14 +90,17 @@ The `ImageProcessor` class has been modified to accommodate the changes mentione
 
 ### View
 
-- **ImageProcessorView:** An interface for different views of image processing results.
+- **ImageProcessorView:** An interface for different Text views of image processing results.
 - **TextView:** An implementation of `ImageProcessorView` for displaying text-based results.
+- **GuiView:** The GuiView interface represents the graphical user interface (GUI) for image processing applications. Implementing classes are expected to provide methods for interacting with and displaying the GUI components.
+- **JFrameView:** JFrameViewSplit is a class that extends JFrame and implements the GuiView interface. It represents a graphical user interface for image processing applications, providing a window with various components for image display, feature selection, and user interaction.
 
 ### Enum
 
 - **FileFormatEnum:** An enum defining supported file formats.
 - **ComponentEnum:** An enum defining various image components.
 - **ColorEnum:** An enum defining colors corresponding to RGB.
+- **FeatureEnum:** The FeatureEnum enum represents a set of basic image processing features that can be applied to an image. This is primarily used to maintain consistency over the features and operations allowed from the view.
 
 ---
 ## Run A Script
@@ -105,10 +110,31 @@ Type this command when the program runs :
 ```
 run script/leo-script.txt
 ```
-`leo-script.txt` contains the set of image manipulation and enhancement operations that can be performed on 
+`leo-script.txt` contains the set of image manipulation and enhancement operations that can be performed on
 the given image leo.png. The results are saved in `res/` directory.
 
 - As per the current design the program accepts only `.txt` files for script files.
+
+## Command line arguments
+
+### The program supports the following command line arguments to run the jar file:
+
+```
+java -jar Program.jar -file path-of-script-file
+```
+- When invoked in this manner the program opens the script file, executes it and then shuts down.
+
+```
+java -jar Program.jar -text 
+```
+- When invoked in this manner the program opens in an interactive text mode, allowing the user to type the script and execute it one line at a time.
+
+```
+java -jar Program.jar 
+```
+- When invoked in this manner the program opens the graphical user interface. This is what will happen if you simply double-click on the jar file.
+
+Any other command-line arguments are invalid: in these cases the program will display an error message and quit.
 
 ## Image Attribution and Authorization
 

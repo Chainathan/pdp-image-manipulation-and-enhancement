@@ -26,6 +26,11 @@ public interface GuiView {
   void resetPreviewSlider();
 
   /**
+   * Resets all the input sliders.
+   */
+  void resetInputSliders();
+
+  /**
    * Displays the main window of the GUI.
    */
   void showWindow();

@@ -75,6 +75,7 @@ public class GuiControllerSplit implements Features, ImageController {
         currImage = actImage;
         refreshImage();
 //        view.togglePreview(false);
+        view.resetInputSliders();
         imageSaved = false;
       } catch (IllegalArgumentException e) {
         view.displayError(e.getMessage());

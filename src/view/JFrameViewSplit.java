@@ -71,7 +71,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     setTitle(caption);
     setSize(1300, 900);
     // this.setMinimumSize(new Dimension(300,300));
-    defaultDropdownOption = "select an operation";
+    defaultDropdownOption = "Select an operation";
     mainPanel = new JPanel();
     //for elements to be arranged vertically within this panel
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.LINE_AXIS));
@@ -217,8 +217,8 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   private void addLvlAdjPanel() {
     lvlAdjPanel = new JPanel(new GridLayout(0, 1));
     lvlAdjPanel.setBorder(BorderFactory.createTitledBorder("Level Adjust"));
-    lvlAdjSliderB = getSlider(0, 255, 0);
-    lvlAdjSliderM = getSlider(0, 255, 128);
+    lvlAdjSliderB = getSlider(0, 253, 0);
+    lvlAdjSliderM = getSlider(0, 254, 128);
     lvlAdjSliderW = getSlider(0, 255, 255);
     JLabel labelB = new JLabel("black: 0");
     JLabel labelM = new JLabel("mid: 128");
@@ -257,7 +257,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     JPanel panelW = new JPanel();
     panelW.add(labelW);
     panelW.add(lvlAdjSliderW);
-    lvlAdjPanel.add(new JLabel("Enter valid black, mid, white values (0 < b < m < w < 256) :"));
+    lvlAdjPanel.add(new JLabel("Enter valid black, mid, white values (0 <= b < m < w <= 255) :"));
     lvlAdjPanel.add(panelB);
     lvlAdjPanel.add(panelM);
     lvlAdjPanel.add(panelW);
@@ -271,6 +271,15 @@ public class JFrameViewSplit extends JFrame implements GuiView {
 
   @Override
   public void resetPreviewSlider() {
+    splitSlider.setValue(0);
+  }
+
+  @Override
+  public void resetInputSliders() {
+    lvlAdjSliderB.setValue(0);
+    lvlAdjSliderM.setValue(128);
+    lvlAdjSliderW.setValue(255);
+    compressionSlider.setValue(0);
     splitSlider.setValue(0);
   }
 
