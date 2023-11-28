@@ -3,6 +3,7 @@ package controller;
 import model.ImageData;
 import model.FactoryRgbImageModel;
 import model.FactoryRgbImage;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -713,40 +714,40 @@ public class RgbControllerIntegrationTest {
     String command = "run \"images/test/script folder/scriptTest.txt\"";
     runCommand(command);
     String[] imageNames = {
-        "koalaTest.jpg",
-        "koalaTest.png",
-        "koalaTest.ppm",
-        "koalaTestBlue.png",
-        "koalaTestBlur.png",
-        "koalaTestBright.png",
-        "koalaTestBrightDark.png",
-        "koalaTestCombine.png",
-        "koalaTestDark.png",
-        "koalaTestGreen.png",
-        "koalaTestIntensity.png",
-        "koalaTestLuma.png",
-        "koalaTestRed.png",
-        "koalaTestSepia.png",
-        "koalaTestSharpen.png",
-        "koalaTestSplitBlue.png",
-        "koalaTestSplitGreen.png",
-        "koalaTestSplitRed.png",
-        "koalaTestSplitRedBr.png",
-        "koalaTestTint.png",
-        "koalaTestValue.png",
-        "koalaTestVertical.png",
-        "koalaTestVerticalHorizontal.png",
-        "koala-blur-sp.png",
-        "koala-cc-histogram.png",
-        "koala-color-correct.png",
-        "koala-color-correct-sp.png",
-        "koala-compress.png",
-        "koala-histogram.png",
-        "koala-la-histogram.png",
-        "koala-levels-adjust.png",
-        "koala-levels-adjust-sp.png",
-        "koala-sepia-sp.png",
-        "koala-sharpen-sp.png"
+            "koalaTest.jpg",
+            "koalaTest.png",
+            "koalaTest.ppm",
+            "koalaTestBlue.png",
+            "koalaTestBlur.png",
+            "koalaTestBright.png",
+            "koalaTestBrightDark.png",
+            "koalaTestCombine.png",
+            "koalaTestDark.png",
+            "koalaTestGreen.png",
+            "koalaTestIntensity.png",
+            "koalaTestLuma.png",
+            "koalaTestRed.png",
+            "koalaTestSepia.png",
+            "koalaTestSharpen.png",
+            "koalaTestSplitBlue.png",
+            "koalaTestSplitGreen.png",
+            "koalaTestSplitRed.png",
+            "koalaTestSplitRedBr.png",
+            "koalaTestTint.png",
+            "koalaTestValue.png",
+            "koalaTestVertical.png",
+            "koalaTestVerticalHorizontal.png",
+            "koala-blur-sp.png",
+            "koala-cc-histogram.png",
+            "koala-color-correct.png",
+            "koala-color-correct-sp.png",
+            "koala-compress.png",
+            "koala-histogram.png",
+            "koala-la-histogram.png",
+            "koala-levels-adjust.png",
+            "koala-levels-adjust-sp.png",
+            "koala-sepia-sp.png",
+            "koala-sharpen-sp.png"
     };
     String src = "images/scriptRef/";
     String res = "images/temp/";
@@ -770,14 +771,14 @@ public class RgbControllerIntegrationTest {
       Path directory = Paths.get(folderPath);
       if (Files.exists(directory) && Files.isDirectory(directory)) {
         Files.walkFileTree(directory, EnumSet.noneOf(FileVisitOption.class), Integer.MAX_VALUE,
-            new SimpleFileVisitor<Path>() {
-              @Override
-              public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                      throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-              }
-            });
+                new SimpleFileVisitor<Path>() {
+                  @Override
+                  public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                          throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                  }
+                });
       }
     } catch (IOException e) {
       // delete fail but test pass

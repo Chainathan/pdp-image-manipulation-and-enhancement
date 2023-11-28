@@ -80,7 +80,7 @@ public class GenericCommandTest {
 
     @Override
     public void loadImageData(ImageData imageData) {
-    //mock
+      //mock
     }
 
     @Override

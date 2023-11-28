@@ -179,6 +179,7 @@ public class RgbImageFileIO implements ImageFileIO {
     File outputFile = new File(destinationPath);
     ImageIO.write(image, imageFormat, outputFile);
   }
+
   public static BufferedImage convertImgDataToBuffImg(ImageData imageData) {
     int[][][] pixelValues = imageData.getData();
     int width = pixelValues[0][0].length;

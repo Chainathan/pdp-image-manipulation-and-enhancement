@@ -47,15 +47,15 @@ public class ImageData {
    * Get the pixel data of the image.
    *
    * @return A three-dimensional array representing the pixel data of the image.
-   *        The dimensions are [channels][height][width], where channels typically
-   *        represent color components like red, green, and blue.
+   * The dimensions are [channels][height][width], where channels typically
+   * represent color components like red, green, and blue.
    */
   public int[][][] getData() {
     return clone(data);
   }
 
   private int[][][] clone(int[][][] data) {
-    if(data[0].length==0){
+    if (data[0].length == 0) {
       return new int[3][0][0]; //check
     }
     int[][][] copy = new int[data.length][data[0].length][data[0][0].length];
@@ -71,7 +71,7 @@ public class ImageData {
    * Get the maximum pixel value in the image.
    *
    * @return The maximum pixel value, which is often used to represent the
-   *         maximum intensity value in the image.
+   * maximum intensity value in the image.
    */
   public int getMaxValue() {
     return maxValue;
