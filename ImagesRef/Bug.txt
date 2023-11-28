@@ -1,0 +1,25 @@
+Histogram change for preview -
+preview - try catch - done
+level-adjust - white listener - done
+load - reset select operation - done
+level-adjust - make visible the dailog box all time.
+compress - no split - done
+Do apply operation only once - done
+Feature Enum - done
+Disable dropdown menu - until image is loaded
+
+Save operation - when no image is present. - done
+Blur - when clicked pop-up is there if no image is present and preview button should not enable. - done
+Blur + select item - blur is getting selected. - done
+Level-Adjust - ascending order sequence. - done
+Cancel button - done
+Preview slider - done
+Load - without selecting any file. - checked
+Save -  default file format
+
+//DONE :
+Input - text box instead something else - done.
+Split - going back - discard operation - done.
+You have processed an image, but before saving you load another image. At this point since the user will stop seeing the first processed image, there will be no way to save it once the new image is loaded. - done
+Button alignment  - done.
+Scrollable image  - done

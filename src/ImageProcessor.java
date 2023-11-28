@@ -18,22 +18,9 @@ public class ImageProcessor {
    * The main method of the application that initializes the components
    * and runs the image processing controller.
    *
-   * @param args Command-line arguments (not used in this example).
+   * @param args Command-line arguments.
    */
   public static void main(String[] args) {
-    runIP(args);
-  }
-//  private static void runGUI(){
-//    FactoryRgbImageModel factory = new FactoryRgbImage();
-//    GuiView view = new JFrameViewSplit("Image Processor");
-//    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
-//    try {
-//      controller.run();
-//    } catch (IOException e) {
-//      System.out.println(e.getMessage());
-//    }
-//  }
-  private static void runIP(String[] args){
     Readable in;
     Appendable out = System.out;
     FactoryRgbImageModel factory = new FactoryRgbImage();
@@ -63,5 +50,15 @@ public class ImageProcessor {
       System.out.println(e.getMessage());
     }
   }
+//  private static void runGUI(){
+//    FactoryRgbImageModel factory = new FactoryRgbImage();
+//    GuiView view = new JFrameViewSplit("Image Processor");
+//    GuiControllerSplit controller = new GuiControllerSplit(factory, view);
+//    try {
+//      controller.run();
+//    } catch (IOException e) {
+//      System.out.println(e.getMessage());
+//    }
+//  }
 }
 

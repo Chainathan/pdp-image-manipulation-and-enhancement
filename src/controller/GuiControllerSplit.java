@@ -10,18 +10,35 @@ import model.ImageData;
 import model.RgbImageModel;
 import view.GuiView;
 
+/**
+ * GuiControllerSplit is a class that implements both the Features and ImageController interfaces
+ * to provide functionality for handling image operations and user interactions in a graphical user
+ * interface. This class manages the GUI components and serves as a controller for image processing
+ * operations.
+ */
 public class GuiControllerSplit implements Features, ImageController{
 
     private GuiView view;
     private final ImageFileIO rgbImageFileIO;
     private RgbImageModel currImage;
     private RgbImageModel actImage;
+    private RgbImageModel tempImage;
 //    private double splitP;
 //    private boolean supportSplit;
     private boolean imageSaved;
 
     private Function<RgbImageModel,RgbImageModel> currentOperation;
 
+    /**
+     * This constructor initializes the GuiControllerSplit with the provided FactoryRgbImageModel and GuiView.
+     * It sets up the necessary components for the GUI, including the view and its action listener.
+     * The constructor also initializes the RgbImageFileIO, the current image model (currImage) created by the factory,
+     * and sets the actImage to be the same as currImage initially. The imageSaved flag is set to true,
+     * indicating that there are no unsaved changes to the image upon initialization.
+     *
+     * @param factory The FactoryRgbImageModel used to create the initial RgbImageModel for the controller.
+     * @param v The GuiView associated with this controller, providing the user interface components.
+     */
     public GuiControllerSplit(FactoryRgbImageModel factory, GuiView v) {
         view = v;
         view.addFeatures(this);
@@ -50,7 +67,12 @@ public class GuiControllerSplit implements Features, ImageController{
     public void apply() {
         if(currentOperation!=null){
             try {
-                actImage = currentOperation.apply(actImage);
+                if(tempImage!=null){
+                    actImage = tempImage;
+                }
+                else{
+                    actImage = currentOperation.apply(actImage);
+                }
                 currImage = actImage;
                 refreshImage();
                 view.togglePreview(false);
@@ -69,6 +91,7 @@ public class GuiControllerSplit implements Features, ImageController{
     public void cancel() {
         currImage = actImage;
         refreshImage();
+        view.resetPreviewSlider();
     }
 
     @Override
@@ -76,7 +99,7 @@ public class GuiControllerSplit implements Features, ImageController{
         if (!imageSaved) {
             view.showDiscardConfirmation();
         }
-        //System.exit(0);
+        System.exit(0);  //check
     }
 
     @Override
@@ -89,7 +112,8 @@ public class GuiControllerSplit implements Features, ImageController{
             actImage.loadImageData(imageData);
             currImage=actImage;
             refreshImage();
-            imageSaved = false;
+            view.resetDropdown();
+            imageSaved = true;
         } catch (IOException | FileFormatNotSupportedException e){
             view.displayError(e.getMessage());
         }
@@ -135,8 +159,11 @@ public class GuiControllerSplit implements Features, ImageController{
 
     private void setUpForOperation(Function<RgbImageModel,RgbImageModel> operation, boolean isPreviewEnabled){
         currentOperation = operation;
-        currImage = actImage;
-        refreshImage();
+//        currImage = actImage;
+        if(currImage!=actImage){
+            refreshImage();
+        }
+        tempImage = null;
         if(isImagePresent()){
             view.togglePreview(isPreviewEnabled);
         }
@@ -145,6 +172,7 @@ public class GuiControllerSplit implements Features, ImageController{
     @Override
     public void noOperation(){
         currentOperation=null;
+        tempImage = null;
         view.togglePreview(false);
     }
 
@@ -170,18 +198,18 @@ public class GuiControllerSplit implements Features, ImageController{
 
     @Override
     public void red() {
-        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.RED), true);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.RED), false);
     }
 
     @Override
     public void green() {
-        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), true);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), false);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.GREEN), false);
     }
 
     @Override
     public void blue() {
-        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), true);
+        setUpForOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), false);
 //        executeOperation(rgb->rgb.visualizeComponent(ComponentEnum.BLUE), false);
     }
 
@@ -220,7 +248,7 @@ public class GuiControllerSplit implements Features, ImageController{
     public void compress(double compressRatio) {
 //        try {
             //double cr = Double.parseDouble(compressRatio);
-            setUpForOperation(rgb->rgb.applyCompression(compressRatio), true);
+            setUpForOperation(rgb->rgb.applyCompression(compressRatio), false);
 //            executeOperation(rgb->rgb.applyCompression(cr), supportSplit);
 //        } catch (NumberFormatException ne){
 //            view.displayError("Invalid input");
@@ -244,10 +272,15 @@ public class GuiControllerSplit implements Features, ImageController{
 
     @Override
     public void preview(int splitP){
-        currImage = currentOperation.apply(actImage);
-        RgbImageModel left = currImage.cropVertical(0, splitP);
-        currImage = actImage.overlapOnBase(left, 0);
-        refreshImage();
+        try{
+            tempImage = currentOperation.apply(actImage);
+            RgbImageModel left = tempImage.cropVertical(0, splitP);
+            currImage = actImage.overlapOnBase(left, 0);
+            refreshImage();
+        }catch(IllegalArgumentException e){
+            view.displayError(e.getMessage());
+        }
+
     }
 
 }
