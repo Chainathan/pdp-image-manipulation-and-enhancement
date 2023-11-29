@@ -59,10 +59,10 @@ public class JFrameView extends JFrame implements GuiView {
 
   private JComboBox<String> dropdown;
   private JLabel loadLabel;
-  private String defaultDropdownOption;
+  private final String defaultDropdownOption;
 
-  private JLabel imageLabel;
-  private JLabel imageLabelHist;
+  private final JLabel imageLabel;
+  private final JLabel imageLabelHist;
 
   private JPanel compressionPanel;
   private JSlider compressionSlider;
@@ -120,7 +120,7 @@ public class JFrameView extends JFrame implements GuiView {
     addFeaturePanel();
     toolBarPanel.add(featuresPanel);
 
-    //Compressoin Panel
+    //Compression Panel
     addCompressionPanel();
     toolBarPanel.add(compressionPanel);
 
@@ -181,13 +181,17 @@ public class JFrameView extends JFrame implements GuiView {
     previewPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
     splitSlider = getSlider(0, 100, 0);
     splitLabel = new JLabel("Split 0% : ");
-    splitSlider.addChangeListener(e -> splitLabel.setText("Split "
-            + splitSlider.getValue() + "% : "));
     previewPanel.add(splitLabel);
     previewPanel.add(splitSlider);
     cancelButton = new JButton("Cancel Preview");
     previewPanel.add(cancelButton);
+    splitSlider.addChangeListener(e -> splitSliderHelper());
     setPanelEnabled(previewPanel, false);
+  }
+
+  private void splitSliderHelper() {
+    splitLabel.setText("Split " + splitSlider.getValue() + "% : ");
+    cancelButton.setEnabled(splitSlider.getValue() != 0);
   }
 
   private void setPanelEnabled(JPanel panel, boolean isEnabled) {
@@ -286,6 +290,7 @@ public class JFrameView extends JFrame implements GuiView {
   public void togglePreview(boolean isEnabled) {
     splitSlider.setValue(0);
     setPanelEnabled(previewPanel, isEnabled);
+    cancelButton.setEnabled(false);
   }
 
   @Override

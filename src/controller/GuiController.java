@@ -17,7 +17,7 @@ import view.GuiView;
  */
 public class GuiController implements Features, ImageController {
 
-  private GuiView view;
+  private final GuiView view;
   private final ImageFileIO rgbImageFileIO;
   private RgbImageModel currImage;
   private RgbImageModel actImage;
