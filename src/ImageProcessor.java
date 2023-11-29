@@ -1,5 +1,5 @@
 import controller.RgbController;
-import controller.GuiControllerSplit;
+import controller.GuiController;
 import controller.CommandMapper;
 import controller.CommandMapperAdv;
 import controller.ImageController;
@@ -7,7 +7,7 @@ import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
 import view.GuiView;
 import view.ImageProcessorView;
-import view.JFrameViewSplit;
+import view.JFrameView;
 import view.TextView;
 
 import java.io.IOException;
@@ -44,8 +44,8 @@ public class ImageProcessor {
         controller = new RgbController(factory, textView, in, commandMapper);
         controller.run();
       } else if (args.length == 0) {
-        GuiView view = new JFrameViewSplit("Image Processor");
-        controller = new GuiControllerSplit(factory, view);
+        GuiView view = new JFrameView("Image Processor");
+        controller = new GuiController(factory, view);
         controller.run();
       } else {
         System.out.println("Invalid arguments");

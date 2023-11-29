@@ -15,7 +15,7 @@ import view.GuiView;
  * interface. This class manages the GUI components and serves as a controller for image processing
  * operations.
  */
-public class GuiControllerSplit implements Features, ImageController {
+public class GuiController implements Features, ImageController {
 
   private GuiView view;
   private final ImageFileIO rgbImageFileIO;
@@ -40,7 +40,7 @@ public class GuiControllerSplit implements Features, ImageController {
    * @param v       The GuiView associated with this controller, providing the user
    *                interface components.
    */
-  public GuiControllerSplit(FactoryRgbImageModel factory, GuiView v) {
+  public GuiController(FactoryRgbImageModel factory, GuiView v) {
     view = v;
     view.addFeatures(this);
     this.rgbImageFileIO = new RgbImageFileIO();
@@ -93,9 +93,6 @@ public class GuiControllerSplit implements Features, ImageController {
   @Override
   public void loadImage(String filePath) {
     try {
-      if (isImagePresent() && !imageSaved) {
-        view.showDiscardConfirmation();
-      }
       ImageData imageData = rgbImageFileIO.load(filePath);
       actImage.loadImageData(imageData);
       currImage = actImage;
@@ -109,6 +106,9 @@ public class GuiControllerSplit implements Features, ImageController {
 
   @Override
   public void handleLoadButton() {
+    if (isImagePresent() && !imageSaved) {
+      view.showDiscardConfirmation();
+    }
     view.showLoadMenu();
   }
 

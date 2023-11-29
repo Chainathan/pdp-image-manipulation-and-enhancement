@@ -43,7 +43,7 @@ import model.ImageData;
  * The GUI components include buttons, sliders, labels, and panels arranged to provide a
  * user-friendly interface for interacting with image processing features.
  */
-public class JFrameViewSplit extends JFrame implements GuiView {
+public class JFrameView extends JFrame implements GuiView {
 
   private Features features;
   private JButton fileOpenButton;
@@ -82,7 +82,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
    *
    * @param caption The caption/title to be set for the JFrameViewSplit window.
    */
-  public JFrameViewSplit(String caption) {
+  public JFrameView(String caption) {
     super();
     setTitle(caption);
     setSize(1300, 900);
@@ -155,7 +155,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     dropdownPanel.add(dropdown);
     featuresPanel.add(dropdownPanel);
 
-    applyButton = new JButton("Apply");
+    applyButton = new JButton("Apply Operation");
     fileSaveButton = new JButton("Save Image");
     JPanel buttonPanel = new JPanel(new FlowLayout());
     buttonPanel.add(applyButton);
@@ -185,7 +185,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
             + splitSlider.getValue() + "% : "));
     previewPanel.add(splitLabel);
     previewPanel.add(splitSlider);
-    cancelButton = new JButton("Cancel");
+    cancelButton = new JButton("Cancel Preview");
     previewPanel.add(cancelButton);
     setPanelEnabled(previewPanel, false);
   }
@@ -295,7 +295,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
 
   @Override
   public void showDiscardConfirmation() {
-    int result = JOptionPane.showConfirmDialog(JFrameViewSplit.this,
+    int result = JOptionPane.showConfirmDialog(JFrameView.this,
             "Save Changes?", "Unsaved Changes",
             JOptionPane.YES_NO_OPTION);
     if (result == JOptionPane.YES_OPTION) {
@@ -406,7 +406,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
     FileNameExtensionFilter filter = new FileNameExtensionFilter(
             "JPG, PNG & PPM Images", "jpg", "png", "ppm");
     fchooser.setFileFilter(filter);
-    int retvalue = fchooser.showOpenDialog(JFrameViewSplit.this);
+    int retvalue = fchooser.showOpenDialog(JFrameView.this);
     if (retvalue == JFileChooser.APPROVE_OPTION) {
       File f = fchooser.getSelectedFile();
       features.loadImage(f.getAbsolutePath());
@@ -417,7 +417,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
   @Override
   public void showSaveMenu() {
     final JFileChooser fchooser = new JFileChooser(".");
-    int retvalue = fchooser.showSaveDialog(JFrameViewSplit.this);
+    int retvalue = fchooser.showSaveDialog(JFrameView.this);
     if (retvalue == JFileChooser.APPROVE_OPTION) {
       File f = fchooser.getSelectedFile();
       features.saveImage(f.getAbsolutePath());
@@ -442,7 +442,7 @@ public class JFrameViewSplit extends JFrame implements GuiView {
 
   @Override
   public void displayError(String message) {
-    JOptionPane.showMessageDialog(JFrameViewSplit.this, message,
+    JOptionPane.showMessageDialog(JFrameView.this, message,
             "Error", JOptionPane.ERROR_MESSAGE);
   }
 

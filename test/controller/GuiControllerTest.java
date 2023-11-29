@@ -1,16 +1,15 @@
 package controller;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+
 import model.FactoryRgbImage;
 import model.FactoryRgbImageModel;
 import model.ImageData;
 import model.RgbImageModel;
-
-import org.junit.Before;
-import org.junit.Test;
-
 import view.GuiView;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -316,7 +315,7 @@ public class GuiControllerTest {
   StringBuilder expModelLog;
   FactoryRgbImageModel factory;
   GuiView view;
-  GuiControllerSplit controller;
+  GuiController controller;
 
   @Before
   public void setUp() {
@@ -324,7 +323,7 @@ public class GuiControllerTest {
     viewLog = new StringBuilder();
     factory = new FactoryRgbImageMock(modelLog);
     view = new JFrameViewMock(viewLog);
-    controller = new GuiControllerSplit(factory, view);
+    controller = new GuiController(factory, view);
     expViewLog = new StringBuilder();
     expModelLog = new StringBuilder();
     generateExpViewLogs();
@@ -459,7 +458,7 @@ public class GuiControllerTest {
   public void testOperationIfImageIsNotPresent() {
     //GIVEN
     factory = new FactoryRgbImage();
-    controller = new GuiControllerSplit(factory, view);
+    controller = new GuiController(factory, view);
     expViewLog = new StringBuilder();
     expViewLog.append("No Image Present").append("reset dropdown called");
     //WHEN
@@ -743,7 +742,6 @@ public class GuiControllerTest {
     getexpViewLog();
     expViewLog.append("reset dropdown called");
     expModelLog = new StringBuilder();
-    expModelLog.append("GetImageData called\n");
     expModelLog.append("Image Data :");
     int[][][] data = {
             {
@@ -790,33 +788,12 @@ public class GuiControllerTest {
   }
 
   @Test
-  public void testLoadImageIfImageIsNotSavedAfterOperation() {
-    //GIVEN
-    controller.blur();
-    controller.apply();
-    getLogForApplyOperation(true);
-    expModelLog.append("Blur operation called");
-    expViewLog.append("Show discard confirmation");
-    expViewLog.append("Image to display : \n");
-    getexpViewLog();
-    expViewLog.append("Histogram of Image : \n");
-    getexpViewLog();
-    expViewLog.append("reset dropdown called");
-    //WHEN
-    controller.loadImage("images/test/test.ppm");
-
-    //THEN
-    assertEquals(expModelLog.toString(), modelLog.toString());
-    assertEquals(expViewLog.toString(), viewLog.toString());
-  }
-
-  @Test
   public void testLoadImageForUnsupportedFileFormat() {
     //WHEN
     controller.loadImage("images/test/testInvalidFormat.txt");
 
     //THEN
-    assertEquals("GetImageData called\n", modelLog.toString());
+    assertEquals("", modelLog.toString());
     assertEquals("Unsupported File format", viewLog.toString());
   }
 
@@ -827,7 +804,7 @@ public class GuiControllerTest {
     controller.loadImage("images/test/sample.png");
 
     //THEN
-    assertEquals("GetImageData called\n", modelLog.toString());
+    assertEquals("", modelLog.toString());
     assertEquals("Invalid Image.", viewLog.toString());
   }
 
@@ -857,8 +834,27 @@ public class GuiControllerTest {
     controller.handleLoadButton();
 
     //THEN
-    assertEquals("", modelLog.toString());
+    assertEquals("GetImageData called\n", modelLog.toString());
     assertEquals("Show load menu", viewLog.toString());
+  }
+
+  @Test
+  public void testHandleLoadButtonIfPreviousImageIsNotSaved() {
+    //GIVEN
+    controller.blur();
+    controller.apply();
+    expViewLog.append("true\n");
+    expViewLog.append("Image to display : \n");
+    getexpViewLog();
+    expViewLog.append("Histogram of Image : \n");
+    getexpViewLog();
+    expViewLog.append("reset input slidersShow discard confirmationShow load menu");
+    //WHEN
+    controller.handleLoadButton();
+
+    //THEN
+    assertEquals("GetImageData called\nBlur operation called", modelLog.toString());
+    assertEquals(expViewLog.toString(), viewLog.toString());
   }
 
   @Test
@@ -874,7 +870,7 @@ public class GuiControllerTest {
   @Test
   public void testHandleSaveButtonForNoImage() {
     factory = new FactoryRgbImage();
-    controller = new GuiControllerSplit(factory, view);
+    controller = new GuiController(factory, view);
     //WHEN
     controller.handleSaveButton();
 
@@ -896,7 +892,7 @@ public class GuiControllerTest {
   public void testHandleLevelsAdjustIfImageNotPresent() {
     //GIVEN
     factory = new FactoryRgbImage();
-    controller = new GuiControllerSplit(factory, view);
+    controller = new GuiController(factory, view);
     expViewLog = new StringBuilder();
     expViewLog.append("No Image Present").append("reset dropdown called");
 
@@ -921,7 +917,7 @@ public class GuiControllerTest {
   public void testHandleCompressWhenImageIsNotPresent() {
     //GIVEN
     factory = new FactoryRgbImage();
-    controller = new GuiControllerSplit(factory, view);
+    controller = new GuiController(factory, view);
     expViewLog = new StringBuilder();
     expViewLog.append("No Image Present").append("reset dropdown called");
     //WHEN
