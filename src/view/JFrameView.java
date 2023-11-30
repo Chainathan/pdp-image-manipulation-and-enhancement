@@ -185,13 +185,7 @@ public class JFrameView extends JFrame implements GuiView {
     previewPanel.add(splitSlider);
     cancelButton = new JButton("Cancel Preview");
     previewPanel.add(cancelButton);
-    splitSlider.addChangeListener(e -> splitSliderHelper());
     setPanelEnabled(previewPanel, false);
-  }
-
-  private void splitSliderHelper() {
-    splitLabel.setText("Split " + splitSlider.getValue() + "% : ");
-    cancelButton.setEnabled(splitSlider.getValue() != 0);
   }
 
   private void setPanelEnabled(JPanel panel, boolean isEnabled) {
@@ -288,8 +282,8 @@ public class JFrameView extends JFrame implements GuiView {
 
   @Override
   public void togglePreview(boolean isEnabled) {
-    splitSlider.setValue(0);
     setPanelEnabled(previewPanel, isEnabled);
+    splitSlider.setValue(0);
     cancelButton.setEnabled(false);
   }
 
@@ -374,7 +368,7 @@ public class JFrameView extends JFrame implements GuiView {
 
     applyButton.addActionListener(evt -> features.apply());
     cancelButton.addActionListener(evt -> features.cancel());
-    splitSlider.addChangeListener(evt -> features.preview(splitSlider.getValue()));
+    splitSlider.addChangeListener(evt -> splitSliderChangeListener());
 
     addWindowListener(new WindowAdapter() {
       @Override
@@ -382,6 +376,15 @@ public class JFrameView extends JFrame implements GuiView {
         features.exitProgram();
       }
     });
+  }
+
+  private void splitSliderChangeListener() {
+    splitLabel.setText("Split " + splitSlider.getValue() + "% : ");
+    cancelButton.setEnabled(splitSlider.getValue() != 0);
+    String selectedDropdown = Objects.requireNonNull(dropdown.getSelectedItem()).toString();
+    if (!selectedDropdown.equals(defaultDropdownOption)) {
+      features.preview(splitSlider.getValue());
+    }
   }
 
   private JSlider getSlider(int min, int max, int start) {
