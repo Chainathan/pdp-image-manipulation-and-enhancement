@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Java application is designed for image processing tasks. It allows users to load, manipulate, and visualize images with various components such as red, green, blue, value, intensity, and luma. The application supports different file formats (e.g., ASCII PPM, JPG, PNG) and provides a text-based view for displaying the operation results. Below are the key features of the application:
+This Java application is designed for image processing tasks. It allows users to load, manipulate, and visualize images with various components such as red, green, blue, value, intensity, and luma. The application supports different file formats (e.g., ASCII PPM, JPG, PNG) and provides a GUI and text-based view for displaying the operation results. Below are the key features of the application:
 
 ## Key Features
 
